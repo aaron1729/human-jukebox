@@ -34,4 +34,13 @@ module.exports = {
       template: path.join(__dirname, "src/client", "index.html"),
     }),
   ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, './dist'),
+    },
+    proxy: {
+      '/api': 'http://localhost:3000',
+      secure: false
+    }
+  },
 }
