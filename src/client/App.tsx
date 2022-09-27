@@ -1,5 +1,5 @@
 import React from 'react';
-import LandingPageContainer from './src/client/LandingPageContainer';
+import LandingPageContainer from './Containers/LandingPageContainer';
 
 function App(){
   return <LandingPageContainer/>;

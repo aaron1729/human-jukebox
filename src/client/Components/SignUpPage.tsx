@@ -42,8 +42,9 @@ const SignUpPage = () => {
     }
     
     // make post request to backend using username and password
-    // const response = await fetch('/api/login', options)
+    // const response = await fetch('/api/signup', options)
   }
+
   return (
 
     <div className="loginForm">
