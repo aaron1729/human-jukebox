@@ -15,9 +15,6 @@ app.get("/", (req: any, res: any) => {
 
 
 
-
-
-
 // global error handler
 app.use((req: any, res: any) => res.status(404).send('The global error handler has been triggered. Just for you, here\'s Cage 4:33.'));
 
