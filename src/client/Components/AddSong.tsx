@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCookies } from 'react-cookie';
+import SongDisplay from './SongDisplay';
 
 
 // musician will enter a song name (to start - later we will add more fields for search query)
@@ -14,6 +15,9 @@ const AddSong = () => {
     searchQuery: '',
   })
 
+  const [songsData, setSongData] = React.useState({
+    songsArr:[],
+  })
   const onSearchFieldChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setSearchField({searchQuery: e.target.value})
   } 
@@ -44,19 +48,26 @@ const AddSong = () => {
     .then(response => response.json())
     .then(data => {
       console.log('response data is: ', data.tracks.items)
+      //const songsArr = [];
       for(let track of data.tracks.items){
         console.log('track name and artist name: ', track.name, track.artists[0].name)
+        setSongData({songsArr: [...songsData.songsArr,<SongDisplay key={track.external_ids.isrc} title={track.name} artist={track.artists[0].name} genre='unknown'/>]})
       }
     })
   }
 
   return(
+    <div className='song=div'>
     <div className='add-song'>
       <form className='my-4 rounded'>
         <label htmlFor='song-search'>Search Spotify for a song: </label>
         <input type='search' name='song-search' required className='border border-blue-700 rounded' value={searchField.searchQuery} onChange={onSearchFieldChange}></input>
         <input type='button' name='song-search' value='Search' onClick={searchSong} className='bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow'></input>
       </form>
+    </div>
+    <div className='display-song'>
+      {songsData.songsArr}
+    </div>
     </div>
   )
 }
