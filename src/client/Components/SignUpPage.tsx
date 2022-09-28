@@ -41,13 +41,15 @@ const SignUpPage = () => {
     
     // make post request to backend using username and password
     // const response = await fetch('/api/signup', options)
+
+    // depending on the success/failure of the response, we will useNavigate to redirect to private or public page
   }
 
   return (
 
-    <div className="loginForm">
-      <form onSubmit={handleSubmit}>
-        Username: <input type="text" name="username" placeholder='Your Human Jukebox Username' value={username} onChange={changeHandler}/>
+    <div className="flex flex-col items-center ">
+      <form onSubmit={handleSubmit} className="bg-slate-200">
+        Username: <input type="text" name="username" placeholder='Your Human Jukebox Username' value={username} onChange={changeHandler} className="select-none"/>
         <br />
         Musician Display Name: <input type="text" name="displayName" placeholder='Your Artist Name' value={displayName} onChange={changeHandler}/>
         <br />

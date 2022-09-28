@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  input {
+    @apply outline-0;
+  }
+  textarea {
+    @apply outline-0;
+  }
+  body {
+    @apply bg-gradient-to-r from-green-400 to-blue-600
+  }
+}
