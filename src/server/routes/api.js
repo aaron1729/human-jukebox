@@ -7,6 +7,7 @@ const querystring = require('node:querystring');
 
 const spotifyApi = require('../utils/apiWrapper');
 const authController = require('../controllers/authController');
+const songsController = require('../controllers/songsController');
 
 
 
@@ -48,7 +49,9 @@ router.get(
 )
 
 // end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
-
+router.get('/musician/:name',songsController.getMusicianId,songsController.getSongs,(req, res) => {
+    return res.status(200).json(res.locals.songs);
+})
 
 
 

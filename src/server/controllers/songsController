@@ -1,0 +1,42 @@
+const db = require('../models/models.js');
+
+const songsController = {};
+
+songsController.getSongs = (req, res, next) => {
+    console.log('inside songs controller');
+
+    const {_id} = res.locals.id;
+    console.log(_id);
+    const values = [_id];
+
+
+    
+
+    const myQuery = `SELECT title, artist, genre FROM public.songs INNER JOIN public.musician_songs ON public.songs._id = public.musician_songs.song_id WHERE public.musician_songs.musician_id = $1;`
+    db.query(myQuery,values).then((data) => {
+        console.log(data.rows);
+        res.locals.songs = data.rows;
+        return next();
+    }).catch((err) => {
+        console.log(err)
+    });
+
+}
+
+songsController.getMusicianId = (req, res, next) => {
+
+    const {name} = req.params;
+    console.log(name);
+    const values = [name];
+    const myquery = 'SELECT _id FROM public.musicians WHERE handle = $1';
+    db.query(myquery,values).then((data) => {
+        console.log(data.rows);
+        res.locals.id = data.rows[0];
+        return next();
+    }).catch((err) => {
+        console.log(err)
+    });
+
+}
+
+module.exports = songsController;
