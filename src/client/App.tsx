@@ -11,7 +11,7 @@ function App(){
       <Routes>
         <Route path="/" element={<LandingPageContainer/>} /> 
           <Route path="signup" element={<SignUpPage/>} />
-          <Route path="musician/public" element={<PublicMusicianContainer/>} />
+          <Route path="musician/public/" element={<PublicMusicianContainer/>} />
           <Route path="musician/:username" element={<SignUpPage/>} />
           <Route path="*" element={<NoPage/>} />
       </Routes>
