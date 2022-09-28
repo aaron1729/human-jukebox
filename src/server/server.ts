@@ -1,14 +1,13 @@
-import express from "express";
+const express = require('express');
 const app = express();
 const port = 3000;
+const router = require('./routes/api');
 
-app.get("/", (req, res) => {
+app.use('/api', router);
+
+app.get("/", (req: any, res: any) => {
     res.status(200).send("Yellow world!!");
 });
-
-app.get("/api", (req, res) => {
-    res.status(200).send("this is the api route!");
-})
 
 app.listen(port, () => {
     console.log(`your server has been started at http://localhost:${port}`);
