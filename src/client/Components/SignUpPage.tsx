@@ -5,12 +5,12 @@ const SignUpPage = () => {
   // use react hooks to create state for username and password
   const [data, setData] = useState({
     username:'',
-    password:'',
+    displayName: '',
     venmoLink: '',
     musicianBio: ''
   })
 
-  const { username, password, venmoLink, musicianBio } = data;
+  const { username, venmoLink, displayName, musicianBio } = data;
 
   const changeHandler = (e: any) => {
     setData({...data, [e.target.name]: [e.target.value]})
@@ -25,20 +25,18 @@ const SignUpPage = () => {
 
     const target = e.target as typeof e.target & {
       username: { value: string };
-      password: { value: string };
     };
     const username = target.username.value;
-    const password = target.password.value;
     // console.log(username, password)
 
-    console.log('body will be', JSON.stringify({ username, password, venmoLink, musicianBio}))
+    console.log('body will be', JSON.stringify({ username, venmoLink, musicianBio}))
 
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password, venmoLink, musicianBio})
+      body: JSON.stringify({ username, venmoLink, musicianBio})
     }
     
     // make post request to backend using username and password
@@ -49,10 +47,12 @@ const SignUpPage = () => {
 
     <div className="loginForm">
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder='Username' value={username} onChange={changeHandler}/>
+        Username: <input type="text" name="username" placeholder='Your Human Jukebox Username' value={username} onChange={changeHandler}/>
         <br />
-        <input type="password" name="password" placeholder='Password' value={password} onChange={changeHandler}/> 
-        <input type="text" name="venmoLink" placeholder='Venmo Link' onChange={changeHandler}/> 
+        Musician Display Name: <input type="text" name="displayName" placeholder='Your Artist Name' value={displayName} onChange={changeHandler}/>
+        <br />
+        Venmo Link: <input type="text" name="venmoLink" placeholder='Venmo Link' onChange={changeHandler}/> 
+        <br />
         <label htmlFor="text">Enter Bio:</label>
           <br/>
         <textarea id="text" name="musicianBio" rows={12} cols={50} placeholder="Describe yourself here..." onChange={changeHandler}></textarea>

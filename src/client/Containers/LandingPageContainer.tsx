@@ -1,12 +1,13 @@
 import React from 'react';
 import SearchInput from '../Components/SearchInput';
-import LoginForm from '../Components/LoginForm';
+import SpotifySignIn from '../Components/SpotifySignIn';
 import SignUpPage from '../Components/SignUpPage';
 
 function LandingPageContainer(){
   return(
     <div className="landing-page">
-      <LoginForm />
+      <h1 className ="bg-red-900 text-white">Welcome to Human Jukebox!</h1>
+      <SpotifySignIn />
       <hr/>
       <SignUpPage />
       <hr/>
