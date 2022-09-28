@@ -1,10 +1,14 @@
 const express = require('express');
 const app = express();
+
 const port = 3000;
+
 const router = require('./routes/api');
 
-app.use('/api', router);
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
+app.use('/api', router);
 
 // test the server connection (via localhost:3000) at the root endpoint
 app.get("/", (req: any, res: any) => {
@@ -16,7 +20,7 @@ app.get("/", (req: any, res: any) => {
 
 
 // global error handler
-app.use((req: any, res: any) => res.status(404).send('The global error handler has been triggered. Just for you, here\'s Cage 4:33.'));
+app.use((req: any, res: any) => res.status(404).send('The global error handler has been triggered. Just for you, here\'s Cage 4\'33":'));
 
 // local error handler
 app.use((err: any, req: any, res: any, next: any) => {

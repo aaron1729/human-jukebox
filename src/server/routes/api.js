@@ -1,12 +1,17 @@
 const express = require('express');
 const querystring = require('node:querystring');
-const spotifyApi = require('../utils/apiWrapper');
-const dotenv = require('dotenv');
+
+
+// const dotenv = require('dotenv');
 // dotenv.config();
+
+const spotifyApi = require('../utils/apiWrapper');
+const authController = require('../controllers/authController');
+
+
 
 
 const router = express.Router();
-
 
 
 // redirect to the Spotify authorization form for user authentication (i.e. sign-in)
@@ -27,7 +32,6 @@ router.get(
         // console.log('the request is: ', req);
         spotifyApi.authorizationCodeGrant(req.query.code)
         .then(data => {
-            // console.log('the data retrieved from spotify is: ', data);
             res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
             res.status(200).send("ended the api/getToken route!");
         })
@@ -36,11 +40,10 @@ router.get(
 
 router.get(
     '/getSpotifyId',
+    authController.getSpotifyId,
     (req, res) => {
-        spotifyApi.setAccessToken(req.cookies.access);
-        const 
-        
-
+        res.cookie('spotifyId', res.locals.spotifyId);
+        res.status(200).send("ended the api/getSpotifyId route! beware that the musician's spotifyId is currently saved as a cookie, and probably shouldn't be.");
     }
 )
 

@@ -1,1 +1,29 @@
+const cookieParser = require('cookie-parser');
 const spotifyApi = require('../utils/apiWrapper');
+
+const authController = {};
+
+
+
+
+// using a musician's spotify access token, get their spotify id
+authController.getSpotifyId = async (req, res, next) => {
+    try {
+        cookieParser();
+        console.log('in the try block');
+        console.log('req.cookies.access is: ', req.cookies.access);
+        spotifyApi.setAccessToken(req.cookies.access);
+        const userData = await spotifyApi.getMe();
+        if (userData.statusCode === 200) res.locals.spotifyId = userData.body.id;
+        return next();
+    } catch(err) {
+        console.log('in the catch block')
+        return next({
+            log: 'error getting spotify id',
+            status: err.statusCode,
+            message: {error: 'failed to get spotify it'}
+        });
+    }
+}
+
+module.exports = authController;
