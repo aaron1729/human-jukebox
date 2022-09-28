@@ -6,34 +6,18 @@ const SongDisplayContainer = (props: any) => {
   // todo: how do we store the current user so we can use it in our fetch request?
   const [ songArray, setSongArray ] = useState([]);
 
-  const exampleData = [
-    {
-      title: 'Piano Man',
-      artist: 'Billy Joel',
-      genre: 'Rock'
-    },
-    {
-      title: 'Mr. Brightside',
-      artist: 'The Killers',
-      genre: 'Punk Rock'
-    },
-    {
-      title: 'Roses',
-      artist: 'OutKast',
-      genre: 'Hip Hop/Rap'
-    }
-  ]
-
 
   const currentMusician = props.currentMusician;
   console.log('current Musician from SongDisplayContainer props: ', currentMusician);
 
   // fetch songs from db for current user 
   const getAllSongs = async () => {
-    // const songs = await fetch(`/api/musician/songs/${currentMusician}`)
+    const response = await fetch(`/api/musician/${currentMusician}`)
+    const data = await response.json()
+    console.log('songs from getAllSongs', data);
     // then take songs and add to songArray
     // iterate over song array returned
-    exampleData.forEach((song, idx) => {
+    data.forEach((song: any, idx: number) => {
       // create SongDisplay element
       const {title, artist, genre } = song;
       // push to songArray using setSongArray
