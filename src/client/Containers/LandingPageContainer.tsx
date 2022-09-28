@@ -3,6 +3,7 @@ import SearchInput from '../Components/SearchInput';
 import SpotifySignIn from '../Components/SpotifySignIn';
 import SignUpPage from '../Components/SignUpPage';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import PrivateMusicianContainer from './PrivateMusicianContainer';
 
 function LandingPageContainer(){
 
@@ -24,6 +25,7 @@ function LandingPageContainer(){
       <br />
       <Link to="musician/public"> <button className='border border-blue-700 rounded'>REDIRECT TO PUBLIC ARTIST PAGE</button></Link>
       {/* <button onClick={handleButtonClick}>NEW BUTTON HERE</button> */}
+      <PrivateMusicianContainer/>
     </div>
   )
 }
