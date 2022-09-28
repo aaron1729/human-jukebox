@@ -11,8 +11,8 @@ const pool = new Pool({
 
 
 // a test db query; note that the 2nd and 3rd arguments of pool.query are not needed
-const tempQueryText = `SELECT * FROM public.musicianinfo`
-pool.query(tempQueryText).then(value => console.log(value.rows));
+// const tempQueryText = `SELECT * FROM public.musicianinfo`
+// pool.query(tempQueryText).then(value => console.log(value.rows));
 
 
 
