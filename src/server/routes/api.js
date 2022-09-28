@@ -1,12 +1,11 @@
 const express = require('express');
 const querystring = require('node:querystring');
 
-
-// const dotenv = require('dotenv');
-// dotenv.config();
+const query = require('../models/models');
 
 const spotifyApi = require('../utils/apiWrapper');
 const authController = require('../controllers/authController');
+const { nextTick } = require('node:process');
 
 
 
@@ -43,13 +42,17 @@ router.get(
     authController.getSpotifyId,
     (req, res) => {
         res.cookie('spotifyId', res.locals.spotifyId);
-        res.status(200).send("ended the api/getSpotifyId route! beware that the musician's spotifyId is currently saved as a cookie, and probably shouldn't be.");
+        return res.status(200).send("ended the api/getSpotifyId route! beware that the musician's spotifyId is currently saved as a cookie, and probably shouldn't be. (rather, just chain some middlewares and save it on req.params .)");
     }
 )
 
-// end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
-
-
-
+router.get(
+    '/getMusicianInfo',
+    authController.getMusicianInfo,
+    (req, res) => {
+        console.log('at the end of the api/getMusicianInfo, res.locals.musicianInfo is: ', res.locals.musicianInfo);
+        return res.status(200).send("finished api/getMusicianInfo route!");
+    }
+)
 
 module.exports = router;
