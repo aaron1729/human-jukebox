@@ -52,7 +52,7 @@ const SongDisplayContainer = (props: any) => {
   return (
     <div>
       <div>
-        <h1 className='text-4xl px-4 py-2 flex flex-row justify-center'>See {currentMusician}'s songs below!</h1>
+        <h1 className='font-bold text-2xl px-4 py-2 flex flex-row justify-center mt-8'>See {currentMusician}'s songs below!</h1>
       </div>
       <div className='px-4 py-2 flex flex-row justify-center'>
         <table className='table-fixed'>

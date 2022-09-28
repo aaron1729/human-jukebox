@@ -27,8 +27,9 @@ router.get(
         spotifyApi.authorizationCodeGrant(req.query.code)
         .then(data => {
             res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
+            res.status(200).send("ended the api/getToken route!");
         });
-        res.status(200).send("ended the api/getToken route!");
+        
     }
 )
 
