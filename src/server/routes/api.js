@@ -5,7 +5,6 @@ const query = require('../models/models');
 
 const spotifyApi = require('../utils/apiWrapper');
 const authController = require('../controllers/authController');
-const { nextTick } = require('node:process');
 const songsController = require('../controllers/songsController');
 
 
