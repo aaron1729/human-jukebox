@@ -1,3 +1,8 @@
+
 node_modules
+
 dist
+
 .env
+# a .env.test file is used for testing purposes, to overwrite the production values of environment variables that are set in the main .env file.
+.env.test
