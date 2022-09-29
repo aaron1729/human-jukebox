@@ -6,6 +6,7 @@ const query = require('../models/models');
 const spotifyApi = require('../utils/apiWrapper');
 const authController = require('../controllers/authController');
 const { nextTick } = require('node:process');
+const songsController = require('../controllers/songsController');
 
 
 
@@ -42,6 +43,12 @@ router.get(
         return res.status(200).send(myString);
     }
 )
+
+// end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
+router.get('/musician/:name',songsController.getMusicianId,songsController.getSongs,(req, res) => {
+    return res.status(200).json(res.locals.songs);
+})
+
 
 
 module.exports = router;

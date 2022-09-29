@@ -20,9 +20,8 @@ function LandingPageContainer(){
       <hr/>
       <h1 className='mb-5 font-bold'>OR</h1>
       <SearchInput/>
-      <Link to="signup"> <button className='border border-blue-700 rounded'>REDIRECT TO SIGN UP (TESTING REACT ROUTER)</button></Link>
+      <Link to="signup"> <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>SIGN UP</button></Link>
       <br />
-      <Link to="musician/public"> <button className='border border-blue-700 rounded'>REDIRECT TO PUBLIC ARTIST PAGE</button></Link>
       {/* <button onClick={handleButtonClick}>NEW BUTTON HERE</button> */}
     </div>
   )

@@ -48,18 +48,20 @@ const SignUpPage = () => {
   return (
 
     <div className="flex flex-col items-center ">
-      <form onSubmit={handleSubmit} className="bg-slate-200">
-        Username: <input type="text" name="username" placeholder='Your Human Jukebox Username' value={username} onChange={changeHandler} className="select-none"/>
+      <form onSubmit={handleSubmit} className="bg-slate-200 font-semibold text-fuchsia-700 px-2 rounded-lg">
+        Username: <input type="text" name="username" placeholder='Enter username...' value={username} onChange={changeHandler} className="select-none rounded-lg"/>
         <br />
-        Musician Display Name: <input type="text" name="displayName" placeholder='Your Artist Name' value={displayName} onChange={changeHandler}/>
+        Musician Display Name: <input type="text" name="displayName" placeholder='Enter stage name...' value={displayName} onChange={changeHandler} className="select-none rounded-lg"/>
         <br />
-        Venmo Link: <input type="text" name="venmoLink" placeholder='Venmo Link' onChange={changeHandler}/> 
+        Venmo Link: <input type="text" name="venmoLink" placeholder='Enter Venmo link...' onChange={changeHandler} className="select-none rounded-lg"/> 
         <br />
         <label htmlFor="text">Enter Bio:</label>
           <br/>
-        <textarea id="text" name="musicianBio" rows={12} cols={50} placeholder="Describe yourself here..." onChange={changeHandler}></textarea>
+        <textarea id="text" name="musicianBio" rows={12} cols={50} placeholder="Describe yourself here..." onChange={changeHandler} className="select-none rounded-lg"></textarea>
         <br />
-        <input type="submit" name="submit" value="Sign Up"/>
+        <div className='flex justify-center'>
+          <input type="submit" name="submit" value="Sign Up" className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'/>
+        </div>
       </form>
     </div>
   )
