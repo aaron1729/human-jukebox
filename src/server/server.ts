@@ -3,6 +3,12 @@ const app = express();
 
 const port = 3000;
 
+// pull the info from the .env file in the root directory and add it to the process.env object
+const dotenv = require('dotenv');
+dotenv.config();
+
+
+
 const router = require('./routes/api');
 
 
