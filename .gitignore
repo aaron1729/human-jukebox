@@ -3,6 +3,7 @@ node_modules
 
 dist
 
+# a .env file is used to save "environment variables", which are specific to a given instance (and are often private) -- e.g. a database connection string, as well as client id & secret related to the Spotify API. these are attached to the object process.env file by the invocation of dotenv.config in server.ts .
 .env
 # a .env.test file is used for testing purposes, to overwrite the production values of environment variables that are set in the main .env file.
 .env.test
