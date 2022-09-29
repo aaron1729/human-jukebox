@@ -1,34 +1,72 @@
 const cookieParser = require('cookie-parser');
 const spotifyApi = require('../utils/apiWrapper');
 
-const authController = {};
-
 const { query } = require('../models/models');
 
 
 
 
-// using a musician's spotify access token, get their spotify id
+const authController = {};
+
+
+// check whether the user successfully logged in to spotify; if not, throw an error (and proceed to the local error handler).
+authController.checkSpotifyLoginSuccess = (req, res, next) => {
+    if (!err) return next();
+    return next({
+        log: 'error logging in to spotify',
+        status: err.statusCode,
+        message: {error: 'failed to log in to spotify'}
+    });
+}
+
+// get two tokens (long strings)
+    // set them as cookies called 'access' and 'refresh'
+    // also save them on res.locals
+// when this function is triggered, req.query.code has been set to equal a massive string (sent by the spotify redirect).
+authController.getTokens = async (req, res, next) => {
+    console.log('inside of authController.getTokens middleware')
+    try {
+        spotifyApi.authorizationCodeGrant(req.query.code)
+        .then(data => {
+            res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
+            res.locals.access_token = data.body.access_token;
+            res.locals.refresh_token = data.body.refresh_token;
+            return next();
+        })
+    } catch {
+        return next({
+            log: 'error getting access and refresh tokens',
+            status: err.statusCode,
+            message: {error: 'failed to get access and refresh tokens'}
+        });
+    }
+}
+
+
+// using a musician's spotify access token, get their spotify id and set it as res.locals.spotifyId .
 authController.getSpotifyId = async (req, res, next) => {
     try {
-        spotifyApi.setAccessToken(req.cookies.access);
+        spotifyApi.setAccessToken(res.locals.access_token);
         const userData = await spotifyApi.getMe();
-        if (userData.statusCode === 200) res.locals.spotifyId = userData.body.id;
+        console.log('userData object is: ', userData);
+        if (userData.statusCode === 200) {
+            res.locals.spotifyId = userData.body.id;
+        }
         return next();
     } catch(err) {
         return next({
             log: 'error getting spotify id',
             status: err.statusCode,
-            message: {error: 'failed to get spotify id'}
+            message: {error: 'failed to get spotify id. (perhaps you\'re in dev mode and the user isn\'t whitelisted in your spotify developer dashboard?)'}
         });
     }
 }
 
-// given a musician's spotify id, check if they're in our database
-authController.getMusicianInfo = async (req, res, next) => {
+
+// given a musician's spotify id, retrieve their info object from our database and store it as res.locals.musicianInfo . (if they're not in our database, we do _not_ throw an error; rather, res.locals.musicianInfo is simply set equal to undefined.)
+authController.getMusicianInfoFromDb = async (req, res, next) => {
     try {
-        const spotifyId = req.cookies.spotifyId;
-        console.log('the hard-coded spotifyId is: ', spotifyId)
+        const spotifyId = res.locals.spotifyId;
         const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
         query(musicianInfoQueryString).then(data => {
             res.locals.musicianInfo = data.rows[0];

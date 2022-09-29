@@ -13,7 +13,10 @@ const { nextTick } = require('node:process');
 const router = express.Router();
 
 
-// redirect to the Spotify authorization form for user authentication (i.e. sign-in)
+// redirect the musician to the Spotify auth page.
+// after the musician finishes there, they are redirected to localhost:8080/api/getMusicianInfo (handled just below).
+    // if their Spotify login was successful, that redirect comes with a 'code' (a long string) stored as req.query.code .
+    // if the Spotify login was unsuccessful, that redirect comes with an error message.
 router.get(
     '/auth',
     (req, res) => {
@@ -25,34 +28,20 @@ router.get(
     }
 )
 
-router.get(
-    '/getToken',
-    (req, res) => {
-        // console.log('the request is: ', req);
-        spotifyApi.authorizationCodeGrant(req.query.code)
-        .then(data => {
-            res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
-            res.status(200).send("ended the api/getToken route!");
-        })
-    }
-)
-
-router.get(
-    '/getSpotifyId',
-    authController.getSpotifyId,
-    (req, res) => {
-        res.cookie('spotifyId', res.locals.spotifyId);
-        return res.status(200).send("ended the api/getSpotifyId route! beware that the musician's spotifyId is currently saved as a cookie, and probably shouldn't be. (rather, just chain some middlewares and save it on req.params .)");
-    }
-)
-
+// this endpoint receives redirects from the Spotify auth page, which come equipped with a 'code' (a long string) stored as req.query.code . given that, this route handler says:
+    // using the code, go back to the Spotify API to get access and refresh tokens. save them as cookies and also on res.locals .
+    // using the access token, go back to the Spotify API again and get the musician's spotify id.
+    // then, go to the SQL database and get the musician info corresponding to that spotify id (if it exists).
 router.get(
     '/getMusicianInfo',
-    authController.getMusicianInfo,
+    authController.getTokens,
+    authController.getSpotifyId,
+    authController.getMusicianInfoFromDb,
     (req, res) => {
-        console.log('at the end of the api/getMusicianInfo, res.locals.musicianInfo is: ', res.locals.musicianInfo);
-        return res.status(200).send("finished api/getMusicianInfo route!");
+        const myString = JSON.stringify(res.locals.musicianInfo) || 'musician not found in database';
+        return res.status(200).send(myString);
     }
 )
+
 
 module.exports = router;

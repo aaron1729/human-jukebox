@@ -5,22 +5,25 @@ const port = 3000;
 
 const router = require('./routes/api');
 
+
 const cookieParser = require('cookie-parser');
+// every time cookieParser() is run, the existing cookies are stored to the request object.
 app.use(cookieParser());
 
+
+// handle API calls using the imported router
 app.use('/api', router);
+
 
 // test the server connection (via localhost:3000) at the root endpoint
 app.get("/", (req: any, res: any) => {
-    res.status(200).send("Yellow world!");
+    res.status(200).send("Are You There, God? It's Me, Server.");
 });
-
-
-
 
 
 // global error handler
 app.use((req: any, res: any) => res.status(404).send('The global error handler has been triggered. Just for you, here\'s Cage 4\'33":'));
+
 
 // local error handler
 app.use((err: any, req: any, res: any, next: any) => {
@@ -32,6 +35,7 @@ app.use((err: any, req: any, res: any, next: any) => {
     const errorObj = Object.assign({}, defaultErr, err);
     return res.status(errorObj.status).json(errorObj.message);
 })
+
 
 // start the server
 app.listen(port, () => {
