@@ -9,7 +9,7 @@ const { query } = require('../models/models');
 const authController = {};
 
 
-// check whether the user successfully logged in to spotify; if not, throw an error (and proceed to the local error handler).
+// check whether the user has successfully logged in to spotify; if not, throw an error (and proceed to the local error handler).
 authController.checkSpotifyLoginSuccess = (req, res, next) => {
     if (!err) return next();
     return next({
