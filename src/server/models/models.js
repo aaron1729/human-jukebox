@@ -9,7 +9,6 @@ const pool = new Pool({
 
 
 
-
 // // a test db query; note that the 2nd and 3rd arguments of pool.query are not needed
 // const tempQueryText = `SELECT * FROM public.musicians WHERE spotifyid = '.a.m.g.'`
 // pool.query(tempQueryText).then(data => console.log(data.rows));
