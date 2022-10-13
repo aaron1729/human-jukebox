@@ -24,7 +24,7 @@ const AddSong = () => {
 
   const searchSong = (e:React.SyntheticEvent) => {
     e.preventDefault();
-    //console.log('target is: ',e.target);
+    console.log('target is: ',e.target);
     const { searchQuery } = searchField;
 
     //replace spaces with '%20'
@@ -47,7 +47,7 @@ const AddSong = () => {
     fetch(uri, options)
     .then(response => response.json())
     .then(data => {
-      console.log('response data is: ', data.tracks.items)
+      console.log('response datums are: ', data.tracks.items)
       //const songsArr = [];
       for(let track of data.tracks.items){
         console.log('track name and artist name: ', track.name, track.artists[0].name)
