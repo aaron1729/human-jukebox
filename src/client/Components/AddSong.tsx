@@ -47,10 +47,10 @@ const AddSong = () => {
     fetch(uri, options)
     .then(response => response.json())
     .then(data => {
-      console.log('response datums are: ', data.tracks.items)
+      console.log('response datums are: ', data)
       //const songsArr = [];
       for(let track of data.tracks.items){
-        console.log('track name and artist name: ', track.name, track.artists[0].name)
+        console.log('track name and artist name: ', track.name + ' by the artist ' + track.artists[0].name)
         setSongData({songsArr: [...songsData.songsArr,<SongDisplay key={track.external_ids.isrc} title={track.name} artist={track.artists[0].name} genre='unknown'/>]})
       }
     })

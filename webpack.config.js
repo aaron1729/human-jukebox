@@ -1,6 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+// pull the info from the .env file in the root directory and add it to the process.env object
+// this seems to be a *separate* environment from that of server.ts
+const dotenv = require('dotenv');
+dotenv.config();
+const port = process.env.PORT || 3000;
+console.log('webpack dev port:', port)
+
 module.exports = {
     mode: 'development',
     entry: path.join(__dirname, "src/client", "index.tsx"),
@@ -44,7 +51,7 @@ module.exports = {
       directory: path.join(__dirname, './dist'),
     },
     proxy: {
-      '/api': 'http://localhost:3000',
+      '/api': 'http://localhost:' + port,
       secure: false
     }
   },

@@ -14,7 +14,7 @@ const MusicianInfo = (props: any) => {
     // fetch to db to get bandName, venmoLink, and musicianBio based on props.currentMusician
     // setMusicianInfo
     // const dataFromFetch = {};
-    setMusicianInfo({...musicianInfo, bandName: 'Aaron', venmoLink: 'givememoney@venmo.com', musicianBio: 'rly good at song'})
+    setMusicianInfo({...musicianInfo, bandName: 'Name o\' Musicker(s) [hard-coded]', venmoLink: 'benmo handle [hard-coded]', musicianBio: 'rly good at song -- srsly!! [hard-coded]'})
   }
 
   useEffect(() => {
@@ -24,7 +24,8 @@ const MusicianInfo = (props: any) => {
 
   return (
     <div className='flex flex-col items-center'>
-      <h2 className='text-4xl py-2'><span className='font-bold'>Musician:</span> {props.currentMusician}</h2>
+      <h2 className='text-4xl py-2'><span className='font-bold'>name:</span> {musicianInfo.bandName}</h2>
+      <span className='text-2xl'><span className='font-bold'>handle:</span> {props.currentMusician} [passed from props]</span>
       <span className='text-2xl'><span className='font-bold'>Venmo Link:</span> {musicianInfo.venmoLink}</span>
       <span className='text-2xl'><span className='font-bold'>Bio:</span> {musicianInfo.musicianBio}</span>
       <hr />
