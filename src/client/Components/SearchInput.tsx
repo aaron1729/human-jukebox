@@ -13,8 +13,7 @@ function SearchInput(){
     };
 
     const artistName = target.artistName.value;
-    console.log(artistName)
-
+    console.log('the artistName (inside of the SearchInput component) is:', artistName)
     // navigate to public musician profile
     // navigate(`/musician/public/${artistName}`)
     navigate({

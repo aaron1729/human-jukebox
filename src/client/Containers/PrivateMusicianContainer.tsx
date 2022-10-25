@@ -14,6 +14,7 @@ function PrivateMusicianContainer(){
           bio, venmo, songs, tags, edit options
         */
       }
+      [...and this is the bottom of the Private Musician Container]
     </div>
   )
 }

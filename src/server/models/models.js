@@ -9,14 +9,14 @@ const pool = new Pool({
 
 
 
-// // a test db query; note that the 2nd and 3rd arguments of pool.query are not needed
+// // here's a test db query; note that the 2nd and 3rd arguments of pool.query are not needed
 // const tempQueryText = `SELECT * FROM public.musicians WHERE spotifyid = '.a.m.g.'`
 // pool.query(tempQueryText).then(data => console.log(data.rows));
 
 
 module.exports = {
     query: (text, params, callback) => {
-        console.log('executing the query: ', text);
+        console.log('inside the query method of the pool, and we\'re executing the query: ', text);
         return pool.query(text, params, callback);
     }
 }

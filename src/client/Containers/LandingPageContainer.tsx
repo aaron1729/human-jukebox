@@ -20,11 +20,11 @@ function LandingPageContainer(){
       <SpotifySignIn />
       <hr/>
       <h1 className='mb-5 font-bold'>OR</h1>
-      <SearchInput/>
-      <Link to="signup"> <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>SIGN UP</button></Link>
+      <SearchInput />
+      <Link to="signup"> <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>Sign Up</button></Link>
       <br />
       {/* <button onClick={handleButtonClick}>NEW BUTTON HERE</button> */}
-      <PrivateMusicianContainer/>
+      <PrivateMusicianContainer />
     </div>
   )
 }

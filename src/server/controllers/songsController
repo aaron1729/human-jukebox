@@ -3,10 +3,8 @@ const db = require('../models/models.js');
 const songsController = {};
 
 songsController.getSongs = (req, res, next) => {
-    console.log('inside songs controller');
-
     const {_id} = res.locals.id;
-    console.log(_id);
+    console.log('inside songsController.getSongs, and the _id is: ', _id);
     const values = [_id];
 
 
@@ -24,19 +22,17 @@ songsController.getSongs = (req, res, next) => {
 }
 
 songsController.getMusicianId = (req, res, next) => {
-
     const {name} = req.params;
-    console.log(name);
+    console.log('inside of songsController.getMusicianId, and the name coming from the URL parameter is', name);
     const values = [name];
-    const myquery = 'SELECT _id FROM public.musicians WHERE handle = $1';
-    db.query(myquery,values).then((data) => {
-        console.log(data.rows);
+    const queryString = 'SELECT _id FROM public.musicians WHERE handle = $1';
+    db.query(queryString,values).then((data) => {
+        console.log('inside of songsController.getMusicianId, and the data.rows returned from the database are:', data.rows);
         res.locals.id = data.rows[0];
         return next();
     }).catch((err) => {
         console.log(err)
     });
-
 }
 
 module.exports = songsController;

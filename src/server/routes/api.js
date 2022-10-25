@@ -43,8 +43,16 @@ router.get(
     }
 )
 
+
+// this endpoint receives a musician's handle, and then:
+    // looks up the handle in the SQL database, retrieves the corresponding _id, and stores it as res.locals.id .
+    // stores res.locals.id as _id , and then 
 // end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
-router.get('/musician/:name',songsController.getMusicianId,songsController.getSongs,(req, res) => {
+router.get(
+    '/musician/:name',
+    songsController.getMusicianId,
+    songsController.getSongs,
+    (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
 
