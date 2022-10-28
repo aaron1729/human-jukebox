@@ -24,7 +24,12 @@ function LandingPageContainer(){
       <Link to="signup"> <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>Sign Up</button></Link>
       <br />
       {/* <button onClick={handleButtonClick}>NEW BUTTON HERE</button> */}
+
+      from inside LandingPageContainer, here's the PrivateMusicianContainer (just to test it out):
       <PrivateMusicianContainer />
+      <hr/>
+      and here's an attempt at a Link component:
+      <Link to="musician/public?artist=hard-coded-artist-name-in-the-Link-y'all!">clickbait</Link>
     </div>
   )
 }
