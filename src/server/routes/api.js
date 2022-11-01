@@ -13,7 +13,7 @@ const songsController = require('../controllers/songsController');
 const router = express.Router();
 
 
-// test: handle GET request in new tab
+// test: handle GET request
 router.get('/abc', (req, res) => {
     res.status(200).send('hello -- testing api/abc route');
 });
