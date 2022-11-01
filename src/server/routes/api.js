@@ -8,6 +8,8 @@ const authController = require('../controllers/authController');
 const songsController = require('../controllers/songsController');
 
 
+
+
 const router = express.Router();
 
 
@@ -33,32 +35,25 @@ router.get(
     }
 )
 
-
-
-
-// THE ROUTE BELOW SHOULD BE RENAMED! (this will need to get changed in a few places, and also whitelisted in Spotify dev dashboard too.) no longer 'getMusicianInfo', but more like 'go to musician private page'. easiest would be for this *not* to depend on whether the musician has ever logged in before, but just have some default values.
-
-
 // this endpoint receives redirects from the Spotify auth page, which come equipped with a 'code' (a long string) stored as req.query.code . given that, this route handler says:
     // using the code, go back to the Spotify API to get access and refresh tokens. save them as cookies and also on res.locals .
     // using the access token, go back to the Spotify API again and get the musician's spotify id.
     // then, go to the SQL database and get the musician info corresponding to that spotify id (if it exists).
-    // for now, it just responds with a string containing the musician info. see just above.
 router.get(
     '/getMusicianInfo',
     authController.getTokens,
     authController.getSpotifyId,
     authController.getMusicianInfoFromDb,
     (req, res) => {
-        const infoString = 'the musicianInfo is: ' + JSON.stringify(res.locals.musicianInfo);
-        const myString = infoString || 'musician not found in database';
+        const myString = JSON.stringify(res.locals.musicianInfo) || 'musician not found in database';
         return res.status(200).send(myString);
     }
 )
 
+
 // this endpoint receives a musician's handle, and then:
-    // looks up the handle in the SQL database, retrieves the corresponding _id, and stores it as res.locals.id as well as as the unique entry .
-    // stores res.locals.id as _id , and then uses it to query the database for the song info associated to that musician id .
+    // looks up the handle in the SQL database, retrieves the corresponding _id, and stores it as res.locals.id .
+    // stores res.locals.id as _id , and then 
 // end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
 router.get(
     '/musician/:name',
@@ -67,5 +62,7 @@ router.get(
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
+
+
 
 module.exports = router;

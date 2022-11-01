@@ -2,37 +2,37 @@ const db = require('../models/models.js');
 
 const songsController = {};
 
-songsController.getMusicianId = (req, res, next) => {
-    // this `name` is coming from the GET request parameter -- as indicated by the fact that it lives on req.params .
-    const {name} = req.params;
-    console.log('inside of songsController.getMusicianId, and the name coming from the URL parameter is', name);
-    // save the name in an array to be used for the SQL query to the database
-    const values = [name];
-    // define the SQL query
-    const queryString = 'SELECT _id FROM public.musicians WHERE handle = $1';
-    db.query(queryString,values).then((data) => {
-        console.log('inside of songsController.getMusicianId (promise-chained after the database query), and the data.rows returned from the database are:', data.rows);
-        res.locals.id = data.rows[0];
-        return next();
-    }).catch((err) => {
-        console.log(err)
-    });
-}
-
 songsController.getSongs = (req, res, next) => {
     const {_id} = res.locals.id;
     console.log('inside songsController.getSongs, and the _id is: ', _id);
     const values = [_id];
-    // define the SQL query
-    const queryString = `SELECT title, artist, genre FROM public.songs INNER JOIN public.musician_songs ON public.songs._id = public.musician_songs.song_id WHERE public.musician_songs.musician_id = $1;`
-    db.query(queryString,values).then((data) => {
-        console.log('inside songsController.getSongs (promise-chained after the database query), and the data.rows returned from the database are:', data.rows);
+
+
+    
+
+    const myQuery = `SELECT title, artist, genre FROM public.songs INNER JOIN public.musician_songs ON public.songs._id = public.musician_songs.song_id WHERE public.musician_songs.musician_id = $1;`
+    db.query(myQuery,values).then((data) => {
+        console.log(data.rows);
         res.locals.songs = data.rows;
         return next();
     }).catch((err) => {
         console.log(err)
     });
 
+}
+
+songsController.getMusicianId = (req, res, next) => {
+    const {name} = req.params;
+    console.log('inside of songsController.getMusicianId, and the name coming from the URL parameter is', name);
+    const values = [name];
+    const queryString = 'SELECT _id FROM public.musicians WHERE handle = $1';
+    db.query(queryString,values).then((data) => {
+        console.log('inside of songsController.getMusicianId, and the data.rows returned from the database are:', data.rows);
+        res.locals.id = data.rows[0];
+        return next();
+    }).catch((err) => {
+        console.log(err)
+    });
 }
 
 module.exports = songsController;
