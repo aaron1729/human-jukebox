@@ -21,8 +21,8 @@ function LandingPageContainer(){
       <hr/>
       <h1 className='mb-5 font-bold'>OR</h1>
       <SearchInput />
-      <Link target="_blank" to="api/abc">
-        // to="signup"
+      <Link target="_blank" to="signup">
+        {/* this prop used to be to="signup" */}
         <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>Sign Up</button> </Link>
       <br />
       {/* <button onClick={handleButtonClick}>NEW BUTTON HERE</button> */}

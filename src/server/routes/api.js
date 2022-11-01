@@ -12,7 +12,7 @@ const router = express.Router();
 
 
 // test: handle GET request in new tab
-app.get('/abc', (req: any, res: any) => {
+router.get('/abc', (req, res) => {
     res.status(200).send('hello -- testing api/abc route');
 });
 
