@@ -11,6 +11,13 @@ const songsController = require('../controllers/songsController');
 const router = express.Router();
 
 
+// test: handle GET request in new tab
+app.get('/abc', (req: any, res: any) => {
+    res.status(200).send('hello -- testing api/abc route');
+});
+
+
+
 // redirect the musician to the Spotify auth page.
 // after the musician finishes there, they are redirected to localhost:8080/api/getMusicianInfo (handled just below).
     // if their Spotify login was successful, that redirect comes with a 'code' (a long string) stored as req.query.code .

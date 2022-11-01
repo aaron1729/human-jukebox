@@ -19,14 +19,30 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 
+
+/// TEMPORARY for testing production mode
+app.use(express.static('dist'));
+app.use('/musician', express.static('dist'));
+
+
 // handle API calls using the imported router
 app.use('/api', router);
 
 
-// test the server connection (via localhost:${port}) at the root endpoint
-app.get("/", (req: any, res: any) => {
-    res.status(200).send("Are You There, God? It's Me, Server.");
+// handle requests to the root endpoint
+app.get('/*', (req: any, res: any) => {
+    console.log('the origianl URL request is: ', req.originalUrl);
+    console.log('inside the server route handler for root endpoint');
+    // // test the server connection (via localhost:${port}) at the root endpoint
+    // res.status(200).send("Are You There, God? It's Me, Server.");
+    res.sendFile('/Users/aaron/git/human-jukebox/dist/index.html')
 });
+
+
+
+
+
+//////////////////////
 
 
 // global error handler
