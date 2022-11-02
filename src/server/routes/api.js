@@ -1,6 +1,10 @@
 const express = require('express');
 const querystring = require('node:querystring');
 
+
+const path = require('path');
+
+
 const query = require('../models/models');
 
 const spotifyApi = require('../utils/apiWrapper');
@@ -41,10 +45,17 @@ router.get(
     authController.getSpotifyId,
     authController.getMusicianInfoFromDb,
     (req, res) => {
-        const myString = JSON.stringify(res.locals.musicianInfo) || 'musician not found in database';
-        return res.status(200).send(myString);
+        const myString = 'the JSON-stringified musicianInfo is: ' + JSON.stringify(res.locals.musicianInfo);
+        console.log(myString);
+        return res.sendFile(path.join(__dirname, '../../client/auth.html'));
+        // return res.status(200).send(myString);
     }
 )
+
+// src/client/auth.html
+// src/server/routes/api.js
+
+
 
 
 // this endpoint receives a musician's handle, and then:

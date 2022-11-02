@@ -7,8 +7,8 @@ function PublicMusicianContainer(){
 
   // figure out how to get query param from URL
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentMusician = searchParams.get("artist");
-  console.log('currentMusician is', currentMusician);
+  const currentMusician = searchParams.get('artist');
+  console.log('inside of PublicMusicianContainer component, and currentMusician is:', currentMusician);
 
   return(
     <div className="Public-musician">

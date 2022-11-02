@@ -10,7 +10,7 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 
-// import the 
+// import the api router
 const router = require('./routes/api');
 
 
@@ -43,7 +43,7 @@ app.use('/api', router);
 
 // handle requests past api route
 app.get('/api/*', (req: any, res: any) => {
-    res.status(200).send('reached the * route handler');
+    res.status(200).send('reached the/api/* route handler');
 })
 
 

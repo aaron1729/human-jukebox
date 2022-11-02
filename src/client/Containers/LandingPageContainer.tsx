@@ -49,10 +49,18 @@ const myFunc = () => {
   return(
     <div className="landing-page flex flex-col items-center">
       <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
+      <hr />
       <SpotifySignIn />
-      <hr/>
-      <h1 className='mb-5 font-bold'>OR</h1>
+      <hr />
+      {/* the following button opens a new window (or tab) using window.open('http://localhost:8080/api/auth') -- so that this window is accessible therein as window.opener! */}
+      <button onClick={authWindow}>
+        new signup/login button
+      </button>
+      <br />
       <SearchInput />
+      <br />
+      <br />
+      <br />
       <Link to="signup">
         <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
           Sign Up
@@ -72,10 +80,6 @@ const myFunc = () => {
       <Link to="DNE">
         a Link to a route that Does Not Exist (which triggers the catch-all Route "NoPage")
       </Link>
-      <br />
-      <button onClick={authWindow}>
-        a button that opens a new window (or tab) and serves it with the api/auth route
-      </button>
       <br />
       <PrivateMusicianContainer />
       <br />
