@@ -10,7 +10,7 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 
-
+// import the 
 const router = require('./routes/api');
 
 
@@ -20,29 +20,36 @@ app.use(cookieParser());
 
 
 
-/// TEMPORARY for testing production mode
-app.use(express.static('dist'));
-app.use('/musician', express.static('dist'));
+// /// for testing production mode
+// app.use(express.static('dist'));
+// app.use('/musician', express.static('dist'));
 
 
 // handle API calls using the imported router
 app.use('/api', router);
 
 
-// handle requests to the root endpoint
-app.get('/*', (req: any, res: any) => {
-    console.log('the origianl URL request is: ', req.originalUrl);
-    console.log('inside the server route handler for root endpoint');
-    // // test the server connection (via localhost:${port}) at the root endpoint
-    // res.status(200).send("Are You There, God? It's Me, Server.");
-    res.sendFile('/Users/aaron/git/human-jukebox/dist/index.html')
-});
+// // handle requests to the root endpoint
+// // this is for production mode
+// app.get('/*', (req: any, res: any) => {
+//     console.log('the original URL request is: ', req.originalUrl);
+//     console.log('inside the server route handler for root endpoint');
+//     // // test the server connection (via localhost:${port}) at the root endpoint
+//     // res.status(200).send("Are You There, God? It's Me, Server.");
+//     res.sendFile('/Users/aaron/git/human-jukebox/dist/index.html')
+// });
 
 
 
+// handle requests past api route
+app.get('/api/*', (req: any, res: any) => {
+    res.status(200).send('reached the * route handler');
+})
 
 
-//////////////////////
+////////////////////
+// error handlers //
+////////////////////
 
 
 // global error handler

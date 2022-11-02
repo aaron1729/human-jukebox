@@ -5,7 +5,30 @@ import SignUpPage from '../Components/SignUpPage';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import PrivateMusicianContainer from './PrivateMusicianContainer';
 
+
+
+
+
+
+
+
 function LandingPageContainer(){
+
+
+  // to test the window for variables
+
+  let myVariable: number = 0;
+for(let i=0; i < 10; i++) {
+  myVariable++
+}
+
+const myFunc = () => {
+  myVariable++;
+}
+
+
+
+
 
   const navigate = useNavigate();
 
@@ -14,6 +37,15 @@ function LandingPageContainer(){
     navigate('/signup');
   }
 
+
+
+  const authWindow = () => {
+    const newWindow = window.open('http://localhost:8080/api/auth');
+    // refer to main window as newWindow.opener
+  }
+
+
+
   return(
     <div className="landing-page flex flex-col items-center">
       <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
@@ -21,12 +53,33 @@ function LandingPageContainer(){
       <hr/>
       <h1 className='mb-5 font-bold'>OR</h1>
       <SearchInput />
-      <Link target="_blank" to="api/abc">
-        {/* this prop used to be to="signup" */}
-        <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>Sign Up</button> </Link>
+      <Link to="signup">
+        <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
+          Sign Up
+        </button>
+      </Link>
       <br />
-      {/* <button onClick={handleButtonClick}>NEW BUTTON HERE</button> */}
+      <Link target="_blank" to="api/auth">
+        a Link to the api/auth route (handled by the server, opened in a new tab)
+      </Link>
+      <br />
+      <a href="https://www.google.com" target="_blank">a good ol' a-tag, opening google in a new tab</a>
+      <br />
+      <button onClick={handleButtonClick}>
+        a button that uses useNavigate
+      </button>
+      <br />
+      <Link to="DNE">
+        a Link to a route that Does Not Exist (which triggers the catch-all Route "NoPage")
+      </Link>
+      <br />
+      <button onClick={authWindow}>
+        a button that opens a new window (or tab) and serves it with the api/auth route
+      </button>
+      <br />
       <PrivateMusicianContainer />
+      <br />
+      myVariable is: {myVariable}
     </div>
   )
 }

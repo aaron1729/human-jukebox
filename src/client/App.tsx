@@ -6,14 +6,34 @@ import NoPage from './Components/NoPage';
 import PublicMusicianContainer from './Containers/PublicMusicianContainer';
 
 function App(){
+
+
+
+
+
   return (
     <div className=''>
       <Routes>
-        <Route path="/" element={<LandingPageContainer/>} /> 
-          <Route path="signup" element={<SignUpPage/>} />
-          <Route path="musician/public/" element={<PublicMusicianContainer/>} />
-          <Route path="musician/:username" element={<SignUpPage/>} />
-          <Route path="*" element={<NoPage/>} />
+        <Route
+          path="/"
+          element={<LandingPageContainer />}
+        />
+        <Route
+          path="signup"
+          element={<SignUpPage/>}
+        />
+        <Route
+          path="musician/public/"
+          element={<PublicMusicianContainer/>}
+        />
+        <Route
+          path="musician/:username"
+          element={<SignUpPage/>}
+        />
+        <Route
+          path="*"
+          element={<NoPage/>}
+        />
       </Routes>
     </div>
   );

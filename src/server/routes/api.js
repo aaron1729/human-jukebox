@@ -13,11 +13,6 @@ const songsController = require('../controllers/songsController');
 const router = express.Router();
 
 
-// test: handle GET request
-router.get('/abc', (req, res) => {
-    res.status(200).send('hello -- testing api/abc route');
-});
-
 
 
 // redirect the musician to the Spotify auth page.
@@ -34,6 +29,7 @@ router.get(
         }))
     }
 )
+
 
 // this endpoint receives redirects from the Spotify auth page, which come equipped with a 'code' (a long string) stored as req.query.code . given that, this route handler says:
     // using the code, go back to the Spotify API to get access and refresh tokens. save them as cookies and also on res.locals .
@@ -62,7 +58,6 @@ router.get(
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
-
 
 
 module.exports = router;
