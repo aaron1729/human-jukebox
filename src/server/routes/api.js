@@ -48,9 +48,16 @@ router.get(
         const myString = 'the JSON-stringified musicianInfo is: ' + JSON.stringify(res.locals.musicianInfo);
         console.log(myString);
         return res.sendFile(path.join(__dirname, '../../client/auth.html'));
-        // return res.status(200).send(myString);
     }
 )
+
+router.get(
+    '*/auth.js',
+    (req, res) => {
+        return res.sendFile(path.join(__dirname, '../../client/auth.js'));
+    }
+)
+
 
 // src/client/auth.html
 // src/server/routes/api.js
