@@ -51,18 +51,14 @@ router.get(
     }
 )
 
+
+// this serves the javascript file attached to auth.html
 router.get(
     '*/auth.js',
     (req, res) => {
         return res.sendFile(path.join(__dirname, '../../client/auth.js'));
     }
 )
-
-
-// src/client/auth.html
-// src/server/routes/api.js
-
-
 
 
 // this endpoint receives a musician's handle, and then:
