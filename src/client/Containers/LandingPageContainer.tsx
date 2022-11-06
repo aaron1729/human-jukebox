@@ -84,6 +84,8 @@ const myFunc = () => {
       <PrivateMusicianContainer />
       <br />
       myVariable is: {myVariable}
+      <br />
+      the global variable is: {(window as any).myName};
     </div>
   )
 }

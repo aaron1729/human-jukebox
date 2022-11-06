@@ -23,7 +23,13 @@ rootTSX.render(
 
 // to test the window for variables
 
+
+// this assigns a variable to window, which is accessible as indicated in the console log below.
 (window as any).myName = "abcde"
+console.log('hello ' + (window as any).myName)
+
+
+
 
 let myVar: number = 0;
 for(let i=0; i < 9; i++) {
