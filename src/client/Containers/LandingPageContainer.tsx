@@ -22,6 +22,8 @@ for(let i=0; i < 10; i++) {
   myVariable++
 }
 
+console.log('inside of LandingPageContainer, myVariable is: ', myVariable)
+
 const myFunc = () => {
   myVariable++;
 }
@@ -85,7 +87,7 @@ const myFunc = () => {
       <br />
       myVariable is: {myVariable}
       <br />
-      the global variable is: {(window as any).myName};
+      and the global function's output is: {(window as any).myName()};
     </div>
   )
 }

@@ -25,9 +25,11 @@ rootTSX.render(
 
 
 // this assigns a variable to window, which is accessible as indicated in the console log below.
-(window as any).myName = "abcde"
-console.log('hello ' + (window as any).myName)
+(window as any).myName = () => 'abcdefg';
+// console.log('hello ' + (window as any).myName)
 
+(window as any).loggit = (data: any) => console.log('the data is:', data);
+(window as any).loggit('test from index.tsx!')
 
 
 
