@@ -87,7 +87,7 @@ const myFunc = () => {
       <br />
       myVariable is: {myVariable}
       <br />
-      and the global function's output is: {(window as any).myName()};
+      and the global function's output (living on the window object) is: {(window as any).myName()};
     </div>
   )
 }

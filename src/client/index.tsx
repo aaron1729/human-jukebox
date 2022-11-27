@@ -10,6 +10,7 @@ const container = document.getElementById('root');
 
 const rootTSX = createRoot(container!);
 
+
 rootTSX.render(
   <BrowserRouter>
     <CookiesProvider>
@@ -25,11 +26,11 @@ rootTSX.render(
 
 
 // this assigns a variable to window, which is accessible as indicated in the console log below.
-(window as any).myName = () => 'abcdefg';
+(window as any).myName = () => 'abcdefghij';
 // console.log('hello ' + (window as any).myName)
 
 (window as any).loggit = (data: any) => console.log('the data is:', data);
-(window as any).loggit('test from index.tsx!')
+(window as any).loggit('test the loggit function from index.tsx!')
 
 
 
