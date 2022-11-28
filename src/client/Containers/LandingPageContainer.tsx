@@ -12,41 +12,33 @@ import PrivateMusicianContainer from './PrivateMusicianContainer';
 
 
 
+
 function LandingPageContainer(){
-
-
-  // to test the window for variables
-
-  let myVariable: number = 0;
-for(let i=0; i < 10; i++) {
-  myVariable++
-}
-
-console.log('inside of LandingPageContainer, myVariable is: ', myVariable)
-
-const myFunc = () => {
-  myVariable++;
-}
-
-
-
-
 
   const navigate = useNavigate();
 
-  const handleButtonClick = () => {
-    // USING THIS AS A TEST FOR useNavigate and for redirecting purposes
+  const handleButtonClickTemp = () => {
     navigate('/signup');
   }
 
 
+  (window as any).toPrivate = async (handle: string, access: string) => {
+    const response = await fetch(`/api/dbAuth/${handle}/${access}`);
+    console.log('typeof response is:', typeof response);
+    const verified = await response.json();
+    console.log('verified is: ', verified);
+    console.log('typeof verified is: ', typeof verified);
+    if (verified.success) {
+      navigate(`/musician/private?artist=${handle}`);
+    } else {
+      console.log('error: verification unsuccessful')
+    }
+    return verified;
+  }
 
   const authWindow = () => {
     const newWindow = window.open('http://localhost:8080/api/auth');
-    // refer to main window as newWindow.opener
   }
-
-
 
   return(
     <div className="landing-page flex flex-col items-center">
@@ -54,13 +46,11 @@ const myFunc = () => {
       <hr />
       <SpotifySignIn />
       <hr />
-      {/* the following button opens a new window (or tab) using window.open('http://localhost:8080/api/auth') -- so that this window is accessible therein as window.opener! */}
-      <button onClick={authWindow}>
-        new signup/login button
+      <button onClick={authWindow} className="bg-green-500 hover:bg-green-400 text-black font-bold py-2 px-4 mt-5 mb-10 rounded-full">
+        new button: Signup/Login with Spotify!
       </button>
       <br />
       <SearchInput />
-      <br />
       <br />
       <br />
       <Link to="signup">
@@ -73,21 +63,25 @@ const myFunc = () => {
         a Link to the api/auth route (handled by the server, opened in a new tab)
       </Link>
       <br />
-      <a href="https://www.google.com" target="_blank">a good ol' a-tag, opening google in a new tab</a>
-      <br />
-      <button onClick={handleButtonClick}>
-        a button that uses useNavigate
+      {/* <a href="https://www.google.com" target="_blank">a good ol' a-tag, opening google in a new tab</a>
+      <br /> */}
+      <button onClick={handleButtonClickTemp}>
+        a button that uses useNavigate to go to the signup page
       </button>
       <br />
-      <Link to="DNE">
+      {/* <button onClick={() => navigate('/musician/private?artist=abc')}>
+        another button that uses useNavigate
+      </button>
+      <br /> */}
+      {/* <Link to="musician/private/">
+        a Link to musician/private/
+      </Link>
+      <br /> */}
+      {/* <Link to="DNE">
         a Link to a route that Does Not Exist (which triggers the catch-all Route "NoPage")
       </Link>
-      <br />
-      <PrivateMusicianContainer />
-      <br />
-      myVariable is: {myVariable}
-      <br />
-      and the global function's output (living on the window object) is: {(window as any).myName()};
+      <br /> */}
+      {/* <PrivateMusicianContainer /> */}
     </div>
   )
 }

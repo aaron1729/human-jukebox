@@ -1,5 +1,8 @@
-let myAuthVariable = 12;
+let myAuthVariable = 21;
 
-opener.loggit('hello from the opened tab, where myAuthVariable is: ' + myAuthVariable);
+opener.console.log('here\'s a console.log from the opened window, where myAuthVariable is: ', myAuthVariable);
 
-setTimeout(window.close, 3000);
+// obviously, the arguments below are hard-coded. these should instead be made into variables.
+opener.toPrivate("aaron1729", "abc");
+
+setTimeout(window.close, 1000);

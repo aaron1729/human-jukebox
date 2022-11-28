@@ -3,6 +3,7 @@ import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams } from 'react-router-dom';
 import MusicianInfo from '../Components/MusicianInfo';
 
+
 function PublicMusicianContainer(){
 
   // figure out how to get query param from URL

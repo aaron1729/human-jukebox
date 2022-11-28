@@ -1,9 +1,7 @@
 const express = require('express');
 const querystring = require('node:querystring');
 
-
 const path = require('path');
-
 
 const query = require('../models/models');
 
@@ -46,8 +44,7 @@ router.get(
     authController.getSpotifyId,
     authController.getMusicianInfoFromDb,
     (req, res) => {
-        const myString = 'the JSON-stringified musicianInfo is: ' + JSON.stringify(res.locals.musicianInfo);
-        console.log(myString);
+        console.log('in the getMusicianInfo route handler, the JSON-stringified musicianInfo is: ' + JSON.stringify(res.locals.musicianInfo));
         return res.sendFile(path.join(__dirname, '../../client/auth.html'));
     }
 )
@@ -73,6 +70,17 @@ router.get(
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
+
+
+// this endpoint receives a proposed musician handle and access code, and checks that they agree in the database
+router.get(
+    '/dbAuth/:handle/:access',
+    authController.checkHandleAccessInDb,
+    (req, res) => {
+        console.log('inside of the dbAuth route handler');
+        return res.status(200).json({success: 'success: handle and access token are a match!'});
+    }
+)
 
 
 module.exports = router;

@@ -28,7 +28,7 @@ function SearchInput(){
   return(
     <div className="search-div">
       <form onSubmit={handleSubmit} className='my-4 rounded font-semibold'>
-        <label htmlFor="artistName">Look Up a Musician: </label>
+        <label htmlFor="artistName">find musician by handle: </label>
         <input type="search" name="artistName" required className='border border-blue-700 rounded px-1 mr-2'></input>
         <input type="submit" name="search-param" value="Search" className='bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow'></input>
       </form>

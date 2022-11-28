@@ -82,5 +82,41 @@ authController.getMusicianInfoFromDb = async (req, res, next) => {
 }
 
 
+// given a proposed musician handle and access token, check that they match in our database
+authController.checkHandleAccessInDb = async (req, res, next) => {
+    try {
+        const handle = req.params.handle;
+        const access = req.params.access;
+        const checkHandleAccessQueryString = `SELECT access_token FROM public.musicians WHERE handle = '${handle}'`;
+        query(checkHandleAccessQueryString).then(data => {
+            // console.log('inside of the authController.checkHandleAccessInDb middleware, the data.rows returned from the database is:', data.rows);
+            if (!data.rows[0]) {
+                return next({
+                    log: 'error checking handle against access token',
+                    status: 404,
+                    message: {error: 'handle not found in musician db'}
+                });
+            }
+            accessFromDb = data.rows[0].access_token;
+            console.log('inside of the authController.checkHandleAccessInDb middleware, accessFromDb is: ', accessFromDb);
+            if (access === accessFromDb) {
+                return next();
+            } else {
+                return next({
+                    log: 'error checking handle against access token',
+                    status: 406,
+                    message: {error: 'submitted access token does not match the one in musician db'}
+                });
+            }
+        })
+    } catch(err) {
+        return next({
+            log: 'error checking handle against access token',
+            status: err.statusCode,
+            message: {error: 'failed to check handle against access token'}
+        });
+    }
+}
+
 
 module.exports = authController;
