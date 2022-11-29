@@ -119,4 +119,11 @@ authController.checkHandleAccessInDb = async (req, res, next) => {
 }
 
 
+// delete the cookies containing a musician's access and refresh tokens
+authController.deleteCookies = (req, res, next) => {
+    res.clearCookie('access').clearCookie('refresh');
+    return next();
+}
+
+
 module.exports = authController;

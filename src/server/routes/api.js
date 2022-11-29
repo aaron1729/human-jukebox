@@ -83,4 +83,16 @@ router.get(
 )
 
 
+// this endpoint receives a request based on the musician clicking the "logout" button on their private page
+router.get(
+    '/logout',
+    authController.deleteCookies,
+    (req, res) => {
+        return res.status(200).send();
+    }
+
+)
+
+
+
 module.exports = router;

@@ -41,10 +41,11 @@ app.use('/api', router);
 
 
 
-// handle requests past api route
-app.get('/api/*', (req: any, res: any) => {
-    res.status(200).send('reached the/api/* route handler');
-})
+// // handle requests past api route
+// app.get('/api/*', (req: any, res: any) => {
+//     res.status(200).send('reached the /api/* route handler');
+// })
+
 
 
 ////////////////////
