@@ -1,12 +1,50 @@
 const cookieParser = require('cookie-parser');
 const spotifyApi = require('../utils/apiWrapper');
-
 const { query } = require('../models/models');
 
 
-
-
 const authController = {};
+
+
+// store a boolean as res.locals.cookieMatch based on whether the cookies "spotifyId" and "access" exist and are a match in our db
+authController.checkCookies = async (req, res, next) => {
+    try {
+        spotifyId = req.cookies.spotifyId;
+        access = req.cookies.access;
+        if (!spotifyId || !access) {
+            res.locals.cookieMatch = false;
+            return next();
+        }
+        const getAccessFromIdQueryString = `SELECT handle, access_token FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+        query(getAccessFromIdQueryString).then(data => {
+            accessFromDb = data.rows[0].access_token;
+            handleFromDb = data.rows[0].handle;
+            console.log('accessFromDb is: ', accessFromDb)
+            if (access === accessFromDb) {
+                res.locals.cookieMatch = true;
+                res.locals.handle = handle;
+            } else {
+                res.locals.cookieMatch = false;
+            }
+            console.log('inside of authController.checkAuthCookies, res.locals.cookieMatch is: ', res.locals.cookieMatch);
+            return next();
+        })
+    } catch {
+        return next({
+            log: 'error checking cookies',
+            status: err.statusCode,
+            message: {error: 'failed to check cookies'}
+        });
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 // check whether the user has successfully logged in to spotify; if not, throw an error (and proceed to the local error handler).
@@ -117,30 +155,6 @@ authController.checkHandleAccessInDb = async (req, res, next) => {
             message: {error: 'failed to check handle against access token'}
         });
     }
-}
-
-
-// store a boolean as res.locals.cookieMatch based on whether the cookies "spotifyId" and "access" exist and are a match in our db
-authController.checkCookies = async (req, res, next) => {
-    spotifyId = req.cookies.spotifyId;
-    access = req.cookies.access;
-    if (!spotifyId) {
-        res.locals.cookieMatch = false;
-        return next();
-    }
-    const getAccessFromIdQueryString = `SELECT handle, access_token FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
-    query(getAccessFromIdQueryString).then(data => {
-        accessFromDb = data.rows[0].access_token;
-        handleFromDb = data.rows[0].handle;
-        if (access === accessFromDb) {
-            res.locals.cookieMatch = true;
-            res.locals.handle = handle;
-        } else {
-            res.locals.cookieMatch = false;
-        }
-        console.log('inside of authController.checkAuthCookies, res.locals.cookieMatch is: ', res.locals.cookieMatch);
-        return next();
-    })
 }
 
 

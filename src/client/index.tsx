@@ -10,7 +10,6 @@ const container = document.getElementById('root');
 
 const rootTSX = createRoot(container!);
 
-
 rootTSX.render(
   <BrowserRouter>
     <CookiesProvider>
@@ -20,13 +19,3 @@ rootTSX.render(
     </CookiesProvider>
   </BrowserRouter>
 );
-
-
-
-
-
-
-// to test the window for variables
-
-(window as any).loggit = (data: any) => console.log('the data is:', data);
-// (window as any).loggit('test the loggit function from index.tsx!')

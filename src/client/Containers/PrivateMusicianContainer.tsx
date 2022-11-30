@@ -1,5 +1,4 @@
 import React from 'react';
-import AddSong from '../Components/AddSong';
 import MusicianInfo from '../Components/MusicianInfo';
 import PublicMusicianContainer from './PublicMusicianContainer';
 import { Link } from 'react-router-dom';

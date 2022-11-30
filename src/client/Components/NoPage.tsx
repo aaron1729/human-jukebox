@@ -3,7 +3,7 @@ import React from 'react'
 const NoPage = () => {
   return (
     <div>
-      <h1>Not the page you're lookin' for!</h1>
+      This React Route does not exist! Just for you, here\'s Cage 4\'33":
     </div>
   )
 }

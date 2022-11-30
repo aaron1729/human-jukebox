@@ -5,7 +5,6 @@ const path = require('path');
 
 const query = require('../models/models');
 
-const spotifyApi = require('../utils/apiWrapper');
 const authController = require('../controllers/authController');
 const songsController = require('../controllers/songsController');
 
@@ -14,6 +13,19 @@ const songsController = require('../controllers/songsController');
 
 const router = express.Router();
 
+
+// this endpoint checks if the user has valid cookies
+router.get(
+    '/checkCookies',
+    authController.checkCookies,
+    (req, res) => {
+        return res.status(200).json({key: 'this is the sent text from checkCookies route handler. ' + res.locals.cookieMatch})
+    }
+)
+
+
+
+////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -79,16 +91,6 @@ router.get(
     (req, res) => {
         console.log('inside of the dbAuth route handler');
         return res.status(200).json({success: 'success: handle and access token are a match!'});
-    }
-)
-
-
-// this endpoint checks if the user has valid cookies
-router.get(
-    '/checkCookies',
-    authController.checkCookies,
-    (req, res) => {
-        return res.status(200).json({key: 'sent text from checkCookies route handler'})
     }
 )
 
