@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 
 
-
 // pull the info from the .env file in the root directory and add it to the process.env object
 // this seems to be a *separate* environment from that of webpack.config.js
 const dotenv = require('dotenv');

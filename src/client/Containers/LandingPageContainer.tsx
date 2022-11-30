@@ -17,8 +17,20 @@ function LandingPageContainer(){
 
   const login = async () => {
     const res = await fetch('/api/checkCookies');
-    const answer = await res.json();
-    console.log('the stuff is: ', answer.key);
+    console.log('typeof res is: ', typeof res);
+    console.log('some bit of res is: ', res.body);
+    if (res.status !== 200) {
+      console.log('error checking cookies against db');
+      return;
+    }
+    const resObj = await res.json();
+    console.log('the stuff is: ', resObj);
+    if (resObj.cookieMatch) {
+      navigate(`/musician/private?artist=${resObj.handle}`);
+    } else {
+      console.log('cookies did not exist or did not match');
+      // here, trigger the oauth flow
+    }
   }
 
 

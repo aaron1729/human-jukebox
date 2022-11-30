@@ -19,16 +19,15 @@ authController.checkCookies = async (req, res, next) => {
         query(getAccessFromIdQueryString).then(data => {
             accessFromDb = data.rows[0].access_token;
             handleFromDb = data.rows[0].handle;
-            console.log('accessFromDb is: ', accessFromDb)
             if (access === accessFromDb) {
                 res.locals.cookieMatch = true;
-                res.locals.handle = handle;
+                res.locals.handle = handleFromDb;
             } else {
                 res.locals.cookieMatch = false;
             }
             console.log('inside of authController.checkAuthCookies, res.locals.cookieMatch is: ', res.locals.cookieMatch);
             return next();
-        })
+        });
     } catch {
         return next({
             log: 'error checking cookies',

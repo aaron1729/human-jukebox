@@ -9,8 +9,6 @@ const authController = require('../controllers/authController');
 const songsController = require('../controllers/songsController');
 
 
-
-
 const router = express.Router();
 
 
@@ -19,7 +17,7 @@ router.get(
     '/checkCookies',
     authController.checkCookies,
     (req, res) => {
-        return res.status(200).json({key: 'this is the sent text from checkCookies route handler. ' + res.locals.cookieMatch})
+        return res.status(200).json({cookieMatch: res.locals.cookieMatch, handle: res.locals.handle});
     }
 )
 
