@@ -21,7 +21,14 @@ function LandingPageContainer(){
     navigate('/signup');
   }
 
+  const authWindow = async () => {
+    const response = await fetch('/api/checkCookies');
+    const answer = await response.json()
+    console.log('inside the authWindow function, answer.key is: ', answer.key);
+    const newWindow = window.open('http://localhost:8080/api/auth');
+  }
 
+  
   (window as any).toPrivate = async (handle: string, access: string) => {
     const response = await fetch(`/api/dbAuth/${handle}/${access}`);
     console.log('typeof response is:', typeof response);
@@ -36,9 +43,6 @@ function LandingPageContainer(){
     return verified;
   }
 
-  const authWindow = () => {
-    const newWindow = window.open('http://localhost:8080/api/auth');
-  }
 
   return(
     <div className="landing-page flex flex-col items-center">

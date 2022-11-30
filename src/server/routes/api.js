@@ -83,12 +83,22 @@ router.get(
 )
 
 
+// this endpoint checks if the user has valid cookies
+router.get(
+    '/checkCookies',
+    authController.checkCookies,
+    (req, res) => {
+        return res.status(200).json({key: 'sent text from checkCookies route handler'})
+    }
+)
+
+
 // this endpoint receives a request based on the musician clicking the "logout" button on their private page
 router.get(
     '/logout',
     authController.deleteCookies,
     (req, res) => {
-        return res.status(200).send();
+        return res.status(200).send('cookies deleted');
     }
 
 )

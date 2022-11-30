@@ -51,6 +51,7 @@ authController.getSpotifyId = async (req, res, next) => {
         console.log('userData object is: ', userData);
         if (userData.statusCode === 200) {
             res.locals.spotifyId = userData.body.id;
+            res.cookie('spotifyId', res.locals.spotifyId);
         }
         return next();
     } catch(err) {
@@ -119,9 +120,33 @@ authController.checkHandleAccessInDb = async (req, res, next) => {
 }
 
 
+// store a boolean as res.locals.cookieMatch based on whether the cookies "spotifyId" and "access" exist and are a match in our db
+authController.checkCookies = async (req, res, next) => {
+    spotifyId = req.cookies.spotifyId;
+    access = req.cookies.access;
+    if (!spotifyId) {
+        res.locals.cookieMatch = false;
+        return next();
+    }
+    const getAccessFromIdQueryString = `SELECT handle, access_token FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+    query(getAccessFromIdQueryString).then(data => {
+        accessFromDb = data.rows[0].access_token;
+        handleFromDb = data.rows[0].handle;
+        if (access === accessFromDb) {
+            res.locals.cookieMatch = true;
+            res.locals.handle = handle;
+        } else {
+            res.locals.cookieMatch = false;
+        }
+        console.log('inside of authController.checkAuthCookies, res.locals.cookieMatch is: ', res.locals.cookieMatch);
+        return next();
+    })
+}
+
+
 // delete the cookies containing a musician's access and refresh tokens
 authController.deleteCookies = (req, res, next) => {
-    res.clearCookie('access').clearCookie('refresh');
+    res.clearCookie('access').clearCookie('refresh').clearCookie('spotifyId');
     return next();
 }
 
