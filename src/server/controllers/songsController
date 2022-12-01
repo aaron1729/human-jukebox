@@ -22,9 +22,9 @@ songsController.getSongs = (req, res, next) => {
 }
 
 songsController.getMusicianId = (req, res, next) => {
-    const {name} = req.params;
-    console.log('inside of songsController.getMusicianId, and the name coming from the URL parameter is', name);
-    const values = [name];
+    const {handle} = req.params;
+    console.log('inside of songsController.getMusicianId, and the handle coming from the URL parameter is', handle);
+    const values = [handle];
     const queryString = 'SELECT _id FROM public.musicians WHERE handle = $1';
     db.query(queryString,values).then((data) => {
         console.log('inside of songsController.getMusicianId, and the data.rows returned from the database are:', data.rows);

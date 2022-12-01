@@ -37,61 +37,12 @@ authController.checkCookies = async (req, res, next) => {
 }
 
 
-// given a spotify id (saved as res.locals.spotifyId), check if it's in the database.
-    // if so, update its access token (saved as res.locals.access_token).
-    // if not, create a new row in the database with some default values.
-authController.spotifyIdToDb = async (req, res, next) => {
-    const spotifyId = res.locals.spotifyId;
-    const access = res.locals.access_token;
-    const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
-        query(musicianInfoQueryString).then(data => {
-            if (data.rows.length) {
-                // update the access_token in this row
-            } else {
-                // add a new row.
-            }
-
-
-
-
-            return next();
-        })
-
-
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-///// THIS SEEMS NOT TO BE USED??
-
-
-// check whether the user has successfully logged in to spotify; if not, throw an error (and proceed to the local error handler).
-authController.checkSpotifyLoginSuccess = (req, res, next) => {
-    if (!err) return next();
-    return next({
-        log: 'error logging in to spotify',
-        status: err.statusCode,
-        message: {error: 'failed to log in to spotify'}
-    });
-}
-
-
-
-
-
 // get two tokens (long strings)
     // set them as cookies called 'access' and 'refresh'
     // also save them on res.locals
 // when this function is triggered, req.query.code has been set to equal a massive string (sent by the spotify redirect).
 authController.getTokens = async (req, res, next) => {
-    console.log('inside of authController.getTokens middleware')
+    console.log('inside of authController.getTokens middleware, and req.query.code is:', req.query.code);
     try {
         spotifyApi.authorizationCodeGrant(req.query.code)
         .then(data => {
@@ -110,7 +61,7 @@ authController.getTokens = async (req, res, next) => {
 }
 
 
-// using a musician's spotify access token, get their spotify id and set it as res.locals.spotifyId .
+// using a musician's spotify access token (saved as res.locals.access_token), get their spotify id and set it as res.locals.spotifyId .
 authController.getSpotifyId = async (req, res, next) => {
     try {
         spotifyApi.setAccessToken(res.locals.access_token);
@@ -131,6 +82,63 @@ authController.getSpotifyId = async (req, res, next) => {
 }
 
 
+// given a spotify id and an access token (saved res.locals.spotifyId and res.locals.access_token), check if the spotify id is in the database.
+// if so, update its access token there.
+// if not, create a new row in the database with some default values.
+authController.spotifyIdToDb = async (req, res, next) => {
+    try {
+        const spotifyId = res.locals.spotifyId;
+        const access = res.locals.access_token;
+        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+        query(musicianInfoQueryString).then(data => {
+            console.log('the array of musician data (which should have 0 or 1 elements) is:', data.rows)
+            if (data.rows.length) {
+                console.log('found musician in db');
+                const updateAccessInDbQueryString = `UPDATE public.musicians SET access_token = '${access}' where spotifyid = '${spotifyId}'`;
+                query(updateAccessInDbQueryString).then(data => {
+                    if (data.rowCount === 1) {
+                        return next();
+                    } else {
+                        return next({
+                            log: 'error updating access token in db',
+                            status: err.statusCode,
+                            message: {error: 'failed to update access token in db'}
+                        });
+                    }
+                })
+            } else {
+                const addMusicianToDbQueryString = `INSERT INTO public.musicians (display_name, bio, handle, spotifyid, access_token) VALUES ('temp display name', 'This is the bio of musician ${spotifyId}.', '${spotifyId}', '${spotifyId}', '${access}')`;
+                query(addMusicianToDbQueryString).then(data => {
+                    console.log('added musician to db, and returned data is:', data);
+                    return next();
+                })
+            }
+            return next();
+        })
+    } catch {
+        return next({
+            log: 'error syncing spotify id and access token with db',
+            status: err.statusCode,
+            message: {error: 'failed to sync spotify id and access token with db'}
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// TO BE USED LATER?
+
+
 // given a musician's spotify id, retrieve their info object from our database and store it as res.locals.musicianInfo . (if they're not in our database, we do _not_ throw an error; rather, res.locals.musicianInfo is simply set equal to undefined.)
 authController.getMusicianInfoFromDb = async (req, res, next) => {
     try {
@@ -145,43 +153,6 @@ authController.getMusicianInfoFromDb = async (req, res, next) => {
             log: 'error checking if spotify id is in our database',
             status: err.statusCode,
             message: {error: 'failed to check if spotify id is in our database'}
-        });
-    }
-}
-
-
-// given a proposed musician handle and access token, check that they match in our database
-authController.checkHandleAccessInDb = async (req, res, next) => {
-    try {
-        const handle = req.params.handle;
-        const access = req.params.access;
-        const checkHandleAccessQueryString = `SELECT access_token FROM public.musicians WHERE handle = '${handle}'`;
-        query(checkHandleAccessQueryString).then(data => {
-            // console.log('inside of the authController.checkHandleAccessInDb middleware, the data.rows returned from the database is:', data.rows);
-            if (!data.rows[0]) {
-                return next({
-                    log: 'error checking handle against access token',
-                    status: 404,
-                    message: {error: 'handle not found in musician db'}
-                });
-            }
-            accessFromDb = data.rows[0].access_token;
-            console.log('inside of the authController.checkHandleAccessInDb middleware, accessFromDb is: ', accessFromDb);
-            if (access === accessFromDb) {
-                return next();
-            } else {
-                return next({
-                    log: 'error checking handle against access token',
-                    status: 406,
-                    message: {error: 'submitted access token does not match the one in musician db'}
-                });
-            }
-        })
-    } catch(err) {
-        return next({
-            log: 'error checking handle against access token',
-            status: err.statusCode,
-            message: {error: 'failed to check handle against access token'}
         });
     }
 }
