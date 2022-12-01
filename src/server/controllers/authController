@@ -25,7 +25,6 @@ authController.checkCookies = async (req, res, next) => {
             } else {
                 res.locals.cookieMatch = false;
             }
-            console.log('inside of authController.checkAuthCookies, res.locals.cookieMatch is: ', res.locals.cookieMatch);
             return next();
         });
     } catch {
@@ -38,12 +37,39 @@ authController.checkCookies = async (req, res, next) => {
 }
 
 
+// given a spotify id (saved as res.locals.spotifyId), check if it's in the database.
+    // if so, update its access token (saved as res.locals.access_token).
+    // if not, create a new row in the database with some default values.
+authController.spotifyIdToDb = async (req, res, next) => {
+    const spotifyId = res.locals.spotifyId;
+    const access = res.locals.access_token;
+    const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+        query(musicianInfoQueryString).then(data => {
+            if (data.rows.length) {
+                // update the access_token in this row
+            } else {
+                // add a new row.
+            }
+
+
+
+
+            return next();
+        })
+
+
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////
 
 
 
+
+
+
+///// THIS SEEMS NOT TO BE USED??
 
 
 // check whether the user has successfully logged in to spotify; if not, throw an error (and proceed to the local error handler).
@@ -55,6 +81,10 @@ authController.checkSpotifyLoginSuccess = (req, res, next) => {
         message: {error: 'failed to log in to spotify'}
     });
 }
+
+
+
+
 
 // get two tokens (long strings)
     // set them as cookies called 'access' and 'refresh'

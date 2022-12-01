@@ -1,7 +1,9 @@
 const { Pool } = require('pg');
 
-// postgres URI for dan's DB made in elephantSQL
+// postgres URI for db (in elephantSQL)
 const PG_URI = process.env.PG_URI;
+
+
 
 const pool = new Pool({
     connectionString: PG_URI

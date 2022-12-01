@@ -12,7 +12,7 @@ const songsController = require('../controllers/songsController');
 const router = express.Router();
 
 
-// this endpoint checks if the user has valid cookies
+// this endpoint checks if the user has valid cookies, i.e. "spotifyId" and "access" cookies that match ones in the database
 router.get(
     '/checkCookies',
     authController.checkCookies,
@@ -23,11 +23,14 @@ router.get(
 
 
 
+
+
+
 ////////////////////////////////////////////////////////////////////////////
 
 
 
-// redirect the musician to the Spotify auth page.
+// this endpoint redirects the musician to the Spotify auth page.
 // after the musician finishes there, they are redirected to localhost:8080/api/getMusicianInfo (handled just below).
     // if their Spotify login was successful, that redirect comes with a 'code' (a long string) stored as req.query.code .
     // if the Spotify login was unsuccessful, that redirect comes with an error message.
@@ -42,6 +45,49 @@ router.get(
         }))
     }
 )
+
+
+// THIS WILL REPLACE THE ENDPOINT BELOW -- REMEMBER TO UPDATE THE REDIRECT URL:
+    // ABOVE,
+    // IN THE SPOTIFY DEV DASHBOARD, AND
+    // IN THE ENV FILE.
+// this endpoint receives redirects from the Spotify auth page, which come equipped with a 'code' (a long string) stored as req.query.code . given that, this route handler says:
+    // using the code, go back to the Spotify API to get access and refresh tokens. save them as cookies and also on res.locals .
+    // using the access token, go back to the Spotify API again and get the musician's spotify id.
+    // in the "musicians" database table, check if the spotify id exists:
+        // if so, update its access token.
+        // if not, add the musician and put in some default values for other columns.
+    // send the auth.html page:
+        // its body just says "redirecting..."
+        // it loads the auth.js file, which triggers the function window.login back in the LandingPageContainer
+router.get(
+    '/codeToLogin',
+    authController.getTokens,
+    authController.getSpotifyId,
+
+
+
+    (req, res) => {
+        return res.sendFile(path.join(__dirname, '../../client/auth.html'));
+    }
+)
+
+// this serves the javascript file attached to auth.html
+router.get(
+    '*/auth.js',
+    (req, res) => {
+        return res.sendFile(path.join(__dirname, '../../client/auth.js'));
+    }
+)
+
+
+// FINISH HERE!!! /////
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////
 
 
 // this endpoint receives redirects from the Spotify auth page, which come equipped with a 'code' (a long string) stored as req.query.code . given that, this route handler says:
@@ -60,13 +106,12 @@ router.get(
 )
 
 
-// this serves the javascript file attached to auth.html
-router.get(
-    '*/auth.js',
-    (req, res) => {
-        return res.sendFile(path.join(__dirname, '../../client/auth.js'));
-    }
-)
+
+
+
+
+
+
 
 
 // this endpoint receives a musician's handle, and then:

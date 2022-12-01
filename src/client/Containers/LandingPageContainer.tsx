@@ -5,17 +5,11 @@ import PrivateMusicianContainer from './PrivateMusicianContainer';
 
 
 
-
-
-
-
-
-
 function LandingPageContainer(){
 
   const navigate = useNavigate();
 
-  const login = async () => {
+  const login = async function () {
     const res = await fetch('/api/checkCookies');
     console.log('typeof res is: ', typeof res);
     console.log('some bit of res is: ', res.body);
@@ -29,9 +23,11 @@ function LandingPageContainer(){
       navigate(`/musician/private?artist=${resObj.handle}`);
     } else {
       console.log('cookies did not exist or did not match');
-      // here, trigger the oauth flow
+      const newWindow = window.open('http://localhost:8080/api/auth');
     }
   }
+
+
 
 
 
@@ -42,6 +38,13 @@ function LandingPageContainer(){
     console.log('inside the authWindow function, answer.key is: ', answer.key);
     const newWindow = window.open('http://localhost:8080/api/auth');
   }
+
+  (window as any).testFunc = async (str: string) => {
+    console.log('testFunc was triggered! and the argument is: ' + str)
+    return 5
+  }
+
+
 
   
   (window as any).toPrivate = async (handle: string, access: string) => {
