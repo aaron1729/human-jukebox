@@ -22,7 +22,7 @@ function LandingPageContainer(){
     const resObj = await res.json();
     // console.log('the stuff is: ', resObj);
     if (resObj.cookieMatch) {
-      navigate(`/musician/private?artist=${resObj.handle}`);
+      navigate(`/musician/private?musician=${resObj.handle}`);
     } else {
       console.log('cookies did not exist or did not match');
       const newWindow = window.open('/api/auth');
@@ -33,6 +33,7 @@ function LandingPageContainer(){
   // ridiculously, some filler needs to be here otherwise the login2 function gets red-squiggled
   const B: number = 7;
 
+
   // this is essentially a copy of the login function above, but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
   (window as any).login2 = async function () {
     console.log('login2 triggered');
@@ -41,7 +42,7 @@ function LandingPageContainer(){
     const resObj = await res.json();
     console.log('resObj data is:', resObj);
     if (resObj.cookieMatch) {
-      navigate(`/musician/private?artist=${resObj.handle}`);
+      navigate(`/musician/private?musician=${resObj.handle}`);
     }
   }
 

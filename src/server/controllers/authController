@@ -9,15 +9,16 @@ const authController = {};
 // store a boolean as res.locals.cookieMatch based on whether the cookies "spotifyId" and "access" exist and are a match in our db
 authController.checkCookies = async (req, res, next) => {
     try {
+        console.log('inside of authController.checkCookies')
         spotifyId = req.cookies.spotifyId;
         access = req.cookies.access;
         if (!spotifyId || !access) {
             res.locals.cookieMatch = false;
             return next();
         }
-        const getAccessFromIdQueryString = `SELECT handle, access_token FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+        const getAccessFromIdQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
         query(getAccessFromIdQueryString).then(data => {
-            accessFromDb = data.rows[0].access_token;
+            accessFromDb = data.rows[0].access;
             handleFromDb = data.rows[0].handle;
             if (access === accessFromDb) {
                 res.locals.cookieMatch = true;
@@ -47,8 +48,8 @@ authController.getTokens = async (req, res, next) => {
         spotifyApi.authorizationCodeGrant(req.query.code)
         .then(data => {
             res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
-            res.locals.access_token = data.body.access_token;
-            res.locals.refresh_token = data.body.refresh_token;
+            res.locals.access = data.body.access_token;
+            res.locals.refresh = data.body.refresh_token;
             return next();
         })
     } catch {
@@ -61,10 +62,10 @@ authController.getTokens = async (req, res, next) => {
 }
 
 
-// using a musician's spotify access token (saved as res.locals.access_token), get their spotify id and set it as res.locals.spotifyId .
+// using a musician's spotify access token (saved as res.locals.access), get their spotify id and set it as res.locals.spotifyId .
 authController.getSpotifyId = async (req, res, next) => {
     try {
-        spotifyApi.setAccessToken(res.locals.access_token);
+        spotifyApi.setAccessToken(res.locals.access);
         const userData = await spotifyApi.getMe();
         console.log('userData object is: ', userData);
         if (userData.statusCode === 200) {
@@ -82,19 +83,19 @@ authController.getSpotifyId = async (req, res, next) => {
 }
 
 
-// given a spotify id and an access token (saved res.locals.spotifyId and res.locals.access_token), check if the spotify id is in the database.
+// given a spotify id and an access token (saved res.locals.spotifyId and res.locals.access), check if the spotify id is in the database.
 // if so, update its access token there.
 // if not, create a new row in the database with some default values.
 authController.spotifyIdToDb = async (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
-        const access = res.locals.access_token;
-        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+        const access = res.locals.access;
+        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
         query(musicianInfoQueryString).then(data => {
             console.log('the array of musician data (which should have 0 or 1 elements) is:', data.rows)
             if (data.rows.length) {
                 console.log('found musician in db');
-                const updateAccessInDbQueryString = `UPDATE public.musicians SET access_token = '${access}' where spotifyid = '${spotifyId}'`;
+                const updateAccessInDbQueryString = `UPDATE public.musicians SET access = '${access}' where spotify_id = '${spotifyId}'`;
                 query(updateAccessInDbQueryString).then(data => {
                     if (data.rowCount === 1) {
                         return next();
@@ -107,7 +108,7 @@ authController.spotifyIdToDb = async (req, res, next) => {
                     }
                 })
             } else {
-                const addMusicianToDbQueryString = `INSERT INTO public.musicians (display_name, bio, handle, spotifyid, access_token) VALUES ('temp display name', 'This is the bio of musician ${spotifyId}.', '${spotifyId}', '${spotifyId}', '${access}')`;
+                const addMusicianToDbQueryString = `INSERT INTO public.musicians (display_name, bio, handle, spotify_id, access) VALUES ('temp display name', 'This is the bio of musician ${spotifyId}.', '${spotifyId}', '${spotifyId}', '${access}')`;
                 query(addMusicianToDbQueryString).then(data => {
                     console.log('added musician to db, and returned data is:', data);
                     return next();
@@ -143,7 +144,7 @@ authController.spotifyIdToDb = async (req, res, next) => {
 authController.getMusicianInfoFromDb = async (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
-        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotifyid = '${spotifyId}'`;
+        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
         query(musicianInfoQueryString).then(data => {
             res.locals.musicianInfo = data.rows[0];
             return next();

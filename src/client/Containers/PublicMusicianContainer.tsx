@@ -8,8 +8,8 @@ function PublicMusicianContainer(){
 
   // figure out how to get query param from URL
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentMusician = searchParams.get('artist');
-  console.log('inside of PublicMusicianContainer component, and currentMusician is:', currentMusician);
+  const handle = searchParams.get('musician');
+  console.log('inside of PublicMusicianContainer component, and handle is:', handle);
 
 
   //  className="landing-page flex flex-col items-center"
@@ -22,13 +22,14 @@ function PublicMusicianContainer(){
         </button>
       </Link>
 
-      <MusicianInfo currentMusician={currentMusician} />
+      <MusicianInfo handle={handle} />
       {
         /*contains all of the musician data:
           bio, venmo, songs, tags, edit options
         */
       }
-      <SongDisplayContainer currentMusician={currentMusician}/>
+
+      <SongDisplayContainer handle={handle}/>
     </div>
   ) 
 }

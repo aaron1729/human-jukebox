@@ -55,7 +55,6 @@ router.get(
     authController.spotifyIdToDb,
     (req, res) => {
         return res.sendFile(path.join(__dirname, '../../client/auth.html'));
-        // return res.status(200).send('test text');
     }
 )
 
@@ -75,7 +74,8 @@ router.get(
 // end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
 router.get(
     '/musician/:handle',
-    songsController.getMusicianId,
+    songsController.getSpotifyId,
+    songsController.getMusicianId, // to be deleted -- replaced by the above
     songsController.getSongs,
     (req, res) => {
     return res.status(200).json(res.locals.songs);
