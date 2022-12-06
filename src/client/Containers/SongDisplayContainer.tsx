@@ -12,33 +12,30 @@ const SongDisplayContainer = (props: any) => {
 
   // fetch songs from db for current user 
   const getAllSongs = async () => {
-    const response = await fetch(`/api/musician/${handle}`)
-    const data = await response.json()
-    console.log('songs from getAllSongs', data);
+    const response = await fetch(`/api/songs/${handle}`)
+    const songs = await response.json()
+    console.log('songs from getAllSongs:', songs);
     // then take songs and add to songArray
     // iterate over song array returned
-    data.forEach((song: any, idx: number) => {
-      // create SongDisplay element
+    songs.forEach((song: any, idx: number) => {
+      // create a new SongDisplay component and push it to songArray using setSongArray
       const {name, artist, genre, preview_url} = song;
       const previewUrl = preview_url
-      console.log('song data is:', name, artist, genre, previewUrl)
-      // push to songArray using setSongArray
       const newComponent = <SongDisplay name={name} artist={artist} genre={genre} key={idx} previewUrl={previewUrl} />
         setSongArray(songArray => [...songArray, newComponent]);
+        console.log('and now songArray is:', songArray);
     })
-
-    console.log('songArray at end of getAllSongs', songArray);
+    console.log('at end of getAllSongs, songArray is:' + JSON.stringify(songArray));
   }
 
   useEffect(() => {
     getAllSongs();
   }, [])
 
-
   return (
     <div>
       <div>
-        <h1 className='font-bold text-2xl px-4 py-2 flex flex-row justify-center mt-8'>{handle} [change from handle to displayName] can play the following songs. Click a title to hear a preview!</h1>
+        <h1 className='font-bold text-2xl px-4 py-2 flex flex-row justify-center mt-8'>Click a title to hear a preview!</h1>
       </div>
       <div className='px-4 py-2 flex flex-row justify-center'>
         <table className='table-fixed'>

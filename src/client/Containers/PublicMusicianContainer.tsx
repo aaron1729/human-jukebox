@@ -29,7 +29,7 @@ function PublicMusicianContainer(){
         */
       }
 
-      <SongDisplayContainer handle={handle}/>
+      <SongDisplayContainer handle={handle} />
     </div>
   ) 
 }

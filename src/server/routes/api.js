@@ -6,7 +6,9 @@ const path = require('path');
 const query = require('../models/models');
 
 const authController = require('../controllers/authController');
+const musicianController = require('../controllers/musicianController');
 const songsController = require('../controllers/songsController');
+
 
 
 const router = express.Router();
@@ -68,14 +70,40 @@ router.get(
 )
 
 
-// this endpoint receives a musician's handle, and then:
-    // looks up the handle in the SQL database, retrieves the corresponding _id, and stores it as res.locals.id .
-    // stores res.locals.id as _id , and then 
-// end the /getToken req/res cycle with a RES.REDIRECT to another route, say api/getSpotifyId
+// this endpoint receives a musician's handle, retrieves their public info from the database, and sends it back.
 router.get(
-    '/musician/:handle',
-    songsController.getSpotifyId,
-    songsController.getMusicianId, // to be deleted -- replaced by the above
+    '/info_public/:handle',
+    musicianController.getMusicianInfo,
+    (req, res) => {
+        return res.status(200).json(res.locals.info)
+    }
+)
+
+
+
+
+
+// WRITE THIS!!! FOR PRIVATE PAGE.
+// this endpoint receives a musician's handle, checks their cookies (!!!), and if they're valid gets all info.
+router.get(
+    '/info_private/:handle',
+    (req, res) => {
+        return res.status(200).json({tempKey: tempValue})
+    }
+)
+
+
+
+
+
+
+// this endpoint receives a musician's handle, and then:
+    // looks up the handle in the SQL database, retrieves the corresponding spotify id, and stores it as res.locals.spotifyId .
+    // using the spotify id, gets the musician's array of songs and stores it as res.locals.songs .
+    // sends that back.
+router.get(
+    '/songs/:handle',
+    musicianController.getSpotifyId,
     songsController.getSongs,
     (req, res) => {
     return res.status(200).json(res.locals.songs);

@@ -1,0 +1,67 @@
+const db = require('../models/models.js');
+
+const musicianController = {};
+
+
+// this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their spotify_id from the musicians table in the database, and saves it as res.locals.spotifyId .
+musicianController.getSpotifyId = (req, res, next) => {
+    const {handle} = req.params;
+    const values = [handle];
+    const queryString = 'SELECT spotify_id FROM musicians WHERE handle = $1';
+    db.query(queryString, values).then(data => {
+        console.log('inside of musicianController.getSpotifyId, and the data.rows returned from the database are:', data.rows);
+        res.locals.spotifyId = data.rows[0].spotify_id;
+        return next();
+    })
+}
+
+
+// this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their *public* data from the musicians table in the database, and saved it as res.locals.musicianInfo .
+musicianController.getMusicianInfo = (req, res, next) => {
+    const {handle} = req.params;
+    const queryString = `SELECT * FROM musicians where handle = '${handle}'`;
+    db.query(queryString).then(data => {
+        console.log('inside of musicianController.getMusicianInfo, and the data.rows are:', data.rows);
+        const info = data.rows[0];
+        delete info.access;
+        delete info.spotify_id;
+        if (!info.instagram_show) {
+            delete info.instagram;
+        };
+        if (!info.venmo_show) {
+            delete info.venmo;
+        };
+        console.log('and now the info is:', info)
+        res.locals.info = info;
+        return next();
+    })
+}
+
+
+
+
+
+
+// TO BE USED LATER? THIS IS OLD......
+
+
+// given a musician's spotify id, retrieve their info object from our database and store it as res.locals.musicianInfo . (if they're not in our database, we do _not_ throw an error; rather, res.locals.musicianInfo is simply set equal to undefined.)
+musicianController.getMusicianInfoFromDb = async (req, res, next) => {
+    try {
+        const spotifyId = res.locals.spotifyId;
+        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
+        query(musicianInfoQueryString).then(data => {
+            res.locals.musicianInfo = data.rows[0];
+            return next();
+        })
+    } catch(err) {
+        return next({
+            log: 'error checking if spotify id is in our database',
+            status: err.statusCode,
+            message: {error: 'failed to check if spotify id is in our database'}
+        });
+    }
+}
+
+
+module.exports = musicianController;

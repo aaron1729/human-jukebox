@@ -16,8 +16,9 @@ authController.checkCookies = async (req, res, next) => {
             res.locals.cookieMatch = false;
             return next();
         }
-        const getAccessFromIdQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
-        query(getAccessFromIdQueryString).then(data => {
+        const queryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
+        query(queryString).then(data => {
+            console.log('after db query inside of authController.checkCookies, the data is:', data.rows)
             accessFromDb = data.rows[0].access;
             handleFromDb = data.rows[0].handle;
             if (access === accessFromDb) {
@@ -121,39 +122,6 @@ authController.spotifyIdToDb = async (req, res, next) => {
             log: 'error syncing spotify id and access token with db',
             status: err.statusCode,
             message: {error: 'failed to sync spotify id and access token with db'}
-        });
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TO BE USED LATER?
-
-
-// given a musician's spotify id, retrieve their info object from our database and store it as res.locals.musicianInfo . (if they're not in our database, we do _not_ throw an error; rather, res.locals.musicianInfo is simply set equal to undefined.)
-authController.getMusicianInfoFromDb = async (req, res, next) => {
-    try {
-        const spotifyId = res.locals.spotifyId;
-        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
-        query(musicianInfoQueryString).then(data => {
-            res.locals.musicianInfo = data.rows[0];
-            return next();
-        })
-    } catch(err) {
-        return next({
-            log: 'error checking if spotify id is in our database',
-            status: err.statusCode,
-            message: {error: 'failed to check if spotify id is in our database'}
         });
     }
 }
