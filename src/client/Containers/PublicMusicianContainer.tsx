@@ -23,11 +23,8 @@ function PublicMusicianContainer(){
       </Link>
 
       <MusicianInfo handle={handle} />
-      {
-        /*contains all of the musician data:
-          bio, venmo, songs, tags, edit options
-        */
-      }
+
+      <br />
 
       <SongDisplayContainer handle={handle} />
     </div>

@@ -9,7 +9,7 @@ const MusicianInfo = (props: any) => {
     displayName: '',
     bio: '',
     venmo: '',
-    instagram: 'a',
+    instagram: '',
   });
 
   // make request to get current musician's info
@@ -29,15 +29,16 @@ const MusicianInfo = (props: any) => {
 
       <h2 className='text-4xl py-2'><span className='font-bold'>name:</span> {musicianInfo.displayName} </h2>
 
-      <div className='flex flex-row items-center'>
+      <span className='text-2xl'><span className='font-bold'>bio:</span> {musicianInfo.bio}</span>
 
-      {musicianInfo.venmo && <a href={'https://venmo.com/' + musicianInfo.venmo} target='_blank'><img alt='Venmo logo' height='100vh' width='100vh' src='https://1000logos.net/wp-content/uploads/2021/12/Venmo_Logo_PNG7.png' /></a>}
+      <span className='flex flex-row items-center'>
+      
+        {musicianInfo.venmo && <a href={'https://venmo.com/' + musicianInfo.venmo} target='_blank' ><img alt='Venmo logo' width='50vh' src='https://1000logos.net/wp-content/uploads/2021/12/Venmo_Logo_PNG7.png' /></a>}
 
-      {musicianInfo.instagram && <a href={'https://instagram.com/' + musicianInfo.instagram} target='_blank'><img alt='Instagram logo' height='100vh' width='100vh' src='https://1000logos.net/wp-content/uploads/2017/02/Instagram-Logo.png' /></a>}
+        {musicianInfo.instagram && <a href={'https://instagram.com/' + musicianInfo.instagram} target='_blank'><img alt='Instagram logo' width='50vh' src='https://1000logos.net/wp-content/uploads/2017/02/Instagram-Logo.png' /></a>}
 
-      </div>
+      </span>
 
-      <span className='text-2xl'><span className='font-bold'>Bio:</span> {musicianInfo.bio}</span>
       <hr />
     </div>
   )

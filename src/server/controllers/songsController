@@ -6,6 +6,9 @@ const songsController = {};
 // this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId) retrieves their array of songs, and saves it as res.locals.songs
 songsController.getSongs = (req, res, next) => {
     const spotifyId = res.locals.spotifyId;
+    if (!spotifyId) {
+        return next();
+    }
     console.log('inside of songsController.getSongs, and spotifyId is', spotifyId)
     const queryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId}'`
     db.query(queryString).then(data => {

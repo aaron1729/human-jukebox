@@ -22,6 +22,9 @@ musicianController.getMusicianInfo = (req, res, next) => {
     const queryString = `SELECT * FROM musicians where handle = '${handle}'`;
     db.query(queryString).then(data => {
         console.log('inside of musicianController.getMusicianInfo, and the data.rows are:', data.rows);
+        if (!data.rows[0]) {
+            return next()
+        }
         const info = data.rows[0];
         delete info.access;
         delete info.spotify_id;
