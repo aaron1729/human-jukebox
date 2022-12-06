@@ -12,8 +12,8 @@ const SongDisplayContainer = (props: any) => {
 
   // fetch songs from db for current user 
   const getAllSongs = async () => {
-    const response = await fetch(`/api/songs/${handle}`)
-    const songs = await response.json()
+    const response = await fetch(`/api/songs/${handle}`);
+    const songs = await response.json();
     console.log('songs from getAllSongs:', songs);
     // then take songs and add to songArray
     // iterate over song array returned
@@ -35,7 +35,7 @@ const SongDisplayContainer = (props: any) => {
   return (
     <div>
       <div>
-        <h1 className='font-bold text-2xl px-4 py-2 flex flex-row justify-center mt-8'>Click a title to hear a preview!</h1>
+        <h4 className='font-bold text-2xl px-4 py-2 flex flex-row justify-center mt-8'> Click a title to hear a preview!</h4>
       </div>
       <div className='px-4 py-2 flex flex-row justify-center'>
         <table className='table-fixed'>
