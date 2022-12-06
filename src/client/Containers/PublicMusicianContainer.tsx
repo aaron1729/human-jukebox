@@ -1,7 +1,9 @@
 import React from 'react';
+import { useFetch } from 'react-async';
 import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import MusicianInfo from '../Components/MusicianInfo';
+
 
 
 function PublicMusicianContainer(){
@@ -11,6 +13,33 @@ function PublicMusicianContainer(){
   const handle = searchParams.get('musician');
   console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);
 
+
+
+
+
+  /*
+  // fetch from database
+  const info = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
+  const error = info.error;
+  console.log('in PublicMusicianContainer (handling the case when handle isn\'t in database, info is:', info)
+  if (error) return (
+    <div>
+      {error.message}
+    </div>
+  )
+  if ((info as any).display_name) return (
+    <div>
+      success, handle in database
+    </div>
+  )
+  if (!(info as any).display_name) return (
+    <div>
+      nope! handle not in database.
+    </div>
+  )
+
+
+*/
 
   return(
     <div className="Public-musician flex flex-col items-center">
@@ -28,6 +57,8 @@ function PublicMusicianContainer(){
       <SongDisplayContainer handle={handle} />
     </div>
   ) 
+
+}
 
 
 
@@ -81,7 +112,5 @@ function PublicMusicianContainer(){
 
   */
 
-
-}
 
 export default PublicMusicianContainer;

@@ -74,6 +74,7 @@ router.get(
 router.get(
     '/info_public/:handle',
     musicianController.getMusicianInfo,
+    musicianController.removePrivateInfo,
     (req, res) => {
         return res.status(200).json(res.locals.info)
     }
