@@ -12,7 +12,7 @@ const MusicianInfo = (props: any) => {
     instagram: '',
   });
 
-  // make request to get current musician's info
+  // get musician's info from db
   const getMusicianInfo = async () => {
     const response = await fetch(`/api/info_public/${handle}`);
     const info = await response.json();
