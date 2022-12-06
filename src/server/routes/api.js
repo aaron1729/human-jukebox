@@ -7,7 +7,7 @@ const query = require('../models/models');
 
 const authController = require('../controllers/authController');
 const musicianController = require('../controllers/musicianController');
-const songsController = require('../controllers/songsController');
+const songController = require('../controllers/songController');
 
 
 
@@ -88,7 +88,7 @@ router.get(
 router.get(
     '/info_private/:handle',
     (req, res) => {
-        return res.status(200).json({tempKey: tempValue})
+        return res.status(200).json({tempKey: 'tempValue'})
     }
 )
 
@@ -104,7 +104,7 @@ router.get(
 router.get(
     '/songs/:handle',
     musicianController.getSpotifyId,
-    songsController.getSongs,
+    songController.getSongs,
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })

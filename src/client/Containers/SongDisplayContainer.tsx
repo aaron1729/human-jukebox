@@ -19,9 +19,9 @@ const SongDisplayContainer = (props: any) => {
     // iterate over song array returned
     songs.forEach((song: any, idx: number) => {
       // create a new SongDisplay component and push it to songArray using setSongArray
-      const {name, artist, genre, preview_url} = song;
+      const {name, artist, preview_url} = song;
       const previewUrl = preview_url
-      const newComponent = <SongDisplay name={name} artist={artist} genre={genre} key={idx} previewUrl={previewUrl} />
+      const newComponent = <SongDisplay name={name} artist={artist} key={idx} previewUrl={previewUrl} />
         setSongArray(songArray => [...songArray, newComponent]);
         console.log('and now songArray is:', songArray);
     })
@@ -43,7 +43,7 @@ const SongDisplayContainer = (props: any) => {
             <tr>
               <th className='border px-4 py-2'>Title</th>
               <th className='border px-4 py-2'>Artist</th>
-              <th className='border px-4 py-2'>Genre</th>
+              {/* <th className='border px-4 py-2'>Tags</th> */}
             </tr>
           </thead>
           <tbody>
