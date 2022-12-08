@@ -1,5 +1,6 @@
 import React from 'react';
 import PublicMusicianContainer from './PublicMusicianContainer';
+import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useFetch } from 'react-async';
 
@@ -28,7 +29,26 @@ function PrivateMusicianContainer(){
     return(
       <div className="private-musician flex flex-col items-center">
 
+
+      <span className="flex flex-row">
+
+      <Link to="/">
+        <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
+          Home
+        </button>
+      </Link>
+
+      <Link to="/">
+        <button onClick={deleteCookies} className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
+          Logout
+        </button>
+      </Link>
+
+      </span>
+
       spotify id: {(info as any).spotify_id}
+      <br />
+      handle: {(info as any).handle}
       <br />
       display name: {(info as any).display_name}
       <br />
@@ -49,11 +69,6 @@ function PrivateMusicianContainer(){
 
       <br />
 
-      <Link to="/">
-        <button onClick={deleteCookies} className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
-          Logout (delete cookies)
-        </button>
-      </Link>
 
       {/* <MusicianInfo /> */}
       {/* <AddSong /> */}
@@ -62,7 +77,12 @@ function PrivateMusicianContainer(){
         bio, venmo, songs, tags, edit options
         */
       }
-      <PublicMusicianContainer />
+
+
+      {/* <PublicMusicianContainer /> */}
+
+
+      <SongDisplayContainer handle={handle} />
     </div>
   )
 }

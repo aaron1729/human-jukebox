@@ -10,6 +10,6 @@
     @apply outline-0;
   }
   body {
-    @apply bg-gradient-to-r from-green-400 to-blue-600
+    @apply bg-gradient-to-r from-green-400 to-blue-400
   }
 }
