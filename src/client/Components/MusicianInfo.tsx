@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react'
 
 const MusicianInfo = (props: any) => {
 
-  const handle = props.handle;
-
   const musicianInfo = props.info;
 
   console.log('in MusicianInfo, and info (coming from props) is:', musicianInfo);
@@ -12,6 +10,8 @@ const MusicianInfo = (props: any) => {
 
 
 /*
+
+  // THIS USAGE OF useState WAS FROM BEFORE musicianInfo GOT PASSED AS PROPS. (at that time, i passed "handle" as props; this is used in the commented-out code below.)
 
   const [musicianInfo, setMusicianInfo] = useState({
     handle,
@@ -35,10 +35,13 @@ const MusicianInfo = (props: any) => {
 
 */
 
+
+
+
   return (
     <div className='flex flex-col items-center'>
 
-      <h2 className='text-4xl py-2'><span className='font-bold'>name:</span> {musicianInfo.displayName} </h2>
+      <h2 className='text-4xl py-2'><span className='font-bold'>name:</span> {musicianInfo.display_name} </h2>
 
       <span className='text-2xl'><span className='font-bold'>bio:</span> {musicianInfo.bio}</span>
 

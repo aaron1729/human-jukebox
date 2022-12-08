@@ -76,7 +76,7 @@ router.get(
     musicianController.getMusicianInfo,
     musicianController.removePrivateInfo,
     (req, res) => {
-        return res.status(200).json(res.locals.info)
+        return res.status(200).json(res.locals.info);
     }
 )
 
@@ -88,8 +88,10 @@ router.get(
 // this endpoint receives a musician's handle, checks their cookies (!!!), and if they're valid gets all info.
 router.get(
     '/info_private/:handle',
+    authController.checkCookies,
+    musicianController.getMusicianInfo,
     (req, res) => {
-        return res.status(200).json({tempKey: 'tempValue'})
+        return res.status(200).json(res.locals.info);
     }
 )
 

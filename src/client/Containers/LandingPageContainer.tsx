@@ -21,9 +21,10 @@ function LandingPageContainer(){
     const resObj = await res.json();
     // console.log('the stuff is: ', resObj);
     if (resObj.cookieMatch) {
+      console.log('in function login, cookies matched')
       navigate(`/musician/private?musician=${resObj.handle}`);
     } else {
-      console.log('cookies did not exist or did not match');
+      console.log('in function login, cookies did not exist or did not match');
       const newWindow = window.open('/api/auth');
     }
   }
@@ -33,7 +34,7 @@ function LandingPageContainer(){
   const B: number = 7;
 
 
-  // this is essentially a copy of the login function above, but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
+  // this is essentially a copy of the login function above (both are used!), but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
   (window as any).login2 = async function () {
     console.log('login2 triggered');
     const res = await fetch('/api/checkCookies');
@@ -50,11 +51,11 @@ function LandingPageContainer(){
     <div className="landing-page flex flex-col items-center">
       <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
       <br />
+      <SearchInput />
+      <br />
       <button onClick={login} className="bg-green-500 hover:bg-green-400 text-black font-bold py-2 px-4 mt-5 mb-10 rounded-full">
         Spotify signup/login for musicians
       </button>
-      <br />
-      <SearchInput />
       {/* <br />
       <Link to="/DNE">
         a Link to a route that DNE

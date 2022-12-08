@@ -11,16 +11,7 @@ function PublicMusicianContainer(){
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
   const handle = searchParams.get('musician');
-  console.log('inside of PublicMusicianContainer2 component, and handle (coming from query parameter) is:', handle);
-
-
-
-
-
-  
-  
-  let spotifyId;
-  
+  console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);  
 
   // fetch from database
   const response = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
@@ -31,6 +22,7 @@ function PublicMusicianContainer(){
   if (error) {
     return <NoMusicianPage handle={handle} />
   }
+
   if (info) {
     return(
 
@@ -42,14 +34,16 @@ function PublicMusicianContainer(){
         </button>
       </Link>
 
-      <MusicianInfo handle={handle} info={info} />
+      <MusicianInfo info={info} />
 
       <br />
 
       <SongDisplayContainer handle={handle} />
     </div>
     )
-  } else {
+  }
+  
+  else {
     return(
       <div>
         {/* this is a placeholder: an empty div is returned while the status of info is unresolved */}
