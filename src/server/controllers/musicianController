@@ -21,7 +21,7 @@ musicianController.getSpotifyId = (req, res, next) => {
 }
 
 
-// this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their *public* data from the musicians table in the database, and saved it as res.locals.musicianInfo .
+// this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their info from the musicians table in the database, and saves it as res.locals.musicianInfo .
 musicianController.getMusicianInfo = (req, res, next) => {
     try {
         const {handle} = req.params;
@@ -56,7 +56,7 @@ musicianController.getMusicianInfo = (req, res, next) => {
 }
 
 
-// this middleware function is fed all of a musician's info, and removes the private stuff.
+// this middleware function is given all of a musician's info (saved as res.locals.info) and removes the private stuff.
 musicianController.removePrivateInfo = (req, res, next) => {
     delete res.locals.info.access;
     delete res.locals.info.spotify_id;

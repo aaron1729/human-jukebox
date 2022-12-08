@@ -1,7 +1,6 @@
 import React from 'react';
 import SearchInput from '../Components/SearchInput';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import PrivateMusicianContainer from './PrivateMusicianContainer';
 
 
 

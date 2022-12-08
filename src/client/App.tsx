@@ -19,6 +19,10 @@ function App(){
           element={<PublicMusicianContainer />}
         />
         <Route
+          path="musician/public2"
+          element={<PublicMusicianContainer />}
+        />
+        <Route
           path="musician/private/"
           element={<PrivateMusicianContainer />}
         />

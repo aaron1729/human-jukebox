@@ -3,7 +3,7 @@ import { useFetch } from 'react-async';
 import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import MusicianInfo from '../Components/MusicianInfo';
-
+import NoMusicianPage from '../Components/NoMusicianPage';
 
 
 function PublicMusicianContainer(){
@@ -11,38 +11,30 @@ function PublicMusicianContainer(){
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
   const handle = searchParams.get('musician');
-  console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);
+  console.log('inside of PublicMusicianContainer2 component, and handle (coming from query parameter) is:', handle);
 
 
 
 
 
-  /*
+  
+  
+  let spotifyId;
+  
+
   // fetch from database
-  const info = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
-  const error = info.error;
-  console.log('in PublicMusicianContainer (handling the case when handle isn\'t in database, info is:', info)
-  if (error) return (
-    <div>
-      {error.message}
-    </div>
-  )
-  if ((info as any).display_name) return (
-    <div>
-      success, handle in database
-    </div>
-  )
-  if (!(info as any).display_name) return (
-    <div>
-      nope! handle not in database.
-    </div>
-  )
+  const response = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
+  const info = response.data
+  const error = response.error;
+  console.log('in PublicMusicianContainer, info is:', info)
 
+  if (error) {
+    return <NoMusicianPage handle={handle} />
+  }
+  if (info) {
+    return(
 
-*/
-
-  return(
-    <div className="Public-musician flex flex-col items-center">
+      <div className="Public-musician flex flex-col items-center">
 
       <Link to="/">
         <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
@@ -50,67 +42,22 @@ function PublicMusicianContainer(){
         </button>
       </Link>
 
-      <MusicianInfo handle={handle} />
+      <MusicianInfo handle={handle} info={info} />
 
       <br />
 
       <SongDisplayContainer handle={handle} />
     </div>
-  ) 
-
-}
-
-
-
-  /*
-
-
-  // get musician's info from db (and in particular, find out if they're there)
-  const getMusicianInfo = async () => {
-    const response = await fetch(`/api/info_public/${handle}`);
-    const info = await response.json();
-    console.log('info from getMusicianInfo:', info);
-    return info;
-  }
-
-  const info = getMusicianInfo();
-
-  if (!(info as any).display_name) {
-    return(
-      <div>
-        Sorry, musician not found in database!
-
-        <Link to="/">
-        <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
-          Home
-        </button>
-      </Link>
-
-      </div>
     )
   } else {
-
     return(
-      <div className="Public-musician flex flex-col items-center">
-  
-        <Link to="/">
-          <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
-            Home
-          </button>
-        </Link>
-  
-        <MusicianInfo handle={handle} />
-  
-        <br />
-  
-        <SongDisplayContainer handle={handle} />
+      <div>
+        {/* this is a placeholder: an empty div is returned while the status of info is unresolved */}
       </div>
-    ) 
-
-
+    )
   }
+}
 
-  */
 
 
 export default PublicMusicianContainer;

@@ -4,6 +4,15 @@ const MusicianInfo = (props: any) => {
 
   const handle = props.handle;
 
+  const musicianInfo = props.info;
+
+  console.log('in MusicianInfo, and info (coming from props) is:', musicianInfo);
+
+
+
+
+/*
+
   const [musicianInfo, setMusicianInfo] = useState({
     handle,
     displayName: '',
@@ -23,6 +32,8 @@ const MusicianInfo = (props: any) => {
   useEffect(() => {
     getMusicianInfo();
   }, [])
+
+*/
 
   return (
     <div className='flex flex-col items-center'>
