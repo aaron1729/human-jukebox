@@ -65,7 +65,7 @@ function PrivateMusicianContainer(){
       spotify playist id: {(info as any).spotify_playlist_id}
       <br />
 
-      <b>here will be input fields so that the musician can edit their name, handle, venmo link, bio, etc.</b>
+      <b>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id, and make handle a separate page.)</b>
 
       <br />
 

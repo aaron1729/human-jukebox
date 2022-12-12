@@ -13,7 +13,7 @@ function PublicMusicianContainer(){
   const handle = searchParams.get('musician');
   console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);  
 
-  // fetch from database
+  // fetch musician's public info from database
   const response = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
   const info = response.data
   const error = response.error;

@@ -81,11 +81,7 @@ router.get(
 )
 
 
-
-
-
-// WRITE THIS!!! FOR PRIVATE PAGE.
-// this endpoint receives a musician's handle, checks their cookies (!!!), and if they're valid gets all info.
+// this endpoint receives a musician's handle, checks their cookies (so a random person can't just send a request to this endpoint), and if they're valid gets all info.
 router.get(
     '/info_private/:handle',
     authController.checkCookies,
