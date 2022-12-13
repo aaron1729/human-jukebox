@@ -35,7 +35,7 @@ router.get(
             client_id: process.env.CLIENT_ID,
             response_type: 'code',
             redirect_uri: process.env.REDIRECT_URI,
-            scope: 'playlist-read-private'
+            scope: 'playlist-read-private playlist-read-collaborative'
         }))
     }
 )
@@ -85,15 +85,12 @@ router.get(
 router.get(
     '/info_private/:handle',
     authController.checkCookies,
+    authController.endCycleIfCookiesUnmatched,
     musicianController.getMusicianInfo,
     (req, res) => {
         return res.status(200).json(res.locals.info);
     }
 )
-
-
-
-
 
 
 // this endpoint receives a musician's handle, and then:
@@ -107,6 +104,20 @@ router.get(
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
+
+
+// this endpoint will be accessed by a musician from their private page, and will fetch all playlists attached to their spotify account.
+router.get(
+    '/getAllPlaylists',
+    authController.checkCookies,
+    authController.endCycleIfCookiesUnmatched,
+    songController.getSpotifyPlaylists,
+    (req, res) => {
+        return res.status(200).json({message: 'TEMP end of getAllPlaylists route handler'})
+    }
+)
+
+
 
 
 // this endpoint receives a request based on the musician clicking the "logout" button on their private page

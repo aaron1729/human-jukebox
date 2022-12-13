@@ -18,7 +18,6 @@ const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 
-
 // /// for testing production mode
 // app.use(express.static('dist'));
 // app.use('/musician', express.static('dist'));

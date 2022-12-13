@@ -47,6 +47,12 @@ function LandingPageContainer(){
   }
 
 
+
+  const getAllPlaylists = () => {
+    fetch('/api/getAllPlaylists')
+  }
+
+
   return(
     <div className="landing-page flex flex-col items-center">
       <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
@@ -56,6 +62,17 @@ function LandingPageContainer(){
       <button onClick={login} className="bg-green-500 hover:bg-green-400 text-black font-bold py-2 px-4 mt-5 mb-10 rounded-full">
         Spotify signup/login for musicians
       </button>
+
+
+      <br />
+
+
+      {/* this placement is temporary, just to save a step of clickthrough when testing. */}
+      <button onClick={getAllPlaylists} className='border-2'>
+        Get All Playlists
+      </button>
+
+
       {/* <br />
       <Link to="/DNE">
         a Link to a route that DNE

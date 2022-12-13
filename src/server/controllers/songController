@@ -1,9 +1,10 @@
 const db = require('../models/models.js');
+const spotifyApi = require('../utils/apiWrapper');
 
 const songController = {};
 
 
-// this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId) retrieves their array of songs, and saves it as res.locals.songs
+// this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId) retrieves their array of songs from the database, and saves it as res.locals.songs
 songController.getSongs = (req, res, next) => {
     const spotifyId = res.locals.spotifyId;
     if (!spotifyId) {
@@ -19,6 +20,37 @@ songController.getSongs = (req, res, next) => {
         console.log(err)
     })
 }
+
+
+// this middleware function takes in (WHAT?? a musician's spotify id, access token, maybe also refresh token?) and gets their list of spotify playlists from the spotify API.
+songController.getSpotifyPlaylists = (req, res, next) => {
+    console.log('inside of songController.getSpotifyPlaylists, and cookies are', req.cookies)
+    spotifyId = req.cookies.spotifyId;
+    access = req.cookies.access;
+    refresh = req.cookies.refresh;
+    try {
+        spotifyApi.setAccessToken(access);
+        spotifyApi.setRefreshToken(refresh);
+        spotifyApi.getUserPlaylists(spotifyId)
+        .then(data => {
+            // the returned data is an object with the keys "body", "headers", and "statusCode"
+            // data.body is another object, with keys "href"
+            console.log('in songController.getSpotifyPlaylists, some returned data is:', data.body.items.map(obj => [obj.name, obj.id]))
+            res.locals.data = data;
+            return next();
+        })
+    }
+    catch(err) {
+        return next({
+            log: 'error getting spotify playlists',
+            status: err.statusCode,
+            message: {error: 'failed to get spotify playlists.'}
+        })
+    }
+}
+
+
+
 
 
 module.exports = songController;

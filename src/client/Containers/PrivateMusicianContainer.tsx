@@ -20,6 +20,9 @@ function PrivateMusicianContainer(){
 
 
 
+  const getAllPlaylists = () => {
+    fetch('/api/getAllPlaylists')
+  }
 
   const deleteCookies = () => {
     fetch('/api/logout')
@@ -66,6 +69,12 @@ function PrivateMusicianContainer(){
       <br />
 
       <b>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id, and make handle a separate page.)</b>
+
+      <br />
+
+      <button onClick={getAllPlaylists} className='border-2'>
+        Get All Playlists
+      </button>
 
       <br />
 

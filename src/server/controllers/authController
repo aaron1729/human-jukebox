@@ -1,4 +1,3 @@
-const cookieParser = require('cookie-parser');
 const spotifyApi = require('../utils/apiWrapper');
 const { query } = require('../models/models');
 
@@ -35,6 +34,16 @@ authController.checkCookies = async (req, res, next) => {
             status: err.statusCode,
             message: {error: 'failed to check cookies'}
         });
+    }
+}
+
+
+// this follows the above middleware. if cookies don't match, end the request/response cycle.
+authController.endCycleIfCookiesUnmatched = (req, res, next) => {
+    if (!res.locals.cookieMatch) {
+        return res.status(200).send('sorry, cookies did not match')
+    } else {
+        return next()
     }
 }
 
