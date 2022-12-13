@@ -33,6 +33,7 @@ function SearchInput(){
         <input type="submit" name="search-param" value="Search"
         className='border-2 border-black rounded font-bold text-fuchsia-700 mx-100 my-50 px-2 rounded-full'
         // className='bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow'
+        // className="bg-green-500 hover:bg-green-400 text-black font-bold py-2 px-4 mt-5 mb-10 rounded-full"
         ></input>
       </form>
     </div>

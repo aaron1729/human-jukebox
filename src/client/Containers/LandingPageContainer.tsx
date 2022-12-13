@@ -1,11 +1,13 @@
 import React from 'react';
 import SearchInput from '../Components/SearchInput';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import {styles} from '../styles';
+
+// /Users/aaron/git/human-jukebox/src/client/styles.js
 
 
 
 function LandingPageContainer(){
-
 
   const navigate = useNavigate();
   
@@ -59,7 +61,7 @@ function LandingPageContainer(){
       <br />
       <SearchInput />
       <br />
-      <button onClick={login} className="bg-green-500 hover:bg-green-400 text-black font-bold py-2 px-4 mt-5 mb-10 rounded-full">
+      <button onClick={login} className={styles.buttonBig}>
         Spotify signup/login for musicians
       </button>
 
@@ -68,9 +70,13 @@ function LandingPageContainer(){
 
 
       {/* this placement is temporary, just to save a step of clickthrough when testing. */}
-      <button onClick={getAllPlaylists} className='border-2'>
+      <button onClick={getAllPlaylists} className={styles.buttonBig}>
         Get All Playlists
       </button>
+
+      <div id="playlists-modal">
+        test div "playlists-modal"
+      </div>
 
 
       {/* <br />

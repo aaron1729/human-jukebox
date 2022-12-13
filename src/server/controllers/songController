@@ -35,7 +35,13 @@ songController.getSpotifyPlaylists = (req, res, next) => {
         .then(data => {
             // the returned data is an object with the keys "body", "headers", and "statusCode"
             // data.body is another object, with keys "href"
-            console.log('in songController.getSpotifyPlaylists, some returned data is:', data.body.items.map(obj => [obj.name, obj.id]))
+            console.log('in songController.getSpotifyPlaylists, some returned data is:', data.body.items.map(obj => {
+                return [
+                    obj.name,
+                    obj.id,
+                    obj.external_urls.spotify
+                ]
+            }))
             res.locals.data = data;
             return next();
         })
