@@ -28,7 +28,7 @@ authController.checkCookies = async (req, res, next) => {
             }
             return next();
         });
-    } catch {
+    } catch(err) {
         return next({
             log: 'error checking cookies',
             status: err.statusCode,
@@ -51,18 +51,22 @@ authController.endCycleIfCookiesUnmatched = (req, res, next) => {
 // get two tokens (long strings)
     // set them as cookies called 'access' and 'refresh'
     // also save them on res.locals
+    // also invoke the spotifyApi methods setAccessToken and setRefreshToken with these arguments [added 12/13/2022... is this helpful / needed / doesn't break anything?]
 // when this function is triggered, req.query.code has been set to equal a massive string (sent by the spotify redirect).
 authController.getTokens = async (req, res, next) => {
     console.log('inside of authController.getTokens middleware, and req.query.code is:', req.query.code);
     try {
         spotifyApi.authorizationCodeGrant(req.query.code)
         .then(data => {
+            // can additionally set an expiration on the cookie (say N minutes) e.g. using res.cookie('cookieName', cookieValue, {maxAge: 1000 * 60 * N})
             res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
             res.locals.access = data.body.access_token;
             res.locals.refresh = data.body.refresh_token;
+            spotifyApi.setAccessToken(res.locals.access);
+            spotifyApi.setRefreshToken(res.locals.refresh);
             return next();
         })
-    } catch {
+    } catch(err) {
         return next({
             log: 'error getting access and refresh tokens',
             status: err.statusCode,
@@ -70,6 +74,48 @@ authController.getTokens = async (req, res, next) => {
         });
     }
 }
+
+
+
+
+
+
+/////// IN PROGRESS as of 12/13/2022 at ~5pm
+
+
+// given a refresh token, get a new access token -- FINISH DESCRIPTION OF WHAT'S DONE WITH IT
+authController.getNewAccessToken = async (req, res, next) => {
+    console.log('inside of authController.getNewAccessToken middleware, and cookies are', req.cookies);
+    refresh = req.cookies.refresh;
+    try {
+        spotifyApi.setRefreshToken(refresh);
+        spotifyApi.refreshAccessToken()
+        .then(data => {
+            console.log('the returned data from spotifyApi.refreshAccessToken is', data.body.access_token);
+            access = data.body.access_token
+            res.locals.spotifyId = req.cookies.spotifyId;
+            res.locals.access = access;
+            res.cookie('access', access);
+            spotifyApi.setAccessToken(access);
+            return next();
+        })
+    } catch(err) {
+        return next({
+            log: 'error refreshing access token',
+            status: err.statusCode,
+            message: {error: 'failed to refresh access token.'}
+        })
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 // using a musician's spotify access token (saved as res.locals.access), get their spotify id and set it as res.locals.spotifyId .
@@ -96,7 +142,7 @@ authController.getSpotifyId = async (req, res, next) => {
 // given a spotify id and an access token (saved res.locals.spotifyId and res.locals.access), check if the spotify id is in the database.
 // if so, update its access token there.
 // if not, create a new row in the database with some default values.
-authController.spotifyIdToDb = async (req, res, next) => {
+authController.spotifyIdAndAccessToDb = async (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
         const access = res.locals.access;
@@ -126,7 +172,7 @@ authController.spotifyIdToDb = async (req, res, next) => {
             }
             return next();
         })
-    } catch {
+    } catch(err) {
         return next({
             log: 'error syncing spotify id and access token with db',
             status: err.statusCode,

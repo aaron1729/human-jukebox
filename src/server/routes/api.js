@@ -54,7 +54,7 @@ router.get(
     '/getMusicianInfo',
     authController.getTokens,
     authController.getSpotifyId,
-    authController.spotifyIdToDb,
+    authController.spotifyIdAndAccessToDb,
     (req, res) => {
         return res.sendFile(path.join(__dirname, '../../client/auth.html'));
     }
@@ -110,6 +110,8 @@ router.get(
 router.get(
     '/getAllPlaylists',
     authController.checkCookies,
+    authController.getNewAccessToken,
+    authController.spotifyIdAndAccessToDb,
     authController.endCycleIfCookiesUnmatched,
     songController.getSpotifyPlaylists,
     (req, res) => {

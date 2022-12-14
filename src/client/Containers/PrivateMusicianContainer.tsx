@@ -3,6 +3,7 @@ import PublicMusicianContainer from './PublicMusicianContainer';
 import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useFetch } from 'react-async';
+import { styles } from '../styles';
 
 
 function PrivateMusicianContainer(){
@@ -36,13 +37,13 @@ function PrivateMusicianContainer(){
       <span className="flex flex-row">
 
       <Link to="/">
-        <button className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
+        <button className={styles.buttonSmall}>
           Home
         </button>
       </Link>
 
       <Link to="/">
-        <button onClick={deleteCookies} className='border-2 border-black rounded font-bold text-fuchsia-700 mx-10 my-5 px-2 rounded-full'>
+        <button onClick={deleteCookies} className={styles.buttonSmall}>
           Logout
         </button>
       </Link>
@@ -72,8 +73,8 @@ function PrivateMusicianContainer(){
 
       <br />
 
-      <button onClick={getAllPlaylists} className='border-2'>
-        Get All Playlists
+      <button onClick={getAllPlaylists} className={styles.buttonBig}>
+        Get My Playlists
       </button>
 
       <br />

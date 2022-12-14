@@ -71,7 +71,7 @@ function LandingPageContainer(){
 
       {/* this placement is temporary, just to save a step of clickthrough when testing. */}
       <button onClick={getAllPlaylists} className={styles.buttonBig}>
-        Get All Playlists
+        Get My Playlists
       </button>
 
       <div id="playlists-modal">

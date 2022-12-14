@@ -1,9 +1,24 @@
 type StyleObj = {
+    buttonSmall: string
     buttonBig: string
+    searchField: string
 };
 
+// other possible button styles:
+    // className='bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow'
 
 const styles: StyleObj = {
+    buttonSmall: [
+        "border-2",
+        "border-black",
+        "rounded",
+        "font-bold",
+        "text-fuchsia-700",
+        "mx-100",
+        "my-5",
+        "px-2",
+        "rounded-full"
+    ].join(" "),
     buttonBig: [
         "bg-green-500",
         "hover:bg-green-400",
@@ -14,7 +29,13 @@ const styles: StyleObj = {
         "mt-5",
         "mb-10",
         "rounded-full"
+    ].join(" "),
+    searchField: ["border",
+    "border-blue-700",
+    "rounded",
+    "px-1",
+    "mr-2"
     ].join(" ")
 }
 
-export {styles};
+export { styles };
