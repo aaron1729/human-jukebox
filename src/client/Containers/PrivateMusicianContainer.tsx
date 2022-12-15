@@ -3,6 +3,8 @@ import PublicMusicianContainer from './PublicMusicianContainer';
 import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useFetch } from 'react-async';
+// this will be used to display playlists
+import Modal from '@mui/material/Modal';
 import { styles } from '../styles';
 
 
@@ -21,9 +23,16 @@ function PrivateMusicianContainer(){
 
 
 
+
+
+  // WORKING ON THIS NOW (as of wed 12/14/2022)
+  type PlaylistData = [String, String, String];
+  let playlists: PlaylistData[] = [['a', 'hello', 'there'], ['b', 'goodbye', 'here']];
   const getAllPlaylists = () => {
     fetch('/api/getAllPlaylists')
   }
+
+
 
   const deleteCookies = () => {
     fetch('/api/logout')
@@ -73,11 +82,21 @@ function PrivateMusicianContainer(){
 
       <br />
 
+
+      {/* list of playlists is: {playlists.map(arr => arr[1]).join(' ')}
+
+      <br />
+
       <button onClick={getAllPlaylists} className={styles.buttonBig}>
         Get My Playlists
       </button>
 
-      <br />
+      <br /> */}
+
+
+
+
+
 
 
       {/* <MusicianInfo /> */}

@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/charizard-52/human-jukebox#readme",
   "dependencies": {
+    "@mui/material": "^5.11.0",
     "cookie-parser": "^1.4.6",
     "css-loader": "^6.7.1",
     "dotenv": "^16.0.2",

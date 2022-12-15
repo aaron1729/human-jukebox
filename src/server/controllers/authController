@@ -43,7 +43,7 @@ authController.endCycleIfCookiesUnmatched = (req, res, next) => {
     if (!res.locals.cookieMatch) {
         return res.status(200).send('sorry, cookies did not match')
     } else {
-        return next()
+        return next();
     }
 }
 
@@ -76,14 +76,9 @@ authController.getTokens = async (req, res, next) => {
 }
 
 
-
-
-
-
-/////// IN PROGRESS as of 12/13/2022 at ~5pm
-
-
-// given a refresh token, get a new access token -- FINISH DESCRIPTION OF WHAT'S DONE WITH IT
+// given a refresh token, get a new access token and save it:
+    // on res.locals
+    // as a cookie
 authController.getNewAccessToken = async (req, res, next) => {
     console.log('inside of authController.getNewAccessToken middleware, and cookies are', req.cookies);
     refresh = req.cookies.refresh;

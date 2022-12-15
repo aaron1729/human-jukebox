@@ -22,30 +22,61 @@ songController.getSongs = (req, res, next) => {
 }
 
 
-// this middleware function takes in (WHAT?? a musician's spotify id, access token, maybe also refresh token?) and gets their list of spotify playlists from the spotify API.
-songController.getSpotifyPlaylists = (req, res, next) => {
-    console.log('inside of songController.getSpotifyPlaylists, and cookies are', req.cookies)
+// this middleware function gets the musician's list of spotify playlists (or at least the first 20 or so of them) from the spotify API.
+songController.getSpotifyPlaylists = async (req, res, next) => {
+    console.log('inside of songController.getSpotifyPlaylists, and cookies are', req.cookies);
     spotifyId = req.cookies.spotifyId;
     access = req.cookies.access;
     refresh = req.cookies.refresh;
+
+
+
+
+
+
+
+    res.locals.playlistArr = [['a fake array of playlists', 'item 1', 'item 2']]
+
+
+    ////// as of ~4pm on 12/14/2022, still working to make this happen *before* the response cycle ends!
+
+    spotifyApi.setAccessToken(access);
+    spotifyApi.setRefreshToken(refresh);
+    console.log('just set access and refresh tokens on spotifyApi object');
+    const playlistData = await spotifyApi.getUserPlaylists(spotifyId);
+    console.log('playlistData is:', playlistData);
+
+
+    if (playlistData.statusCode === 200) {
+        res.locals.playlistArr = playlistData.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
+        console.log('playlistData.statusCode is 200, and res.locals.playlistArr is', res.locals.playlistArr);
+        return next();
+    } else {
+        return next({
+            log: 'error getting spotify playlists',
+            status: err.statusCode,
+            message: {error: 'failed to get spotify playlists.'}
+        })
+    }
+    
+
+
+
+
+/*
+
     try {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
+        console.log('just set access and refresh tokens on spotifyApi object');
         spotifyApi.getUserPlaylists(spotifyId)
         .then(data => {
-            // the returned data is an object with the keys "body", "headers", and "statusCode"
-            // data.body is another object, with keys "href"
-            console.log('in songController.getSpotifyPlaylists, some returned data is:', data.body.items.map(obj => {
-                return [
-                    obj.name,
-                    obj.id,
-                    obj.external_urls.spotify
-                ]
-            }))
-            res.locals.data = data;
-            return next();
-        })
-    }
+            console.log('just got musician\'s playlists from spotify API');
+            res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
+            console.log('in songController.getSpotifyPlaylists, res.locals.playlistArr is:', res.locals.playlistArr);
+            return next()
+        });
+        }
     catch(err) {
         return next({
             log: 'error getting spotify playlists',
@@ -53,6 +84,10 @@ songController.getSpotifyPlaylists = (req, res, next) => {
             message: {error: 'failed to get spotify playlists.'}
         })
     }
+
+*/
+
+
 }
 
 

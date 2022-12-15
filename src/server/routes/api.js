@@ -106,7 +106,7 @@ router.get(
 })
 
 
-// this endpoint will be accessed by a musician from their private page, and will fetch all playlists attached to their spotify account.
+// this endpoint is accessed by a musician from their private page, and fetches the (first 20) playlists attached to their spotify account.
 router.get(
     '/getAllPlaylists',
     authController.checkCookies,
@@ -115,11 +115,10 @@ router.get(
     authController.endCycleIfCookiesUnmatched,
     songController.getSpotifyPlaylists,
     (req, res) => {
-        return res.status(200).json({message: 'TEMP end of getAllPlaylists route handler'})
+        console.log('at the end of /api/getAllPlaylists route handler, sending back the data', res.locals.playlistArr);
+        return res.status(200).json(res.locals.playlistArr);
     }
 )
-
-
 
 
 // this endpoint receives a request based on the musician clicking the "logout" button on their private page
@@ -129,7 +128,6 @@ router.get(
     (req, res) => {
         return res.status(200).send('cookies deleted');
     }
-
 )
 
 

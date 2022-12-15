@@ -32,7 +32,7 @@ function LandingPageContainer(){
   }
 
 
-  // ridiculously, some filler needs to be here otherwise the login2 function gets red-squiggled
+  // ridiculously, some filler such as the following line needs to be here, otherwise the login2 function gets red-squiggled by the linter.
   const B: number = 7;
 
 
@@ -50,8 +50,16 @@ function LandingPageContainer(){
 
 
 
-  const getAllPlaylists = () => {
-    fetch('/api/getAllPlaylists')
+  const getAllPlaylists = async () => {
+
+    const res = await fetch('/api/getAllPlaylists');
+    console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
+    if (res.status !== 200) {
+      console.log('error getting all playlists');
+      return;
+    }
+    const playlists = await res.json();
+    console.log('playlists is:', playlists);
   }
 
 
@@ -69,14 +77,12 @@ function LandingPageContainer(){
       <br />
 
 
-      {/* this placement is temporary, just to save a step of clickthrough when testing. */}
+      {/* the placement of this button is temporary, just to save a step of clickthrough when testing. */}
       <button onClick={getAllPlaylists} className={styles.buttonBig}>
-        Get My Playlists
+        get my playlists
       </button>
 
-      <div id="playlists-modal">
-        test div "playlists-modal"
-      </div>
+
 
 
       {/* <br />
