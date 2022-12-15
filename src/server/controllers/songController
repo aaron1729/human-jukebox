@@ -76,10 +76,15 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
 
 
 
+
+
+    
+
     // ///////// attempt with DIRECT FETCH REQUEST, I.E. WITHOUT THE SPOTIFY API WRAPPER
     // // problem: get error:
     //     // ReferenceError: fetch is not defined
-    // // this is deeply confusing, since fetch seems to work elsewhere just fine (and doesn't require being imported into the file, either).
+    // // apparently fetch is defined on the front end (so works e.g. in React components), but isn't built in to Node.js. of course, there are packages to get around this -- could be worth a shot, if all else fails...
+
 
     // const uri = 'https://api.spotify.com/v1/users/' + spotifyId + '/playlists'
     // const options = {
