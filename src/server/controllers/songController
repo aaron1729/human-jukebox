@@ -31,50 +31,94 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
 
 
 
+    res.locals.playlistArr = [
+        ['fakePlaylist0 name', 'fakePlaylist0 id', 'fakePlaylist0 url'],
+        ['fakePlaylist1 name', 'fakePlaylist1 id', 'fakePlaylist1 url'],
+        ['fakePlaylist2 name', 'fakePlaylist2 id', 'fakePlaylist2 url']
+    ]
 
 
 
 
-    res.locals.playlistArr = [['a fake array of playlists', 'item 1', 'item 2']]
-
-
-    ////// as of ~4pm on 12/14/2022, still working to make this happen *before* the response cycle ends!
-
-    spotifyApi.setAccessToken(access);
-    spotifyApi.setRefreshToken(refresh);
-    console.log('just set access and refresh tokens on spotifyApi object');
-    const playlistData = await spotifyApi.getUserPlaylists(spotifyId);
-    console.log('playlistData is:', playlistData);
-
-
-    if (playlistData.statusCode === 200) {
-        res.locals.playlistArr = playlistData.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
-        console.log('playlistData.statusCode is 200, and res.locals.playlistArr is', res.locals.playlistArr);
-        return next();
-    } else {
-        return next({
-            log: 'error getting spotify playlists',
-            status: err.statusCode,
-            message: {error: 'failed to get spotify playlists.'}
-        })
-    }
     
 
 
 
 
-/*
+
+
+    // /////////// attempt with IF-BLOCK
+    // this seems to have the same problem as the TRY/CATCH attempt below.
+
+
+
+
+    // spotifyApi.setAccessToken(access);
+    // spotifyApi.setRefreshToken(refresh);
+    // console.log('just set access and refresh tokens on spotifyApi object');
+    // const playlistData = await spotifyApi.getUserPlaylists(spotifyId);
+    // console.log('now that we just grabbed it, playlistData is:', playlistData);
+
+
+
+    // if (playlistData.statusCode === 200) {
+    //     res.locals.playlistArr = playlistData.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
+    //     console.log('playlistData.statusCode is 200, and res.locals.playlistArr is', res.locals.playlistArr);
+    //     // return next();
+    // } else {
+    //     return next({
+    //         log: 'error getting spotify playlists',
+    //         status: err.statusCode,
+    //         message: {error: 'failed to get spotify playlists.'}
+    //     })
+    // }
+    
+
+
+
+    // ///////// attempt with DIRECT FETCH REQUEST, I.E. WITHOUT THE SPOTIFY API WRAPPER
+    // // problem: get error:
+    //     // ReferenceError: fetch is not defined
+    // // this is deeply confusing, since fetch seems to work elsewhere just fine (and doesn't require being imported into the file, either).
+
+    // const uri = 'https://api.spotify.com/v1/users/' + spotifyId + '/playlists'
+    // const options = {
+    //     method: 'get',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: 'Bearer ' + access
+    //     }
+    // }
+
+    // fetch(uri, options)
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log('some data from the non-wrapped spotify API call is:', data)
+    //     return next();
+    // })
+
+
+
+
+    
+
+    // ////////// attempt with TRY/CATCH
+    // problem: the call spotifyApi.getUserPlaylists(spotifyId) seems to occur _after_ the remaining middleware/endware functions. so if i keep "return next()" in there, i get the error:
+        // Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    // which seems to be because i'm calling the "next" function _after_ the response has already been sent, but (as seen in the console-log) at the end of the /api/getAllPlaylists route handler, i'm just sending back the fake data hard-coded above. if i just do "return" (which is of course ultimately wrong), then i no longer get that error, but still the response data is just the hard-coded array.
 
     try {
-        spotifyApi.setAccessToken(access);
-        spotifyApi.setRefreshToken(refresh);
+        await spotifyApi.setAccessToken(access);
+        await spotifyApi.setRefreshToken(refresh);
         console.log('just set access and refresh tokens on spotifyApi object');
-        spotifyApi.getUserPlaylists(spotifyId)
+        await spotifyApi.getUserPlaylists(spotifyId)
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
+            console.log('the type of `data` is', typeof(data));
             res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
-            console.log('in songController.getSpotifyPlaylists, res.locals.playlistArr is:', res.locals.playlistArr);
-            return next()
+            console.log('in songController.getSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
+            return;
+            // return next()
         });
         }
     catch(err) {
@@ -85,10 +129,12 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
         })
     }
 
-*/
 
 
 }
+
+
+
 
 
 

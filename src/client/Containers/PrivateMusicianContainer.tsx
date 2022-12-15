@@ -25,11 +25,12 @@ function PrivateMusicianContainer(){
 
 
 
-  // WORKING ON THIS NOW (as of wed 12/14/2022)
+  // WORK IN PROGRESS
   type PlaylistData = [String, String, String];
   let playlists: PlaylistData[] = [['a', 'hello', 'there'], ['b', 'goodbye', 'here']];
   const getAllPlaylists = () => {
-    fetch('/api/getAllPlaylists')
+    fetch('/api/getAllPlaylists');
+    // update the playlists array here
   }
 
 
