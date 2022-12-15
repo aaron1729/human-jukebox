@@ -22,12 +22,53 @@ songController.getSongs = (req, res, next) => {
 }
 
 
+// UNDER CONSTRUCTION
+// this middleware function gets a playlist id (to which a musician has access) and retrieves it from the spotify API.
+songController.getSpotifyPlaylist = (req, res, next) => {
+    console.log('inside of songController.getSpotifyPlaylist, and cookies are', req.cookies);
+    const {playlistId} = req.params;
+    console.log('and playlistId is', playlistId);
+
+    res.locals.playlist = ['test', 'playlist', 'array']
+ 
+    const spotifyId = req.cookies.spotifyId;
+    const access = req.cookies.access;
+    const refresh = req.cookies.refresh;
+
+    try {
+        spotifyApi.setAccessToken(access);
+        spotifyApi.setRefreshToken(refresh);
+        spotifyApi.getPlaylist(playlistId)
+        .then(data => {
+            res.locals.playlist = data.body.tracks
+            console.log('the data returned from spotifyApi.getPlaylist is', res.locals.playlist)
+            // return next();
+        })
+    } catch(err) {
+        return next({
+            log: 'error getting spotify playlist',
+            status: err.statusCode,
+            message: {error: 'failed to get spotify playlist.'}
+        })
+        
+    }
+
+    // next();
+    return;
+}
+
+
+
+
+
+
+
 // this middleware function gets the musician's list of spotify playlists (or at least the first 20 or so of them) from the spotify API.
-songController.getSpotifyPlaylists = async (req, res, next) => {
-    console.log('inside of songController.getSpotifyPlaylists, and cookies are', req.cookies);
-    spotifyId = req.cookies.spotifyId;
-    access = req.cookies.access;
-    refresh = req.cookies.refresh;
+songController.getAllSpotifyPlaylists = (req, res, next) => {
+    console.log('inside of songController.getAllSpotifyPlaylists, and cookies are', req.cookies);
+    const spotifyId = req.cookies.spotifyId;
+    const access = req.cookies.access;
+    const refresh = req.cookies.refresh;
 
 
 
@@ -40,13 +81,8 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
 
 
 
+    ////////////////////////////////////////////////////////////////////////////
     
-
-
-
-
-
-
     // /////////// attempt with IF-BLOCK
     // this seems to have the same problem as the TRY/CATCH attempt below.
 
@@ -74,11 +110,8 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
     // }
     
 
+    ////////////////////////////////////////////////////////////////////////////
 
-
-
-
-    
 
     // ///////// attempt with DIRECT FETCH REQUEST, I.E. WITHOUT THE SPOTIFY API WRAPPER
     // // problem: get error:
@@ -102,10 +135,7 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
     //     return next();
     // })
 
-
-
-
-    
+    ////////////////////////////////////////////////////////////////////////////
 
     // ////////// attempt with TRY/CATCH
     // problem: the call spotifyApi.getUserPlaylists(spotifyId) seems to occur _after_ the remaining middleware/endware functions. so if i keep "return next()" in there, i get the error:
@@ -113,17 +143,17 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
     // which seems to be because i'm calling the "next" function _after_ the response has already been sent, but (as seen in the console-log) at the end of the /api/getAllPlaylists route handler, i'm just sending back the fake data hard-coded above. if i just do "return" (which is of course ultimately wrong), then i no longer get that error, but still the response data is just the hard-coded array.
 
     try {
-        await spotifyApi.setAccessToken(access);
-        await spotifyApi.setRefreshToken(refresh);
+        spotifyApi.setAccessToken(access);
+        spotifyApi.setRefreshToken(refresh);
         console.log('just set access and refresh tokens on spotifyApi object');
-        await spotifyApi.getUserPlaylists(spotifyId)
+        spotifyApi.getUserPlaylists(spotifyId)
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
-            console.log('the type of `data` is', typeof(data));
+            console.log('the type of "data" is', typeof(data));
             res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
-            console.log('in songController.getSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
+            console.log('in songController.getAllSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
             return;
-            // return next()
+            // return next();
         });
         }
     catch(err) {
@@ -134,6 +164,47 @@ songController.getSpotifyPlaylists = async (req, res, next) => {
         })
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    // // //////// attempt following instructions for spotify-web-api-node (see README at https://github.com/thelinmichael/spotify-web-api-node). in particular, he says that you need to have _two_ arguments in the .then argument. he also says that you need to include an `options` object if you use the "callback method" -- give that a shot.
+    // // sadly, this still doesn't work!! same error as try/catch above.
+
+    // spotifyApi.setAccessToken(access);
+    // spotifyApi.setRefreshToken(refresh);
+    // spotifyApi.getUserPlaylists(
+    //     spotifyId,
+    //     {limit: 10},
+    //     data => {
+    //         console.log('user playlists are', data);
+    //         return;
+    //         // return next();
+    //     },
+    //     err => {
+    //         console.log('hit an error');
+    //         return next('error');
+    //     }
+    // )
+    
+
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    // spotifyApi.getUserPlaylists(spotifyId, {limit: 10})
+    // .then(data => {
+    //     console.log('just got musician\'s playlists from spotify API');
+    //     console.log('the type of `data` is', typeof(data));
+    //     res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
+    //     console.log('in songController.getAllSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
+    //     // return;
+    //     return next();
+    // }, err => {
+    //     return next({
+    //         log: 'error getting spotify playlists',
+    //         status: err.statusCode,
+    //         message: {error: 'failed to get spotify playlists.'}
+    //     })    
+    //     }
+    // )
 
 
 }

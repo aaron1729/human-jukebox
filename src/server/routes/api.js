@@ -106,6 +106,7 @@ router.get(
 })
 
 
+// UNDER CONSTRUCTION
 // this endpoint is accessed by a musician from their private page, and fetches the (first 20) playlists attached to their spotify account.
 router.get(
     '/getAllPlaylists',
@@ -113,12 +114,31 @@ router.get(
     authController.getNewAccessToken,
     authController.spotifyIdAndAccessToDb,
     authController.endCycleIfCookiesUnmatched,
-    songController.getSpotifyPlaylists,
+    songController.getAllSpotifyPlaylists,
     (req, res) => {
         console.log('at the end of /api/getAllPlaylists route handler, sending back the data', res.locals.playlistArr);
         return res.status(200).json(res.locals.playlistArr);
     }
 )
+
+
+// UNDER CONSTRUCTION
+// this endpoint is triggered when a musician wants to add or sync their repertoire against a given spotify playlist. (it might be unnecessary? it's mostly just a request to the spotify API, but maybe it's important to keep this to make sure there's a usable access token.)
+router.get(
+    '/getPlaylist/:playlistId',
+    authController.checkCookies,
+    authController.getNewAccessToken,
+    authController.spotifyIdAndAccessToDb,
+    authController.endCycleIfCookiesUnmatched,
+    songController.getSpotifyPlaylist,
+    (req, res) => {
+        console.log('at the end of the /api/getPlaylist route handler');
+        return res.status(200).json({myKey: '/api/getPlaylist route handler finished', playlistArr: res.locals.playlist})
+    }
+)
+
+
+
 
 
 // this endpoint receives a request based on the musician clicking the "logout" button on their private page

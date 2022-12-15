@@ -2,6 +2,7 @@ import React from 'react';
 import SearchInput from '../Components/SearchInput';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import {styles} from '../styles';
+import { style } from '@mui/system';
 
 // /Users/aaron/git/human-jukebox/src/client/styles.js
 
@@ -63,6 +64,25 @@ function LandingPageContainer(){
   }
 
 
+  const getPlaylist = async () => {
+    // here's a hard-coded playlist id attached to ethan's spotify account:
+    // const playlistId = '1dNwPETQVowrqMwUILsiaz';
+    const playlistId = '20AQPwz2tutPb3XLSlReGE';
+    const res = await fetch(`/api/getPlaylist/${playlistId}`);
+    console.log('res data in getPlaylist function (in LandingPageContainer) is:', res);
+    if (res.status !== 200) {
+      console.log('error getting playlist');
+      return;
+    }
+    const playlist = await res.json();
+    console.log('playlist is:', playlist);
+  }
+
+
+
+
+
+
   return(
     <div className="landing-page flex flex-col items-center">
       <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
@@ -79,8 +99,14 @@ function LandingPageContainer(){
 
       {/* the placement of this button is temporary, just to save a step of clickthrough when testing. */}
       <button onClick={getAllPlaylists} className={styles.buttonBig}>
-        get my playlists
+        test: get my playlists
       </button>
+
+      <button onClick={getPlaylist} className={styles.buttonSmall}>
+        test: get a playlist
+      </button>
+
+
 
 
 

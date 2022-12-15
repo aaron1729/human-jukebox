@@ -104,15 +104,6 @@ authController.getNewAccessToken = async (req, res, next) => {
 }
 
 
-
-
-
-
-
-
-
-
-
 // using a musician's spotify access token (saved as res.locals.access), get their spotify id and set it as res.locals.spotifyId .
 authController.getSpotifyId = async (req, res, next) => {
     try {
