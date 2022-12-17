@@ -15,8 +15,8 @@ authController.checkCookies = (req, res, next) => {
             res.locals.cookieMatch = false;
             return next();
         }
-        const queryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
-        query(queryString).then(data => {
+        const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
+        query(getHandleAndAccessFromDbQueryString).then(data => {
             console.log('after db query inside of authController.checkCookies, the data is:', data.rows)
             accessFromDb = data.rows[0].access;
             handleFromDb = data.rows[0].handle;
@@ -40,6 +40,7 @@ authController.checkCookies = (req, res, next) => {
 
 // this follows the above middleware. if cookies don't match, end the request/response cycle.
 authController.endCycleIfCookiesUnmatched = (req, res, next) => {
+    console.log('inside of authController.endCycleIfCookiesUnmatched');
     if (!res.locals.cookieMatch) {
         return res.status(200).send('sorry, cookies did not match')
     } else {
@@ -114,24 +115,6 @@ authController.getSpotifyId = (req, res, next) => {
                 return next();
             }
         )
-
-
-
-        // AS OF FRIDAY 12/16/2022 at ~7pm:
-            // the below doesn't work without "await". but async/await confusing, so i'm going to try to use promise-chaining here and everywhere. i expect that somehow async/await is the source of my problems......
-
-
-
-
-
-
-        // const userData = await spotifyApi.getMe();
-        // console.log('userData object is: ', userData);
-        // if (userData.statusCode === 200) {
-        //     res.locals.spotifyId = userData.body.id;
-        //     res.cookie('spotifyId', res.locals.spotifyId);
-        // }
-        // return next();
     } catch(err) {
         return next({
             log: 'error getting spotify id',

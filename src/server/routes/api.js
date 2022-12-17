@@ -94,26 +94,20 @@ router.get(
 
 
 // this endpoint receives a musician's handle, and then:
-    // looks up the musician info in the SQL database, retrieves the corresponding spotify id, and stores it as res.locals.spotifyId .
-    // removes the sensitive info (access token and spotify id.)
-    // using the spotify id, gets the musician's array of songs and stores it as res.locals.songs .
+    // looks up the musician info in the SQL database and saves it as res.locals.info ;
+    // using the spotify id, gets the musician's array of songs and stores it as res.locals.songs ;
     // sends that back.
 router.get(
     '/songs/:handle',
     musicianController.getMusicianInfoFromDb,
-    // musicianController.removePrivateInfo,
     songController.getSongs,
-    (req, res, next) => {
-        console.log('test from /songs/:handle route handler')
-        return next();
-    },
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
 
 
 // UNDER CONSTRUCTION
-// this endpoint is accessed by a musician from their private page, and fetches the (first 20) playlists attached to their spotify account.
+// this endpoint is accessed by a musician from their private page, and fetches all (or really the first N) playlists attached to their spotify account.
 router.get(
     '/getAllPlaylists',
     authController.checkCookies,
@@ -133,13 +127,13 @@ router.get(
 router.get(
     '/getPlaylist/:playlistId',
     authController.checkCookies,
-    authController.getNewAccessToken,
-    authController.spotifyIdAndAccessToDb,
-    authController.endCycleIfCookiesUnmatched,
+    // authController.getNewAccessToken,
+    // authController.spotifyIdAndAccessToDb,
+    // authController.endCycleIfCookiesUnmatched,
     songController.getSpotifyPlaylist,
     (req, res) => {
         console.log('at the end of the /api/getPlaylist route handler');
-        return res.status(200).json({myKey: '/api/getPlaylist route handler finished', playlistArr: res.locals.playlist})
+        return res.status(200).json(res.locals.playlist);
     }
 )
 

@@ -11,11 +11,11 @@ songController.getSongs = (req, res, next) => {
         return next();
     }
     console.log('inside of songController.getSongs, and spotifyId is', spotifyId)
-    const queryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId}'`
-    db.query(queryString).then(data => {
+    const getMusicianSongsQueryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId}'`
+    db.query(getMusicianSongsQueryString).then(data => {
         console.log('inside of songController.getSongs, and data.rows is:', data.rows)
         res.locals.songs = data.rows;
-        return next()
+        return next();
     }).catch(err => {
         console.log(err)
     })
@@ -31,16 +31,17 @@ songController.getSpotifyPlaylist = (req, res, next) => {
 
     res.locals.playlist = ['test', 'playlist', 'array']
  
-    const spotifyId = req.cookies.spotifyId;
+    // const spotifyId = req.cookies.spotifyId;
     const access = req.cookies.access;
     const refresh = req.cookies.refresh;
 
     try {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
+        console.log('inside of songController.getSpotifyPlaylist, and just set access and refresh tokens on spotifyApi object');
         spotifyApi.getPlaylist(playlistId)
         .then(data => {
-            res.locals.playlist = data.body.tracks
+            res.locals.playlist = data.body.tracks.items
             console.log('the data returned from spotifyApi.getPlaylist is', res.locals.playlist)
             return next();
         })
@@ -64,8 +65,8 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
     try {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
-        console.log('just set access and refresh tokens on spotifyApi object');
-        spotifyApi.getUserPlaylists(spotifyId, {limit: 50})
+        console.log('inside of songController.getAllSpotifyPlaylists, and just set access and refresh tokens on spotifyApi object');
+        spotifyApi.getUserPlaylists(spotifyId, {limit: 5})
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
             res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);

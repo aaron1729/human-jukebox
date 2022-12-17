@@ -65,9 +65,15 @@ function LandingPageContainer(){
 
 
   const getPlaylist = async () => {
+    
     // here's a hard-coded playlist id attached to ethan's spotify account:
     // const playlistId = '1dNwPETQVowrqMwUILsiaz';
-    const playlistId = '20AQPwz2tutPb3XLSlReGE';
+    // const playlistId = '20AQPwz2tutPb3XLSlReGE';
+
+    // and here's a PRIVATE playlist attached to aaron's spotify account. and it works from aaron's account but not from ethan's!
+    const playlistId = '5cpnzcAZTtQl17IlPNucht';
+
+
     const res = await fetch(`/api/getPlaylist/${playlistId}`);
     console.log('res data in getPlaylist function (in LandingPageContainer) is:', res);
     if (res.status !== 200) {
