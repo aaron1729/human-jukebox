@@ -73,7 +73,7 @@ router.get(
 // this endpoint receives a musician's handle, retrieves their public info from the database, and sends it back.
 router.get(
     '/info_public/:handle',
-    musicianController.getMusicianInfo,
+    musicianController.getMusicianInfoFromDb,
     musicianController.removePrivateInfo,
     (req, res) => {
         return res.status(200).json(res.locals.info);
@@ -86,7 +86,7 @@ router.get(
     '/info_private/:handle',
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
-    musicianController.getMusicianInfo,
+    musicianController.getMusicianInfoFromDb,
     (req, res) => {
         return res.status(200).json(res.locals.info);
     }
@@ -94,13 +94,19 @@ router.get(
 
 
 // this endpoint receives a musician's handle, and then:
-    // looks up the handle in the SQL database, retrieves the corresponding spotify id, and stores it as res.locals.spotifyId .
+    // looks up the musician info in the SQL database, retrieves the corresponding spotify id, and stores it as res.locals.spotifyId .
+    // removes the sensitive info (access token and spotify id.)
     // using the spotify id, gets the musician's array of songs and stores it as res.locals.songs .
     // sends that back.
 router.get(
     '/songs/:handle',
-    musicianController.getSpotifyId,
+    musicianController.getMusicianInfoFromDb,
+    // musicianController.removePrivateInfo,
     songController.getSongs,
+    (req, res, next) => {
+        console.log('test from /songs/:handle route handler')
+        return next();
+    },
     (req, res) => {
     return res.status(200).json(res.locals.songs);
 })
@@ -111,9 +117,9 @@ router.get(
 router.get(
     '/getAllPlaylists',
     authController.checkCookies,
-    authController.getNewAccessToken,
-    authController.spotifyIdAndAccessToDb,
-    authController.endCycleIfCookiesUnmatched,
+    // authController.getNewAccessToken,
+    // authController.spotifyIdAndAccessToDb,
+    // authController.endCycleIfCookiesUnmatched,
     songController.getAllSpotifyPlaylists,
     (req, res) => {
         console.log('at the end of /api/getAllPlaylists route handler, sending back the data', res.locals.playlistArr);

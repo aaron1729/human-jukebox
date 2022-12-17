@@ -3,35 +3,19 @@ const db = require('../models/models.js');
 const musicianController = {};
 
 
-
-
-
-////// THIS IS SUBSUMED BY THE BELOW
-
-// this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their spotify_id from the musicians table in the database, and saves it as res.locals.spotifyId .
-musicianController.getSpotifyId = (req, res, next) => {
-    const {handle} = req.params;
-    const values = [handle];
-    const queryString = 'SELECT spotify_id FROM musicians WHERE handle = $1';
-    db.query(queryString, values).then(data => {
-        console.log('inside of musicianController.getSpotifyId, and the data.rows returned from the database are:', data.rows);
-        res.locals.spotifyId = data.rows[0].spotify_id;
-        return next();
-    })
-}
-
-
 // this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their info from the musicians table in the database, and saves it as res.locals.musicianInfo .
-musicianController.getMusicianInfo = (req, res, next) => {
+musicianController.getMusicianInfoFromDb = (req, res, next) => {
     try {
         const {handle} = req.params;
         const queryString = `SELECT * FROM musicians where handle = '${handle}'`;
         db.query(queryString).then(data => {
-            console.log('inside of musicianController.getMusicianInfo, and the data.rows are:', data.rows);
+            console.log('inside of musicianController.getMusicianInfoFromDb, and the data.rows are:', data.rows);
             if (!data.rows[0]) {
                 return next()
             }
             res.locals.info = data.rows[0]
+            console.log('inside of musicianController.getMusicianInfoFromDb, and the info is:', res.locals.info)
+            // res.locals.spotifyId = res.locals.info.spotify_id
             // const info = data.rows[0];
             // delete info.access;
             // delete info.spotify_id;

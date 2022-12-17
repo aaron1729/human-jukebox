@@ -6,14 +6,14 @@ const songController = {};
 
 // this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId) retrieves their array of songs from the database, and saves it as res.locals.songs
 songController.getSongs = (req, res, next) => {
-    const spotifyId = res.locals.spotifyId;
+    const spotifyId = res.locals.info.spotify_id;
     if (!spotifyId) {
         return next();
     }
     console.log('inside of songController.getSongs, and spotifyId is', spotifyId)
     const queryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId}'`
     db.query(queryString).then(data => {
-        console.log('data.rows is', data.rows)
+        console.log('inside of songController.getSongs, and data.rows is:', data.rows)
         res.locals.songs = data.rows;
         return next()
     }).catch(err => {
@@ -22,7 +22,7 @@ songController.getSongs = (req, res, next) => {
 }
 
 
-// UNDER CONSTRUCTION
+// UNDER CONSTRUCTION!!!
 // this middleware function gets a playlist id (to which a musician has access) and retrieves it from the spotify API.
 songController.getSpotifyPlaylist = (req, res, next) => {
     console.log('inside of songController.getSpotifyPlaylist, and cookies are', req.cookies);
@@ -42,7 +42,7 @@ songController.getSpotifyPlaylist = (req, res, next) => {
         .then(data => {
             res.locals.playlist = data.body.tracks
             console.log('the data returned from spotifyApi.getPlaylist is', res.locals.playlist)
-            // return next();
+            return next();
         })
     } catch(err) {
         return next({
@@ -52,15 +52,7 @@ songController.getSpotifyPlaylist = (req, res, next) => {
         })
         
     }
-
-    // next();
-    return;
 }
-
-
-
-
-
 
 
 // this middleware function gets the musician's list of spotify playlists (or at least the first 20 or so of them) from the spotify API.
@@ -69,91 +61,16 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
     const spotifyId = req.cookies.spotifyId;
     const access = req.cookies.access;
     const refresh = req.cookies.refresh;
-
-
-
-    res.locals.playlistArr = [
-        ['fakePlaylist0 name', 'fakePlaylist0 id', 'fakePlaylist0 url'],
-        ['fakePlaylist1 name', 'fakePlaylist1 id', 'fakePlaylist1 url'],
-        ['fakePlaylist2 name', 'fakePlaylist2 id', 'fakePlaylist2 url']
-    ]
-
-
-
-
-    ////////////////////////////////////////////////////////////////////////////
-    
-    // /////////// attempt with IF-BLOCK
-    // this seems to have the same problem as the TRY/CATCH attempt below.
-
-
-
-
-    // spotifyApi.setAccessToken(access);
-    // spotifyApi.setRefreshToken(refresh);
-    // console.log('just set access and refresh tokens on spotifyApi object');
-    // const playlistData = await spotifyApi.getUserPlaylists(spotifyId);
-    // console.log('now that we just grabbed it, playlistData is:', playlistData);
-
-
-
-    // if (playlistData.statusCode === 200) {
-    //     res.locals.playlistArr = playlistData.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
-    //     console.log('playlistData.statusCode is 200, and res.locals.playlistArr is', res.locals.playlistArr);
-    //     // return next();
-    // } else {
-    //     return next({
-    //         log: 'error getting spotify playlists',
-    //         status: err.statusCode,
-    //         message: {error: 'failed to get spotify playlists.'}
-    //     })
-    // }
-    
-
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    // ///////// attempt with DIRECT FETCH REQUEST, I.E. WITHOUT THE SPOTIFY API WRAPPER
-    // // problem: get error:
-    //     // ReferenceError: fetch is not defined
-    // // apparently fetch is defined on the front end (so works e.g. in React components), but isn't built in to Node.js. of course, there are packages to get around this -- could be worth a shot, if all else fails...
-
-
-    // const uri = 'https://api.spotify.com/v1/users/' + spotifyId + '/playlists'
-    // const options = {
-    //     method: 'get',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         Authorization: 'Bearer ' + access
-    //     }
-    // }
-
-    // fetch(uri, options)
-    // .then(response => response.json())
-    // .then(data => {
-    //     console.log('some data from the non-wrapped spotify API call is:', data)
-    //     return next();
-    // })
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    // ////////// attempt with TRY/CATCH
-    // problem: the call spotifyApi.getUserPlaylists(spotifyId) seems to occur _after_ the remaining middleware/endware functions. so if i keep "return next()" in there, i get the error:
-        // Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-    // which seems to be because i'm calling the "next" function _after_ the response has already been sent, but (as seen in the console-log) at the end of the /api/getAllPlaylists route handler, i'm just sending back the fake data hard-coded above. if i just do "return" (which is of course ultimately wrong), then i no longer get that error, but still the response data is just the hard-coded array.
-
     try {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
         console.log('just set access and refresh tokens on spotifyApi object');
-        spotifyApi.getUserPlaylists(spotifyId)
+        spotifyApi.getUserPlaylists(spotifyId, {limit: 50})
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
-            console.log('the type of "data" is', typeof(data));
             res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
             console.log('in songController.getAllSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
-            return;
-            // return next();
+            return next();
         });
         }
     catch(err) {
@@ -163,50 +80,6 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
             message: {error: 'failed to get spotify playlists.'}
         })
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    // // //////// attempt following instructions for spotify-web-api-node (see README at https://github.com/thelinmichael/spotify-web-api-node). in particular, he says that you need to have _two_ arguments in the .then argument. he also says that you need to include an `options` object if you use the "callback method" -- give that a shot.
-    // // sadly, this still doesn't work!! same error as try/catch above.
-
-    // spotifyApi.setAccessToken(access);
-    // spotifyApi.setRefreshToken(refresh);
-    // spotifyApi.getUserPlaylists(
-    //     spotifyId,
-    //     {limit: 10},
-    //     data => {
-    //         console.log('user playlists are', data);
-    //         return;
-    //         // return next();
-    //     },
-    //     err => {
-    //         console.log('hit an error');
-    //         return next('error');
-    //     }
-    // )
-    
-
-    ////////////////////////////////////////////////////////////////////////////
-
-
-    // spotifyApi.getUserPlaylists(spotifyId, {limit: 10})
-    // .then(data => {
-    //     console.log('just got musician\'s playlists from spotify API');
-    //     console.log('the type of `data` is', typeof(data));
-    //     res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
-    //     console.log('in songController.getAllSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
-    //     // return;
-    //     return next();
-    // }, err => {
-    //     return next({
-    //         log: 'error getting spotify playlists',
-    //         status: err.statusCode,
-    //         message: {error: 'failed to get spotify playlists.'}
-    //     })    
-    //     }
-    // )
-
-
 }
 
 

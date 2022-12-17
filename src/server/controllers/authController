@@ -6,7 +6,7 @@ const authController = {};
 
 
 // store a boolean as res.locals.cookieMatch based on whether the cookies "spotifyId" and "access" exist and are a match in our db
-authController.checkCookies = async (req, res, next) => {
+authController.checkCookies = (req, res, next) => {
     try {
         console.log('inside of authController.checkCookies')
         spotifyId = req.cookies.spotifyId;
@@ -53,7 +53,7 @@ authController.endCycleIfCookiesUnmatched = (req, res, next) => {
     // also save them on res.locals
     // also invoke the spotifyApi methods setAccessToken and setRefreshToken with these arguments [added 12/13/2022... is this helpful / needed / doesn't break anything?]
 // when this function is triggered, req.query.code has been set to equal a massive string (sent by the spotify redirect).
-authController.getTokens = async (req, res, next) => {
+authController.getTokens = (req, res, next) => {
     console.log('inside of authController.getTokens middleware, and req.query.code is:', req.query.code);
     try {
         spotifyApi.authorizationCodeGrant(req.query.code)
@@ -79,7 +79,7 @@ authController.getTokens = async (req, res, next) => {
 // given a refresh token, get a new access token and save it:
     // on res.locals
     // as a cookie
-authController.getNewAccessToken = async (req, res, next) => {
+authController.getNewAccessToken = (req, res, next) => {
     console.log('inside of authController.getNewAccessToken middleware, and cookies are', req.cookies);
     refresh = req.cookies.refresh;
     try {
@@ -105,16 +105,33 @@ authController.getNewAccessToken = async (req, res, next) => {
 
 
 // using a musician's spotify access token (saved as res.locals.access), get their spotify id and set it as res.locals.spotifyId .
-authController.getSpotifyId = async (req, res, next) => {
+authController.getSpotifyId = (req, res, next) => {
     try {
         spotifyApi.setAccessToken(res.locals.access);
-        const userData = await spotifyApi.getMe();
-        console.log('userData object is: ', userData);
-        if (userData.statusCode === 200) {
-            res.locals.spotifyId = userData.body.id;
-            res.cookie('spotifyId', res.locals.spotifyId);
-        }
-        return next();
+        spotifyApi.getMe().then(userData => {
+                res.locals.spotifyId = userData.body.id;
+                res.cookie('spotifyId', res.locals.spotifyId);
+                return next();
+            }
+        )
+
+
+
+        // AS OF FRIDAY 12/16/2022 at ~7pm:
+            // the below doesn't work without "await". but async/await confusing, so i'm going to try to use promise-chaining here and everywhere. i expect that somehow async/await is the source of my problems......
+
+
+
+
+
+
+        // const userData = await spotifyApi.getMe();
+        // console.log('userData object is: ', userData);
+        // if (userData.statusCode === 200) {
+        //     res.locals.spotifyId = userData.body.id;
+        //     res.cookie('spotifyId', res.locals.spotifyId);
+        // }
+        // return next();
     } catch(err) {
         return next({
             log: 'error getting spotify id',
@@ -128,7 +145,7 @@ authController.getSpotifyId = async (req, res, next) => {
 // given a spotify id and an access token (saved res.locals.spotifyId and res.locals.access), check if the spotify id is in the database.
 // if so, update its access token there.
 // if not, create a new row in the database with some default values.
-authController.spotifyIdAndAccessToDb = async (req, res, next) => {
+authController.spotifyIdAndAccessToDb = (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
         const access = res.locals.access;
