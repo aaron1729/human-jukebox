@@ -25,12 +25,19 @@ function PrivateMusicianContainer(){
 
 
 
+
   // WORK IN PROGRESS
   type PlaylistData = [String, String, String];
   let playlists: PlaylistData[] = [['a', 'hello', 'there'], ['b', 'goodbye', 'here']];
-  const getAllPlaylists = () => {
-    fetch('/api/getAllPlaylists');
-    // update the playlists array here
+  const getAllPlaylists = async () => {
+    const res = await fetch('/api/getAllPlaylists');
+    console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
+    if (res.status !== 200) {
+      console.log('error getting all playlists');
+      return;
+    }
+    const playlists = await res.json();
+    console.log('playlists is:', playlists);
   }
 
 
@@ -84,7 +91,7 @@ function PrivateMusicianContainer(){
       <br />
 
 
-      {/* list of playlists is: {playlists.map(arr => arr[1]).join(' ')}
+      list of playlists is: {playlists.map(arr => arr[1]).join(' ')}
 
       <br />
 
@@ -92,7 +99,7 @@ function PrivateMusicianContainer(){
         Get My Playlists
       </button>
 
-      <br /> */}
+      <br />
 
 
 

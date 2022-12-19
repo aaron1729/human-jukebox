@@ -60,10 +60,6 @@ songController.getSpotifyPlaylist = (req, res, next) => {
 }
 
 
-
-
-
-
 // this middleware function gets the musician's list of spotify playlists (or at least the first 20 or so of them) from the spotify API.
 songController.getAllSpotifyPlaylists = (req, res, next) => {
     console.log('inside of songController.getAllSpotifyPlaylists, and cookies are', req.cookies);
@@ -90,13 +86,6 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
         })
     }
 }
-
-
-
-
-
-
-
 
 
 module.exports = songController;
