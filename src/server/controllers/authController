@@ -42,7 +42,7 @@ authController.checkCookies = (req, res, next) => {
 authController.endCycleIfCookiesUnmatched = (req, res, next) => {
     console.log('inside of authController.endCycleIfCookiesUnmatched');
     if (!res.locals.cookieMatch) {
-        return res.status(200).send('sorry, cookies did not match')
+        return res.status(200).send({error: 'sorry, cookies did not match'})
     } else {
         return next();
     }
@@ -156,8 +156,6 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
                     return next();
                 })
             }
-            // this next below here is not needed! delete it!!
-            // return next();
         })
     } catch(err) {
         return next({
