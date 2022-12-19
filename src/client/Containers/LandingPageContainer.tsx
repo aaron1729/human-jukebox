@@ -56,7 +56,7 @@ function LandingPageContainer(){
     const res = await fetch('/api/getAllPlaylists');
     console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
     if (res.status !== 200) {
-      console.log('error getting all playlists');
+      console.log('from the frontend, error getting all playlists');
       return;
     }
     const playlists = await res.json();

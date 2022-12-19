@@ -89,8 +89,8 @@ authController.getNewAccessToken = (req, res, next) => {
         .then(data => {
             console.log('the returned data from spotifyApi.refreshAccessToken is', data.body.access_token);
             access = data.body.access_token
-            res.locals.spotifyId = req.cookies.spotifyId;
             res.locals.access = access;
+            res.locals.spotifyId = req.cookies.spotifyId;
             res.cookie('access', access);
             spotifyApi.setAccessToken(access);
             return next();
@@ -152,11 +152,12 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
             } else {
                 const addMusicianToDbQueryString = `INSERT INTO public.musicians (display_name, bio, handle, spotify_id, access) VALUES ('temp display name', 'This is the bio of musician ${spotifyId}.', '${spotifyId}', '${spotifyId}', '${access}')`;
                 query(addMusicianToDbQueryString).then(data => {
-                    console.log('added musician to db, and returned data is:', data);
+                    console.log('added new musician to db, and returned data is:', data);
                     return next();
                 })
             }
-            return next();
+            // this next below here is not needed! delete it!!
+            // return next();
         })
     } catch(err) {
         return next({

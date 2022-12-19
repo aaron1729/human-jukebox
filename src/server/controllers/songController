@@ -22,6 +22,10 @@ songController.getSongs = (req, res, next) => {
 }
 
 
+
+
+
+
 // UNDER CONSTRUCTION!!!
 // this middleware function gets a playlist id (to which a musician has access) and retrieves it from the spotify API.
 songController.getSpotifyPlaylist = (req, res, next) => {
@@ -56,6 +60,10 @@ songController.getSpotifyPlaylist = (req, res, next) => {
 }
 
 
+
+
+
+
 // this middleware function gets the musician's list of spotify playlists (or at least the first 20 or so of them) from the spotify API.
 songController.getAllSpotifyPlaylists = (req, res, next) => {
     console.log('inside of songController.getAllSpotifyPlaylists, and cookies are', req.cookies);
@@ -66,7 +74,7 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
         console.log('inside of songController.getAllSpotifyPlaylists, and just set access and refresh tokens on spotifyApi object');
-        spotifyApi.getUserPlaylists(spotifyId, {limit: 5})
+        spotifyApi.getUserPlaylists(spotifyId, {limit: 15})
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
             res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
@@ -82,6 +90,7 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
         })
     }
 }
+
 
 
 

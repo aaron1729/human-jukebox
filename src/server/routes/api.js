@@ -106,14 +106,19 @@ router.get(
 })
 
 
+
+
+
+
+
 // UNDER CONSTRUCTION
 // this endpoint is accessed by a musician from their private page, and fetches all (or really the first N) playlists attached to their spotify account.
 router.get(
     '/getAllPlaylists',
     authController.checkCookies,
-    // authController.getNewAccessToken,
-    // authController.spotifyIdAndAccessToDb,
-    // authController.endCycleIfCookiesUnmatched,
+    authController.endCycleIfCookiesUnmatched,
+    authController.getNewAccessToken,
+    authController.spotifyIdAndAccessToDb,
     songController.getAllSpotifyPlaylists,
     (req, res) => {
         console.log('at the end of /api/getAllPlaylists route handler, sending back the data', res.locals.playlistArr);
@@ -136,6 +141,11 @@ router.get(
         return res.status(200).json(res.locals.playlist);
     }
 )
+
+
+
+
+
 
 
 
