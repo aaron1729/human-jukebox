@@ -73,7 +73,14 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
         spotifyApi.getUserPlaylists(spotifyId, {limit: 15})
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
-            res.locals.playlistArr = data.body.items.map(obj => [obj.name, obj.id, obj.external_urls.spotify]);
+            res.locals.playlistArr = data.body.items.map(obj => {
+                return {
+                    playlistName: obj.name,
+                    playlistSpotifyId: obj.id,
+                    playlistSpotifyUrl: obj.external_urls.spotify
+                }
+            }
+            );
             console.log('in songController.getAllSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
             return next();
         });

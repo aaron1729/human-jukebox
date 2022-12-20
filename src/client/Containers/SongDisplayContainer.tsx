@@ -3,24 +3,17 @@ import SongDisplay from '../Components/SongDisplay';
 
 const SongDisplayContainer = (props: any) => {
 
-  // this is an array of song *components*
+  // songArray is an array of song *components*
   const [ songArray, setSongArray ] = useState([]);
 
   const handle = props.handle;
-  console.log('current Musician from SongDisplayContainer props: ', handle);
+  console.log('current musician handle from SongDisplayContainer props:', handle);
 
-  // fetch songs from db for current user 
+  // fetch songs from db for current user and update songArray therefrom
   const getAllSongs = async () => {
     const response = await fetch(`/api/songs/${handle}`);
     const songs = await response.json();
     console.log('songs from getAllSongs:', songs);
-
-
-
-
-
-
-
 
     type Song = {
       album_name: string,
@@ -36,36 +29,19 @@ const SongDisplayContainer = (props: any) => {
     const songObjectToComponent = (songObj: Song) => {
       const {name, artist, preview_url, spotify_id}: {name: string, artist: string, preview_url: string, spotify_id: string} = songObj;
       const previewUrl: string = preview_url
-      const spotifySongId = spotify_id;
-      return <SongDisplay name={name} artist={artist} key={spotifySongId} previewUrl={previewUrl} />
+      const songSpotifyId = spotify_id;
+      return <SongDisplay name={name} artist={artist} previewUrl={previewUrl} key={songSpotifyId} />
     }
 
     setSongArray(songs.map((songObj: Song) => songObjectToComponent(songObj)));
-
-
-
-
-
-
-
-    // // then take songs and add to songArray
-    // // iterate over song array returned
-    // songs.forEach((song: any, index: number) => {
-    //   // create a new SongDisplay component and push it to songArray using setSongArray
-    //   const {name, artist, preview_url, spotify_id} = song;
-    //   const previewUrl = preview_url
-    //   const spotifySongId = spotify_id
-    //   const newSongDisplayComponent = <SongDisplay name={name} artist={artist} key={spotifySongId} previewUrl={previewUrl} />
-    //     setSongArray(songArray => [...songArray, newSongDisplayComponent]);
-    //     // setSongArray([...songArray, newSongDisplayComponent]);
-    //     console.log('and now songArray is:', songArray);
-    // })
-    // console.log('at end of getAllSongs, songArray is:' + JSON.stringify(songArray));
   }
 
-  useEffect(() => {
-    getAllSongs();
-  }, [])
+
+  // the first argument is the effect function. the second argument (which is optional) indicates the dependencies of the effect function. upon each rerender (such as *after* running the effect function the first time), React checks the dependencies to determine whether to run the effect function again. if the second argument is omitted, React will execute the effect function upon every rerender. in this case, omitting the second argument causes the database to be queried over and over. so we instead pass an empty array of dependencies, which ensures that the effect function is only run once.
+  useEffect(
+    () => {getAllSongs()},
+    []
+  )
 
   return (
     <div>

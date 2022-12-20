@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PublicMusicianContainer from './PublicMusicianContainer';
 import SongDisplayContainer from './SongDisplayContainer';
+import PlaylistDisplayContainer from './PlaylistDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useFetch } from 'react-async';
+
+
 // this will be used to display playlists
 import Modal from '@mui/material/Modal';
+
+
 import { styles } from '../styles';
 
 
@@ -14,6 +19,9 @@ function PrivateMusicianContainer(){
   const [searchParams, setSearchParams] = useSearchParams();
   const handle = searchParams.get('musician');
   console.log('inside of PrivateMusicianContainer component, and handle (coming from query parameter) is:', handle);
+
+  // toggle whether to show or hide list of playlists
+  const [showPlaylists, setShowPlaylists] = useState(false);
 
   // fetch musician's private info from database
   const response = useFetch(`/api/info_private/${handle}`, {headers: {accept: 'application/json'}});
@@ -25,23 +33,6 @@ function PrivateMusicianContainer(){
 
 
 
-
-  // WORK IN PROGRESS
-  type PlaylistData = [String, String, String];
-  let playlists: PlaylistData[] = [['a', 'hello', 'there'], ['b', 'goodbye', 'here']];
-  const getAllPlaylists = async () => {
-    const res = await fetch('/api/getAllPlaylists');
-    console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
-    if (res.status !== 200) {
-      console.log('error getting all playlists');
-      return;
-    }
-    const playlists = await res.json();
-    console.log('playlists is:', playlists);
-  }
-
-
-
   const deleteCookies = () => {
     fetch('/api/logout')
   }
@@ -49,7 +40,6 @@ function PrivateMusicianContainer(){
   if (info) {
     return(
       <div className="private-musician flex flex-col items-center">
-
 
       <span className="flex flex-row">
 
@@ -90,20 +80,14 @@ function PrivateMusicianContainer(){
 
       <br />
 
-
-      list of playlists is: {playlists.map(arr => arr[1]).join(' ')}
-
-      <br />
-
-      <button onClick={getAllPlaylists} className={styles.buttonBig}>
-        Get My Playlists
+      <button onClick={() => setShowPlaylists(!showPlaylists)} className={styles.buttonSmall}>
+        toggle whether to show playlists
       </button>
 
+      {showPlaylists && <PlaylistDisplayContainer />}
+
+
       <br />
-
-
-
-
 
 
 
