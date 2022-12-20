@@ -24,10 +24,10 @@ function LandingPageContainer(){
     const resObj = await res.json();
     // console.log('the stuff is: ', resObj);
     if (resObj.cookieMatch) {
-      console.log('in function login, cookies matched')
+      console.log('inside of the "login" function, the cookies matched')
       navigate(`/musician/private?musician=${resObj.handle}`);
     } else {
-      console.log('in function login, cookies did not exist or did not match');
+      console.log('inside of the "login" function, cookies did not exist or did not match');
       const newWindow = window.open('/api/auth');
     }
   }

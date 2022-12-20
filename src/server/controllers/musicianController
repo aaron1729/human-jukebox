@@ -7,8 +7,8 @@ const musicianController = {};
 musicianController.getMusicianInfoFromDb = (req, res, next) => {
     try {
         const {handle} = req.params;
-        const queryString = `SELECT * FROM musicians where handle = '${handle}'`;
-        db.query(queryString).then(data => {
+        const getMusicianInfoQueryString = `SELECT * FROM musicians where handle = '${handle}'`;
+        db.query(getMusicianInfoQueryString).then(data => {
             console.log('inside of musicianController.getMusicianInfoFromDb, and the data.rows are:', data.rows);
             if (!data.rows[0]) {
                 return next()

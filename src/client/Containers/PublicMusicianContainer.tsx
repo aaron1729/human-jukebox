@@ -11,7 +11,7 @@ function PublicMusicianContainer(){
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
   const handle = searchParams.get('musician');
-  console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);  
+  console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);
 
   // fetch musician's public info from database
   const response = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
@@ -39,7 +39,9 @@ function PublicMusicianContainer(){
       <br />
 
       <SongDisplayContainer handle={handle} />
+    
     </div>
+
     )
   }
   

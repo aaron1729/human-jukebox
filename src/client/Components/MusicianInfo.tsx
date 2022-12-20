@@ -53,7 +53,6 @@ const MusicianInfo = (props: any) => {
 
       </span>
 
-      <hr />
     </div>
   )
 

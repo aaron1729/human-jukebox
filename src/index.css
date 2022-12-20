@@ -13,3 +13,26 @@
     @apply bg-gradient-to-r from-green-400 to-blue-500
   }
 }
+
+.ReactModal__Overlay {
+  z-index: 99;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.75);
+}
+
+.ReactModal__Content {
+  position: absolute;
+  /* these all started out as 2.5rem */
+  left: 2.5rem;
+  right: 2.5rem;
+  top: 5rem;
+  bottom: 5rem;
+  box-shadow: 0 0 30px 0 rgba(0,0,97,0.5);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+}

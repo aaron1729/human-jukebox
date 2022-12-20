@@ -7,7 +7,7 @@ import PrivateMusicianContainer from './Containers/PrivateMusicianContainer';
 
 function App(){
   return (
-    <div className="" id="app">
+    <div id="app">
       <Routes>
         <Route
           path="/"
@@ -15,10 +15,6 @@ function App(){
         />
         <Route
           path="musician/public/"
-          element={<PublicMusicianContainer />}
-        />
-        <Route
-          path="musician/public2"
           element={<PublicMusicianContainer />}
         />
         <Route

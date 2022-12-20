@@ -17,6 +17,7 @@ import Modal from '@mui/material/Modal';
 
 
 import { styles } from '../styles';
+import { style } from '@mui/system';
 
 
 function PrivateMusicianContainer(){
@@ -25,9 +26,6 @@ function PrivateMusicianContainer(){
   const [searchParams, setSearchParams] = useSearchParams();
   const handle = searchParams.get('musician');
   console.log('inside of PrivateMusicianContainer component, and handle (coming from query parameter) is:', handle);
-
-  // toggle whether to show or hide list of playlists
-  const [showPlaylists, setShowPlaylists] = useState(false);
 
   // toggle whether to show or hide the modal of playlists
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
@@ -84,18 +82,6 @@ function PrivateMusicianContainer(){
 
       <b>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id, and make handle a separate page.)</b>
 
-      <br />
-
-      <button id="toggle-playlists-button" onClick={() => setShowPlaylists(!showPlaylists)} className={styles.buttonSmall}>
-        toggle whether to show playlists (will be replaced by a modal)
-      </button>
-
-
-      {showPlaylists && <PlaylistDisplayContainer />}
-
-
-
-
       <button
         id="toggle-playlists-modal"
         onClick={() => setShowPlaylistModal(true)}
@@ -106,16 +92,27 @@ function PrivateMusicianContainer(){
 
       <ReactModal
         isOpen={showPlaylistModal}
-        parentSelector={() => document.getElementById("app") || undefined}
+        parentSelector={() => document.getElementById("root") || undefined}
         // the following is not recommended in ReactModal docs, but it gives an error otherwise
         ariaHideApp={false}
+        className={"ReactModal__Content bg-gradient-to-r from-green-400 to-red-500"}
+        // @apply bg-gradient-to-r from-red-400 to-blue-500"
+        overlayClassName={"ReactModal__Overlay"}
       >
+
+        <h4><b>Click a playlist title to see it on Spotify!</b></h4>
+
         <PlaylistDisplayContainer />
 
-        <hr />
+        
+
+        {/* put radio buttons on the playlists, attach them to the playlist id's, and then give the following button an onClick that grabs the playlist id and sends it to the database */}
+        <button className={styles.buttonSmall}>
+          apply
+        </button>
 
         <button onClick={() => setShowPlaylistModal(false)} className={styles.buttonSmall}>
-          close
+          cancel
         </button>
       </ReactModal>
 

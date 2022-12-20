@@ -30,19 +30,15 @@ const PlaylistDisplayContainer = (props: any) => {
     setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToComponent(playlistObj)));
   }
 
-  // see description of useEffect in SongDisplayContainer. however, in this case we might actually *want* to update the list of playlists, in case the user has more than the limiting number dictated by the Spotify API call.
+  // see the description of useEffect in SongDisplayContainer. however, in this case we might actually *want* to update the list of playlists, in case the user has more than the limiting number dictated by the Spotify API call.
   useEffect(
     () => {getAllPlaylists()},
     []
   )
 
   return (
-    <div className='flex flex-col'>
-      <div>
-        <h4 className='flex flex-row justify-center'><b>Click a playlist title to see it on Spotify!</b></h4>
-      </div>
-      {playlistArray}
-      
+    <div className='flex flex-col justify-center'>
+          {playlistArray}
     </div>
   )
 }
