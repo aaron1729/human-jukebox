@@ -54,6 +54,12 @@ function LandingPageContainer(){
 
 
 
+
+
+
+
+
+  ///////// TO BE REMOVED after moving this to musician private page
   
   const getAllPlaylists = async () => {
 
@@ -91,10 +97,9 @@ function LandingPageContainer(){
 
 
 
-
-
   return(
-    <div className="landing-page flex flex-col items-center">
+    // this className used to have "landing-page" in it, which seems not to do anything at the moment (it should be a custom tailwind class or something).
+    <div className="flex flex-col items-center">
       <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
       <br />
       <SearchInput />
@@ -106,8 +111,16 @@ function LandingPageContainer(){
 
       <br />
 
+      <br />
 
-      {/* the placement of this button is temporary, just to save a step of clickthrough when testing. */}
+      <br />
+
+
+
+
+
+      {/* the placement of these buttons is temporary, just to save a step of clickthrough when testing. later, delete them as well as the functions above. */}
+
       <button onClick={getAllPlaylists} className={styles.buttonBig}>
         test: get my playlists
       </button>
@@ -125,6 +138,7 @@ function LandingPageContainer(){
       <Link to="/DNE">
         a Link to a route that DNE
       </Link> */}
+    
     </div>
   )
 }

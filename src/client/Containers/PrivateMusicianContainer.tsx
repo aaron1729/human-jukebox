@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import PublicMusicianContainer from './PublicMusicianContainer';
+// import PublicMusicianContainer from './PublicMusicianContainer';
 import SongDisplayContainer from './SongDisplayContainer';
 import PlaylistDisplayContainer from './PlaylistDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useFetch } from 'react-async';
 
+import ReactModal from 'react-modal';
+
+
+
 
 // this will be used to display playlists
 import Modal from '@mui/material/Modal';
+
+
 
 
 import { styles } from '../styles';
@@ -23,15 +29,15 @@ function PrivateMusicianContainer(){
   // toggle whether to show or hide list of playlists
   const [showPlaylists, setShowPlaylists] = useState(false);
 
+  // toggle whether to show or hide the modal of playlists
+  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+
+
   // fetch musician's private info from database
   const response = useFetch(`/api/info_private/${handle}`, {headers: {accept: 'application/json'}});
   const info = response.data;
   const error = response.error;
   console.log('in PrivateMusicianContainer, and info is:', info);
-
-
-
-
 
   const deleteCookies = () => {
     fetch('/api/logout')
@@ -80,28 +86,44 @@ function PrivateMusicianContainer(){
 
       <br />
 
-      <button onClick={() => setShowPlaylists(!showPlaylists)} className={styles.buttonSmall}>
-        toggle whether to show playlists
+      <button id="toggle-playlists-button" onClick={() => setShowPlaylists(!showPlaylists)} className={styles.buttonSmall}>
+        toggle whether to show playlists (will be replaced by a modal)
       </button>
+
 
       {showPlaylists && <PlaylistDisplayContainer />}
 
+
+
+
+      <button
+        id="toggle-playlists-modal"
+        onClick={() => setShowPlaylistModal(true)}
+        className={styles.buttonSmall}
+      >
+        show playlists modal
+      </button>
+
+      <ReactModal
+        isOpen={showPlaylistModal}
+        parentSelector={() => document.getElementById("app") || undefined}
+        // the following is not recommended in ReactModal docs, but it gives an error otherwise
+        ariaHideApp={false}
+      >
+        <PlaylistDisplayContainer />
+
+        <hr />
+
+        <button onClick={() => setShowPlaylistModal(false)} className={styles.buttonSmall}>
+          close
+        </button>
+      </ReactModal>
 
       <br />
 
 
 
-      {/* <MusicianInfo /> */}
-      {/* <AddSong /> */}
-      {
-        /*contains all of the musician data:
-        bio, venmo, songs, tags, edit options
-        */
-      }
-
-
       {/* <PublicMusicianContainer /> */}
-
 
       <SongDisplayContainer handle={handle} />
     </div>

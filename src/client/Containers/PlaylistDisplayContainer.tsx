@@ -12,8 +12,6 @@ const PlaylistDisplayContainer = (props: any) => {
     const playlists = await response.json();
     console.log('playlists from getAllPlaylists:', playlists);
 
-
-
     type Playlist = {
       playlistName: string,
       playlistSpotifyId: string,
@@ -21,14 +19,10 @@ const PlaylistDisplayContainer = (props: any) => {
     }
 
     const playlistObjectToComponent = (playlistObj: Playlist) => {
-      
-      console.log('playlistObjectToComponent triggered');
-
       const {playlistName, playlistSpotifyId, playlistSpotifyUrl}: {playlistName: string, playlistSpotifyId: string, playlistSpotifyUrl: string} = playlistObj;
       const name: string = playlistName;
       const spotifyUrl: string = playlistSpotifyUrl;
       const spotifyId: string = playlistSpotifyId;
-      console.log('inside of playlistObjectToComponent, name and spotifyUrl and spotifyId (for playlist) are:', name, spotifyUrl, spotifyId);
       const newPlaylistDisplay = <PlaylistDisplay name={name} spotifyUrl={spotifyUrl} key={spotifyId} />;
       return newPlaylistDisplay;
     }
@@ -45,7 +39,7 @@ const PlaylistDisplayContainer = (props: any) => {
   return (
     <div className='flex flex-col'>
       <div>
-        <h4 className='flex flex-row justify-center'>Click a playlist title to see it on Spotify!</h4>
+        <h4 className='flex flex-row justify-center'><b>Click a playlist title to see it on Spotify!</b></h4>
       </div>
       {playlistArray}
       

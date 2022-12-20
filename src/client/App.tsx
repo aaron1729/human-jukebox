@@ -5,10 +5,9 @@ import NoPage from './Components/NoPage';
 import PublicMusicianContainer from './Containers/PublicMusicianContainer';
 import PrivateMusicianContainer from './Containers/PrivateMusicianContainer';
 
-
 function App(){
   return (
-    <div className=''>
+    <div className="" id="app">
       <Routes>
         <Route
           path="/"
