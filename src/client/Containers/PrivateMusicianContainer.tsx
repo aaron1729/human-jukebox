@@ -90,14 +90,16 @@ function PrivateMusicianContainer(){
         show playlists modal
       </button>
 
+      {/* see here for more: https://reactcommunity.org/react-modal/ */}
       <ReactModal
         isOpen={showPlaylistModal}
         parentSelector={() => document.getElementById("root") || undefined}
         // the following is not recommended in ReactModal docs, but it gives an error otherwise
         ariaHideApp={false}
-        className={"ReactModal__Content bg-gradient-to-r from-green-400 to-red-500"}
+        className={"ReactModal__Content" + " " + styles.altFade}
         // @apply bg-gradient-to-r from-red-400 to-blue-500"
         overlayClassName={"ReactModal__Overlay"}
+        contentLabel={"playlist selector modal"}
       >
 
         <h4><b>Click a playlist title to see it on Spotify!</b></h4>

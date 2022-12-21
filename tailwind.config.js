@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    "./src/auth.html"
+    "./src/client/auth.html"
   ],
   theme: {
     extend: {},

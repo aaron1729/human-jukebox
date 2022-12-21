@@ -4,13 +4,18 @@ const { query } = require('../models/models');
 
 const authController = {};
 
-
+// save the cookies spotifyId, access, and refresh on res.locals, possibly for later use (e.g. in authController.spotifyIdAndAccessToDb).
 // store a boolean as res.locals.cookieMatch based on whether the cookies "spotifyId" and "access" exist and are a match in our db
 authController.checkCookies = (req, res, next) => {
     try {
         console.log('inside of authController.checkCookies')
-        const spotifyId = req.cookies.spotifyId;
-        const access = req.cookies.access;
+        res.locals.spotifyId = req.cookies.spotifyId;
+        res.locals.access = req.cookies.access;
+        res.locals.refresh = req.cookies.refresh;
+        
+        const spotifyId = res.locals.spotifyId;
+        const access = res.locals.access;
+
         if (!spotifyId || !access) {
             res.locals.cookieMatch = false;
             return next();
@@ -91,8 +96,6 @@ authController.getNewAccessToken = (req, res, next) => {
             console.log('the returned data from spotifyApi.refreshAccessToken is', data.body.access_token);
             const access = data.body.access_token
             res.locals.access = access;
-            // this next line is because this middleware is followed by authController.spotifyIdAndAccessToDb . that one could *sometimes* pull spotifyId from cookies, but it's also used in the case where a new musician is signing up, and so they won't have any cookies yet. so it really should be coming from res.locals there, not from cookies.
-            res.locals.spotifyId = req.cookies.spotifyId;
             res.cookie('access', access);
             spotifyApi.setAccessToken(access);
             return next();

@@ -2,6 +2,7 @@ type StyleObj = {
     buttonSmall: string
     buttonBig: string
     searchField: string
+    altFade: string
 };
 
 // other possible button styles:
@@ -35,6 +36,11 @@ const styles: StyleObj = {
     "rounded",
     "px-1",
     "mr-2"
+    ].join(" "),
+    altFade: [
+        "bg-gradient-to-r",
+        "from-red-400",
+        "to-blue-500"
     ].join(" ")
 }
 
