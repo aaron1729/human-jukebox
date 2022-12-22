@@ -4,20 +4,8 @@ import SongDisplayContainer from './SongDisplayContainer';
 import PlaylistDisplayContainer from './PlaylistDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useFetch } from 'react-async';
-
 import ReactModal from 'react-modal';
-
-
-
-
-// this will be used to display playlists
-import Modal from '@mui/material/Modal';
-
-
-
-
 import { styles } from '../styles';
-import { style } from '@mui/system';
 
 
 function PrivateMusicianContainer(){

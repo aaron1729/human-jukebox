@@ -2,7 +2,6 @@ import React from 'react';
 import SearchInput from '../Components/SearchInput';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import {styles} from '../styles';
-import { style } from '@mui/system';
 
 // /Users/aaron/git/human-jukebox/src/client/styles.js
 
