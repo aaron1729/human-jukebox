@@ -1,3 +1,4 @@
+import { style } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-router-dom';
 import PlaylistDisplay from '../Components/PlaylistDisplay';
@@ -50,26 +51,29 @@ const PlaylistDisplayContainer = (props: any) => {
       console.log('in playlistObjectToInputElement, the props are:', name, spotifyUrl, spotifyId)
       return (
         <div key={spotifyId}>
+          <label htmlFor={spotifyId}>
           <input
             type="radio"
             id={spotifyId}
+            key={spotifyId}
             checked={playlistChoice === spotifyId}
             value={spotifyId}
             onChange={handleRadioChange}
-            name="playlist"
+            // name="test-group"
           />
-          <label htmlFor={spotifyId}>
             <a href={spotifyUrl} target="_blank">{name}</a>
           </label>
         </div>
       )
     }
 
-    setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToInputElement(playlistObj)));
+
+
+    // setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToInputElement(playlistObj)));
 
 
 
-    // setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToComponent(playlistObj)));
+    setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToComponent(playlistObj)));
   }
 
   // see the description of useEffect in SongDisplayContainer. however, in this case we might actually *want* to update the list of playlists, in case the user has more than the limiting number dictated by the Spotify API call.
@@ -84,35 +88,23 @@ const PlaylistDisplayContainer = (props: any) => {
   //////////////////////////////////////////////////////////////////////////////////////////
 
   // record choice of playlist
+  // TO DO: this should default to the current value, once that's saved in the database
   const [playlistChoice, setPlaylistChoice] = useState(null)
-
-
-
 
 
   ////// NOTE TO SELF: it seems that these invocations of setPlaylistChoice are not working! for some reason, the state value playlistChoice keeps getting set back to what it's initialized to down below (currently "value3").
 
   ///// and weirder, it seems like the console.log in handleRadioChange2 is actually *lagging* by one behind the actual clicks.
 
-  const handleRadioChange = async (e: React.SyntheticEvent) => {
+  const handleRadioChange = (e: React.SyntheticEvent) => {
     // make target into a union type.
     const target = e.target as typeof e.target & {
       value: string
     };
-    console.log('inside of handleRadioChange function, target.value is', target.value)
-    // console.log('and with value:', target.value)
-    const value = target.value;
-    console.log('value is:', value)
-    console.log('first, playlistChoice is:', playlistChoice)
-    setPlaylistChoice(value)
-    console.log('and now, playlistChoice is:', playlistChoice)
-    setTimeout(logPlaylistChoice, 1000)
+    console.log('inside of handleRadioChange function, and target.value is', target.value)
+    // note that setPlaylistChoice happens asynchronously, so it won't show up in a simple console.log (or even one with a setTimeout).
+    setPlaylistChoice(target.value)
   }
-
-  const logPlaylistChoice = () => {
-    console.log('in logPlaylistChoice, and playlistChoice is:', playlistChoice)
-  }
-
 
 
 
@@ -120,6 +112,11 @@ const PlaylistDisplayContainer = (props: any) => {
     setPlaylistChoice(id)
     console.log('handleRadioChange2 triggered, with argument', id)
     console.log('and now playlistChoice is', playlistChoice)
+  }
+
+
+  const logPlaylistChoice = () => {
+    console.log('playlistChoice is:', playlistChoice)
   }
 
 
@@ -140,73 +137,101 @@ const PlaylistDisplayContainer = (props: any) => {
 
 
 // it seems that a "name" field for these input elements is only needed when using HTML (not React) to group these radio buttons together. here, setting the "checked" field to equal an evaluated boolean already does the job.
-// it's unclear if the "id" field is needed, but it's probably a good idea.
+// it's unclear if the "id" field is needed, but it's probably a good idea. likewise with keys.
   return (
     <div className='flex flex-col justify-center'>
       <h4><b>Click a playlist title to see it on Spotify!</b></h4>
+
+      <button onClick={logPlaylistChoice} className={styles.buttonSmall}>
+              log playlistChoice to the console
+      </button>
+
+
           <form>
-            {/* {playlistArray} */}
+            
 
 
 
-
-
+{/* 
+            <label htmlFor="playlist1">
             <input
               type="radio"
               id="playlist1"
+              key="playlist1"
               checked={playlistChoice === "value1"}
               value="value1"
               onChange={handleRadioChange}
-              name="test-group"
+              // name="test-group"
             />
-            <label htmlFor="playlist1">
               test label 1
             </label>
 
             <br />
 
+            <label htmlFor="4lAjVOyWSUZmtS6dK0tGab">
+              <input
+                type="radio"
+                id="4lAjVOyWSUZmtS6dK0tGab"
+                key="4lAjVOyWSUZmtS6dK0tGab"
+                checked={playlistChoice === "4lAjVOyWSUZmtS6dK0tGab"}
+                value="4lAjVOyWSUZmtS6dK0tGab"
+                onChange={handleRadioChange}
+              />
+              hard-coded: Where My Girls At
+            </label>
+
+            <br />
+
+            <label htmlFor="playlist2">
             <input
               type="radio"
               id="playlist2"
+              key="playlist2"
               checked={playlistChoice === "value2"}
               value="value2"
               onChange={handleRadioChange}
-              name="test-group"
+              // name="test-group"
             />
-            <label htmlFor="playlist2">
               test label 2
             </label>
 
             <br />
 
+            <label htmlFor="playlist3">
             <input
               type="radio"
               id="playlist3"
+              key="playlist3"
               checked={playlistChoice === "value3"}
               value="value3"
               onChange={handleRadioChange}
-              name="test-group-2"
+              // name="test-group"
             />
-            <label htmlFor="playlist3">
               test label 3
             </label>
 
             <br />
 
+            <label htmlFor="playlist3">
             <input
               type="radio"
               id="playlist4"
+              key="playlist4"
               checked={playlistChoice === "value4"}
               value="value4"
               onChange={handleRadioChange}
-              name="test-group-2"
+              // name="test-group"
             />
-            <label htmlFor="playlist3">
               test label 4
             </label>
 
 
             <br />
+
+            */}
+
+
+            {playlistArray}
 
 
             <button onClick={handleSubmit} className={styles.buttonSmall}>
@@ -216,14 +241,8 @@ const PlaylistDisplayContainer = (props: any) => {
               cancel
             </button>
 
-
-
-
-
-
-            {/* <input type="submit" value="submit" className={styles.buttonSmall} /> */}
             <br />
-            {/* <input type="submit" value="cancel" className={styles.buttonSmall} /> */}
+
           </form>
     </div>
   )
