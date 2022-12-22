@@ -41,6 +41,17 @@ function PrivateMusicianContainer(){
     fetch('/api/logout')
   }
 
+  const setPlaylist = (playlistId: string) => {
+    // this will take a new playlist id, and:
+      // save it to the database (in the public.musicians table)
+      // update the songs in the database to match
+      // update the `info` object here.... or perhaps that needs to be refactored to use setState, too.
+      console.log('setPlaylist triggered, with argument:', playlistId)
+  }
+
+
+
+
   if (info) {
     return(
       <div className="private-musician flex flex-col items-center">
@@ -102,20 +113,21 @@ function PrivateMusicianContainer(){
         contentLabel={"playlist selector modal"}
       >
 
-        <h4><b>Click a playlist title to see it on Spotify!</b></h4>
-
-        <PlaylistDisplayContainer />
+        <PlaylistDisplayContainer setShowPlaylistModal={setShowPlaylistModal} setPlaylist={setPlaylist} />
 
         
 
         {/* put radio buttons on the playlists, attach them to the playlist id's, and then give the following button an onClick that grabs the playlist id and sends it to the database */}
-        <button className={styles.buttonSmall}>
+        {/* <button className={styles.buttonSmall}>
           apply
         </button>
 
         <button onClick={() => setShowPlaylistModal(false)} className={styles.buttonSmall}>
           cancel
-        </button>
+        </button> */}
+
+
+
       </ReactModal>
 
       <br />

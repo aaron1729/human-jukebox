@@ -14,8 +14,8 @@ function SearchInput(){
 
     const handle = target.handle.value;
     console.log('the handle (inside of the SearchInput component) is:', handle)
-    // navigate to public musician profile
     navigate(`/musician/public?musician=${handle}`)
+    // // an alternative way to write this:
     // navigate({
     //   pathname: '/musician/public',
     //   search: createSearchParams({
