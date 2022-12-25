@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-// import PublicMusicianContainer from './PublicMusicianContainer';
+import React, { useEffect, useState } from 'react';
 import SongDisplayContainer from './SongDisplayContainer';
 import PlaylistDisplayContainer from './PlaylistDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
@@ -18,31 +17,69 @@ function PrivateMusicianContainer(){
   // toggle whether to show or hide the modal of playlists
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
+  // musician info (in database)
+  const [privateMusicianInfo, setPrivateMusicianInfo] = useState({
+    access: "",
+    bio: "",
+    display_name: "",
+    handle: handle,
+    instagram: "",
+    instagram_show: false,
+    spotify_id: "",
+    spotify_playlist_id: "",
+    spotify_playlist_name: "",
+    spotify_playlist_url: "",
+    venmo: "",
+    venmo_show: false
+  })
 
-  // fetch musician's private info from database
-  const response = useFetch(`/api/info_private/${handle}`, {headers: {accept: 'application/json'}});
-  const info = response.data;
-  const error = response.error;
-  console.log('in PrivateMusicianContainer, and info is:', info);
-
-  const deleteCookies = () => {
-    fetch('/api/logout')
+  const getPrivateMusicianInfo = async () => {
+    const response = await fetch(`/api/info_private/${handle}`);
+    const privateMusicianInfoFromDb = await response.json();
+    console.log('inside of getPrivateMusicianInfo function in PrivateMusicianContainer, and privateMusicianInfoFromDb is:', privateMusicianInfoFromDb);
+    setPrivateMusicianInfo(privateMusicianInfoFromDb)
   }
 
-  const setPlaylist = (playlistId: string) => {
+  useEffect(
+    () => {getPrivateMusicianInfo()},
+    []
+  )
+
+  /// here, put a useEffect with first argument getPlaylist (to be written)
+
+
+
+
+  // this is fired by a button-click inside of the modal (in the PlaylistDisplayContainer component), and saves the current value of playlistChoice to the database.
+  const setPlaylist = async (playlistId: string) => {
     // this will take a new playlist id, and:
-      // save it to the database (in the public.musicians table)
-      // update the songs in the database to match
-      // update the `info` object here.... or perhaps that needs to be refactored to use setState, too.
-      console.log('setPlaylist triggered, with argument:', playlistId)
+    // save it to the database (in the public.musicians table)
+    // update the songs in the database to match
+    // update the `info` object here.... or perhaps that needs to be refactored to use setState, too.
+    console.log('setPlaylist triggered, with argument:', playlistId)
+    
+    const response = await fetch(`/api/setPlaylist/${playlistId}`);
+    console.log('inside of setPlaylist function, the response is:', response)
+    const response4real = await response.json();
+    console.log('response4real is:', response4real)
+
+    
+
+
+
   }
+  
+  
+  
+
+    
+    const deleteCookies = () => {
+      fetch('/api/logout')
+    }
 
 
-
-
-  if (info) {
-    return(
-      <div className="private-musician flex flex-col items-center">
+  return (
+    <div className="private-musician flex flex-col items-center">
 
       <span className="flex flex-row">
 
@@ -60,26 +97,46 @@ function PrivateMusicianContainer(){
 
       </span>
 
-      spotify id: {(info as any).spotify_id}
-      <br />
-      handle: {(info as any).handle}
-      <br />
-      display name: {(info as any).display_name}
-      <br />
-      instagram: {(info as any).instagram}
-      <br />
-      show instagram link on public page: {(info as any).instagram_show.toString()}
-      <br />
-      venmo: {(info as any).venmo}
-      <br />
-      show venmo link on public page: {(info as any).venmo_show.toString()}
-      <br />
-      bio: {(info as any).bio}
-      <br />
-      spotify playist id: {(info as any).spotify_playlist_id}
+      <span>
+        <b>display name: </b>
+        {privateMusicianInfo.display_name}
+      </span>
+      <span>
+        <b>handle: </b>
+        {privateMusicianInfo.handle}
+      </span>
+      <span>      
+        <b>spotify id: </b>
+        {privateMusicianInfo.spotify_id}
+      </span>
+      <span>
+        <b>instagram: </b>
+        {privateMusicianInfo.instagram}
+      </span>
+      <span>
+        <b>show instagram on public page: </b>
+        {privateMusicianInfo.instagram_show.toString()}
+      </span>
+      <span>
+        <b>venmo: </b>
+        {privateMusicianInfo.venmo}
+      </span>
+      <span>
+        <b>show venmo on public page: </b>
+        {privateMusicianInfo.venmo_show.toString()}
+      </span>
+      <span>
+        <b>spotify playlist: </b>
+        {privateMusicianInfo.spotify_playlist_id && <a href={privateMusicianInfo.spotify_playlist_url} target="_blank">{privateMusicianInfo.spotify_playlist_name}</a>}
+      </span>
+      <span>
+        <b>bio: </b>
+        {privateMusicianInfo.bio}
+      </span>
+
       <br />
 
-      <b>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id, and make handle a separate page.)</b>
+      <i>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id though; and make handle a separate page since it changes the name of the current route.)</i>
 
       <button
         id="toggle-playlists-modal"
@@ -101,9 +158,10 @@ function PrivateMusicianContainer(){
         contentLabel={"playlist selector modal"}
       >
 
-        <PlaylistDisplayContainer setShowPlaylistModal={setShowPlaylistModal} setPlaylist={setPlaylist} />
-
-        
+        <PlaylistDisplayContainer
+          setShowPlaylistModal={setShowPlaylistModal}
+          setPlaylist={setPlaylist}
+        />
 
         {/* put radio buttons on the playlists, attach them to the playlist id's, and then give the following button an onClick that grabs the playlist id and sends it to the database */}
         {/* <button className={styles.buttonSmall}>
@@ -114,20 +172,16 @@ function PrivateMusicianContainer(){
           cancel
         </button> */}
 
-
-
       </ReactModal>
 
       <br />
 
-
-
-      {/* <PublicMusicianContainer /> */}
-
       <SongDisplayContainer handle={handle} />
+
     </div>
+
   )
-}
+
 }
 
 export default PrivateMusicianContainer;

@@ -2,7 +2,7 @@ import React from 'react';
 import { useFetch } from 'react-async';
 import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
-import MusicianInfo from '../Components/MusicianInfo';
+import PublicMusicianInfo from '../Components/PublicMusicianInfo';
 import NoMusicianPage from '../Components/NoMusicianPage';
 
 
@@ -15,15 +15,15 @@ function PublicMusicianContainer(){
 
   // fetch musician's public info from database
   const response = useFetch(`/api/info_public/${handle}`, {headers: {accept: 'application/json'}});
-  const info = response.data
+  const publicMusicianInfo = response.data
   const error = response.error;
-  console.log('in PublicMusicianContainer, info is:', info)
+  console.log('in PublicMusicianContainer, info is:', publicMusicianInfo)
 
   if (error) {
     return <NoMusicianPage handle={handle} />
   }
 
-  if (info) {
+  if (publicMusicianInfo) {
     return(
 
       <div className="Public-musician flex flex-col items-center">
@@ -34,7 +34,7 @@ function PublicMusicianContainer(){
         </button>
       </Link>
 
-      <MusicianInfo info={info} />
+      <PublicMusicianInfo info={publicMusicianInfo} />
 
       <br />
 

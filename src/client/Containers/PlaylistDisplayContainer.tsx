@@ -6,6 +6,12 @@ import { styles } from '../styles'
 
 const PlaylistDisplayContainer = (props: any) => {
 
+
+  ////////////////////////////////////////
+  // the following relates to the playlistArray
+
+  ////////////////////////////////////////
+
   // playlistArray is an array of PlaylistDisplay *components*
   const [ playlistArray, setPlaylistArray ] = useState([]);
 
@@ -39,40 +45,6 @@ const PlaylistDisplayContainer = (props: any) => {
       return newPlaylistDisplay;
     }
 
-
-
-
-    // here, try creating the elements/components in this file instead of a separate one (which requires passing state as props).
-    const playlistObjectToInputElement = (playlistObj: Playlist) => {
-      const {playlistName, playlistSpotifyId, playlistSpotifyUrl}: {playlistName: string, playlistSpotifyId: string, playlistSpotifyUrl: string} = playlistObj;
-      const name: string = playlistName;
-      const spotifyUrl: string = playlistSpotifyUrl;
-      const spotifyId: string = playlistSpotifyId;
-      console.log('in playlistObjectToInputElement, the props are:', name, spotifyUrl, spotifyId)
-      return (
-        <div key={spotifyId}>
-          <label htmlFor={spotifyId}>
-          <input
-            type="radio"
-            id={spotifyId}
-            key={spotifyId}
-            checked={playlistChoice === spotifyId}
-            value={spotifyId}
-            onChange={handleRadioChange}
-            // name="test-group"
-          />
-            <a href={spotifyUrl} target="_blank">{name}</a>
-          </label>
-        </div>
-      )
-    }
-
-
-
-    // setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToInputElement(playlistObj)));
-
-
-
     setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToComponent(playlistObj)));
   }
 
@@ -90,11 +62,6 @@ const PlaylistDisplayContainer = (props: any) => {
   // record choice of playlist
   // TO DO: this should default to the current value, once that's saved in the database
   const [playlistChoice, setPlaylistChoice] = useState(null)
-
-
-  ////// NOTE TO SELF: it seems that these invocations of setPlaylistChoice are not working! for some reason, the state value playlistChoice keeps getting set back to what it's initialized to down below (currently "value3").
-
-  ///// and weirder, it seems like the console.log in handleRadioChange2 is actually *lagging* by one behind the actual clicks.
 
   const handleRadioChange = (e: React.SyntheticEvent) => {
     // make target into a union type.
@@ -147,9 +114,16 @@ const PlaylistDisplayContainer = (props: any) => {
       </button>
 
 
-          <form>
-            
+        <form>
 
+          {playlistArray}
+
+          <button onClick={handleSubmit} className={styles.buttonSmall}>
+            submit
+          </button>
+          <button onClick={handleCancel} className={styles.buttonSmall}>
+            cancel
+          </button>
 
 
 {/* 
@@ -231,19 +205,8 @@ const PlaylistDisplayContainer = (props: any) => {
             */}
 
 
-            {playlistArray}
 
-
-            <button onClick={handleSubmit} className={styles.buttonSmall}>
-              submit
-            </button>
-            <button onClick={handleCancel} className={styles.buttonSmall}>
-              cancel
-            </button>
-
-            <br />
-
-          </form>
+        </form>
     </div>
   )
 }
