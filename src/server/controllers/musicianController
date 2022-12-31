@@ -43,7 +43,7 @@ musicianController.getMusicianInfoFromDb = (req, res, next) => {
 // this middleware function is given all of a musician's info (saved as res.locals.info) and removes the private stuff.
 musicianController.removePrivateInfo = (req, res, next) => {
     if (!res.locals.info) {
-        return res.status(200).send('sorry, handle not found in database')
+        return res.status(200).json({message: 'sorry, handle not found in database'})
     }
     delete res.locals.info.access;
     delete res.locals.info.spotify_id;

@@ -52,7 +52,7 @@ const PlaylistDisplayContainer = (props: any) => {
   useEffect(
     () => {getAllPlaylists()},
     []
-  )
+  );
 
 
 

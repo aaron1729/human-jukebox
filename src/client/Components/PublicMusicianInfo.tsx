@@ -4,38 +4,7 @@ const PublicMusicianInfo = (props: any) => {
 
   const publicMusicianInfo = props.info;
 
-  console.log('in PublicMusicianInfo, and info (coming from props) is:', PublicMusicianInfo);
-
-
-
-/*
-
-  // THIS USAGE OF useState WAS FROM BEFORE musicianInfo GOT PASSED AS PROPS. (at that time, i passed "handle" as props; this is used in the commented-out code below.)
-
-  const [musicianInfo, setMusicianInfo] = useState({
-    handle,
-    displayName: '',
-    bio: '',
-    venmo: '',
-    instagram: '',
-  });
-
-  // get musician's info from db
-  const getMusicianInfo = async () => {
-    const response = await fetch(`/api/info_public/${handle}`);
-    const info = await response.json();
-    console.log('info from getMusicianInfo:', info);
-    setMusicianInfo({...musicianInfo, displayName: info.display_name, instagram: info.instagram, venmo: info.venmo, bio: info.bio})
-  }
-
-  useEffect(() => {
-    getMusicianInfo();
-  }, [])
-
-*/
-
-
-
+  console.log('in PublicMusicianInfo, and info (coming from props) is:', publicMusicianInfo);
 
   return (
     <div className='flex flex-col items-center'>
