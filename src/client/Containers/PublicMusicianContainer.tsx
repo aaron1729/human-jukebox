@@ -33,9 +33,9 @@ function PublicMusicianContainer(){
   // fetch musician info from database
   const getPublicMusicianInfo = async () => {
     const response = await fetch(`/api/info_public/${handle}`);
-    const info = await response.json();
-    console.log('in getMusicianInfo function in PublicMusicianContainer component, musician info from database is:', info);
-    setPublicMusicianInfo(info);
+    const publicMusicianInfoFromDb = await response.json();
+    console.log('in getMusicianInfo function in PublicMusicianContainer component, and the public musician info from the database is:', publicMusicianInfoFromDb);
+    setPublicMusicianInfo(publicMusicianInfoFromDb);
   }
 
   // see the description of useEffect in SongDisplayContainer.

@@ -60,7 +60,8 @@ const PlaylistDisplayContainer = (props: any) => {
   //////////////////////////////////////////////////////////////////////////////////////////
 
   // record choice of playlist
-  // TO DO: this should default to the current value, once that's saved in the database
+  // TO DO: this should default to the current value, if there's one that's already saved in the database.
+  // TO DO: allow to load more playlists, since spotify API limits the number that are returned.
   const [playlistChoice, setPlaylistChoice] = useState(null)
 
   const handleRadioChange = (e: React.SyntheticEvent) => {

@@ -17,6 +17,11 @@ const cookieParser = require('cookie-parser');
 // every time cookieParser() is run, the existing cookies are stored to the request object.
 app.use(cookieParser());
 
+// this stores request body as req.body
+app.use(express.json());
+
+
+
 
 // /// for testing production mode
 // app.use(express.static('dist'));
@@ -52,7 +57,7 @@ app.use('/api', router);
 
 
 // global error handler
-app.use((req: any, res: any) => res.status(404).send('The global error handler has been triggered. Just for you, here\'s Cage 4\'33":'));
+app.use((req: any, res: any) => res.status(404).json({error: 'The global error handler has been triggered. Just for you, here\'s Cage 4\'33":'}));
 
 
 // local error handler

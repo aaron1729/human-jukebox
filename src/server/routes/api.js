@@ -3,8 +3,6 @@ const querystring = require('node:querystring');
 
 const path = require('path');
 
-const query = require('../models/models');
-
 const authController = require('../controllers/authController');
 const musicianController = require('../controllers/musicianController');
 const songController = require('../controllers/songController');
@@ -134,6 +132,25 @@ router.get(
         return res.status(200).json({message: 'we are at the end of the /api/setPlaylist router handler'})
     }
 )
+
+
+// this endpoint is triggered when the musician attempts to update their private info from their private page.
+router.patch(
+    '/updateMusicianInfo/:spotify_id',
+    authController.checkCookies,
+    authController.endCycleIfCookiesUnmatched,
+    musicianController.updateMusicianInfoInDb,
+    (req, res) => {
+        console.log('at the end of the /api/updateMusicianInfo route handler');
+        return res.status(200).json({success: res.locals.success});
+    }
+)
+
+
+
+
+
+
 
 
 // this endpoint is triggered when a musician wants to add or sync their repertoire against a given spotify playlist. (it might be unnecessary? it's mostly just a request to the spotify API, but maybe it's important to keep this to make sure there's a usable access token.)

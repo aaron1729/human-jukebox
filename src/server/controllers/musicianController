@@ -1,4 +1,5 @@
-const db = require('../models/models.js');
+const { query } = require('express');
+const db = require('../models/models');
 
 const musicianController = {};
 
@@ -7,7 +8,7 @@ const musicianController = {};
 musicianController.getMusicianInfoFromDb = (req, res, next) => {
     try {
         const {handle} = req.params;
-        const getMusicianInfoQueryString = `SELECT * FROM musicians where handle = '${handle}'`;
+        const getMusicianInfoQueryString = `SELECT * FROM musicians WHERE handle = '${handle}'`;
         db.query(getMusicianInfoQueryString).then(data => {
             console.log('inside of musicianController.getMusicianInfoFromDb, and the data.rows are:', data.rows);
             if (!data.rows[0]) {
@@ -43,7 +44,7 @@ musicianController.getMusicianInfoFromDb = (req, res, next) => {
 // this middleware function is given all of a musician's info (saved as res.locals.info) and removes the private stuff.
 musicianController.removePrivateInfo = (req, res, next) => {
     if (!res.locals.info) {
-        return res.status(200).json({message: 'sorry, handle not found in database'})
+        return res.status(200).json({error: 'sorry, handle not found in database'})
     }
     delete res.locals.info.access;
     delete res.locals.info.spotify_id;
@@ -59,5 +60,46 @@ musicianController.removePrivateInfo = (req, res, next) => {
 
 
 
+
+// UNDER CONSTRUCTION
+// this middleware function is given an object of updates to the musician info (living on req.body) and tries to make them in the database.
+musicianController.updateMusicianInfoInDb = (req, res, next) => {
+    try {
+        const spotify_id = req.params.spotify_id;
+        const update = req.body;
+
+        console.log('inside of musicianController.updateInfo, and the update object is:', update);
+        console.log('and the spotify_id is:', spotify_id);
+
+        ///// this assumes there's only one KVP in the update object!! if that changes, change this.
+        let key;
+        for (const theKey in update) {
+            key = theKey;
+            value = update[key];
+            console.log('the key is:', key);
+            console.log('the value is:', value);
+        }
+
+        ////// in the following, ${value} doesn't have quotes around it. be careful for how this works with strings (perhaps go through and escape some quote-marks).
+        const updateKVPInDbQueryString = `UPDATE public.musicians SET ${key} = ${value} WHERE spotify_id = '${spotify_id}'`;
+        console.log('the query string is:', updateKVPInDbQueryString);
+        db.query(updateKVPInDbQueryString).then(data => {
+            console.log('after attempting to update the database, it returned the data:', data);
+            if (data.rowCount === 1) {
+                res.locals.success = true;
+            } else {
+                res.locals.success = false;
+            }
+            return next();
+        })
+
+    } catch(err) {
+        return next({
+            log: 'error updating musician info in db',
+            status: err.statusCode || 418,
+            message: {error: 'failed to update musician info in db'}
+        })
+    }
+}
 
 module.exports = musicianController;

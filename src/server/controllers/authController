@@ -142,7 +142,7 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
             console.log('the array of musician data (which should have 0 or 1 elements) is:', data.rows)
             if (data.rows.length) {
                 console.log('found musician in db');
-                const updateAccessInDbQueryString = `UPDATE public.musicians SET access = '${access}' where spotify_id = '${spotifyId}'`;
+                const updateAccessInDbQueryString = `UPDATE public.musicians SET access = '${access}' WHERE spotify_id = '${spotifyId}'`;
                 query(updateAccessInDbQueryString).then(data => {
                     if (data.rowCount === 1) {
                         return next();
