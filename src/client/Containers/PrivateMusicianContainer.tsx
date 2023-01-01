@@ -78,8 +78,9 @@ function PrivateMusicianContainer(){
     console.log('results is:', results);
     if (results.success) {
       setPrivateMusicianInfo({...privateMusicianInfo, ...update});
+    } else {
+      alert('sorry, attempt to update failed');
     }
-    // do different things based on the response (i.e. whether the updated succeeded or failed).
   }
 
 
@@ -165,6 +166,9 @@ function PrivateMusicianContainer(){
       <span>
         <b>show venmo on public page: </b>
         {privateMusicianInfo.venmo_show.toString()}
+        <button onClick={() => updatePrivateMusicianInfo({venmo_show: !privateMusicianInfo.venmo_show})} className='ml-5'>
+          edit
+        </button>
       </span>
       <span>
         <b>repertoire (spotify playlist): </b>
