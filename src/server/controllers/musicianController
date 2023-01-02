@@ -80,6 +80,14 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
             console.log('the value is:', value);
         }
 
+        // if the value is a string, prepare it for the SQL query: escape its single-quote-marks (i.e. double them) and then wrap the whole thing in single-quote-marks.
+        if (typeof value === "string") {
+            value = value.replaceAll("'", "''");
+            value = `'${value}'`
+            console.log('and now the updated value is:', value);
+        }
+
+
         ////// in the following, ${value} doesn't have quotes around it. be careful for how this works with strings (perhaps go through and escape some quote-marks).
         const updateKVPInDbQueryString = `UPDATE public.musicians SET ${key} = ${value} WHERE spotify_id = '${spotify_id}'`;
         console.log('the query string is:', updateKVPInDbQueryString);

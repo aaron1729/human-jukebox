@@ -3,8 +3,6 @@ import { styles } from '../styles'
 
 const TextFieldSmall = (props: any) => {
 
-  type SmallTextField = 'display_name' | 'instagram' | 'venmo'
-
   const field: SmallTextField = props.field; // e.g. 'display_name'
   const fieldName = props.fieldName; // e.g. 'display name'
   const setShowTextFieldSmallModal = props.setShowTextFieldSmallModal;
@@ -19,25 +17,14 @@ const TextFieldSmall = (props: any) => {
       // value: string
     // };
     console.log('handleSubmit function triggered, and target is:', (target as any).value);
-    // TO DO: add validation here (e.g. reject anything too short, too long, or including spaces or special characters. probably just letters, numbers, dashes, and underscores.)
+    // TO DO: add validation here (e.g. reject anything too short, too long, or including spaces or special characters. probably just letters, numbers, dashes, and underscores. apostrophes, but no quote-marks.)
 
 
 
 
-    // type UpdateObj = {
-    //   bio?: string
-    //   display_name?: string,
-    //   instagram?: string,
-    //   instagram_show?: boolean,
-    //   spotify_playlist_id?: string,
-    //   spotify_playlist_name?: string,
-    //   spotify_playlist_url?: string,
-    //   venmo?: string,
-    //   venmo_show?: boolean
-    // }
 
     const update: UpdateObj = {}
-    update[field] = `'${(target as any).value}'`
+    update[field] = `${(target as any).value}`
 
     updatePrivateMusicianInfo(update);
     setShowTextFieldSmallModal(false);
