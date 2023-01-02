@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactModal from 'react-modal';
-import PlaylistDisplayContainer from '../Containers/PlaylistDisplayContainer';
+import PlaylistDisplayContainer from '../Containers/PlaylistsDisplayContainer';
 import { styles } from '../styles';
 
 

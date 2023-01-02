@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import SongDisplayContainer from './SongDisplayContainer';
-import PlaylistDisplayContainer from './PlaylistDisplayContainer';
+// import PublicMusicianInfo from '../Components/PublicMusicianInfo';
+import PlaylistsDisplayContainer from './PlaylistsDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
-import { useFetch } from 'react-async';
 import ReactModal from 'react-modal';
 import { styles } from '../styles';
+import TextFieldSmall from '../Components/TextFieldSmall';
 
 
 // the PrivateMusicianContainer component is substantially more complicated that PublicMusicianContainer, because the musician can CRUD info.
@@ -20,8 +21,15 @@ function PrivateMusicianContainer(){
   const handle = searchParams.get('musician');
   console.log('inside of PrivateMusicianContainer component, and handle (coming from query parameter) is:', handle);
 
-  // toggle whether to show or hide the modal of playlists
-  const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+  // toggle whether to show or hide the various modals
+  const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
+  const [showTextFieldSmallModal, setShowTextFieldSmallModal] = useState(false);
+
+  // determine what the TextFieldSmall modal is allowing input for
+  const [targetForTextFieldSmallModal, setTargetForTextFieldSmallModal] = useState({
+    field: '',
+    fieldName: ''
+  });
 
   // musician info (from database).
   const [privateMusicianInfo, setPrivateMusicianInfo] = useState({
@@ -51,21 +59,6 @@ function PrivateMusicianContainer(){
     []
   )
 
-
-
-
-  // in comparison with privateMusicianInfo, this is (purposely) missing: access, handle, and spotify_id
-  type UpdateObj = {
-    bio?: string
-    display_name?: string,
-    instagram?: string,
-    instagram_show?: boolean,
-    spotify_playlist_id?: string,
-    spotify_playlist_name?: string,
-    spotify_playlist_url?: string,
-    venmo?: string,
-    venmo_show?: boolean
-  }
   
   const updatePrivateMusicianInfo = async (update: UpdateObj) => {
     const requestOptions = {
@@ -136,65 +129,118 @@ function PrivateMusicianContainer(){
 
       </span>
 
-      <span>
-        <b>display name: </b>
-        {privateMusicianInfo.display_name}
-      </span>
-      <span>
-        <b>handle: </b>
-        {privateMusicianInfo.handle}
-      </span>
-      <span>      
+      <span className="text-gray-500">
         <b>spotify id: </b>
         {privateMusicianInfo.spotify_id}
       </span>
+
+      <span>
+        <b>display name: </b>
+        {privateMusicianInfo.display_name}
+        <button
+          onClick={() => {
+            setTargetForTextFieldSmallModal({
+              field: 'display_name',
+              fieldName: 'display name'
+            })
+            setShowTextFieldSmallModal(true)
+          }}
+          className='ml-5'
+        >
+          <span className="text-red-600">edit</span>
+        </button>
+      </span>
+
+      <span>
+        <b>handle: </b>
+        {privateMusicianInfo.handle}
+        <button
+          className='ml-5'
+        >
+          <span className="text-red-600">edit</span>
+        </button>
+      </span>
+
       <span>
         <b>instagram: </b>
         {privateMusicianInfo.instagram}
+        <button
+          className='ml-5'
+        >
+          <span className="text-red-600">edit</span>
+        </button>
       </span>
+
       <span>
         <b>show instagram on public page: </b>
         {privateMusicianInfo.instagram_show.toString()}
-        <button onClick={() => updatePrivateMusicianInfo({instagram_show: !privateMusicianInfo.instagram_show})} className='ml-5'>
-          edit
+        <button
+          onClick={() => updatePrivateMusicianInfo({instagram_show: !privateMusicianInfo.instagram_show})}
+          className='ml-5'
+        >
+          toggle
         </button>
       </span>
+
       <span>
         <b>venmo: </b>
         {privateMusicianInfo.venmo}
+        <button
+          className='ml-5'
+        >
+          <span className="text-red-600">edit</span>
+        </button>
       </span>
+
       <span>
         <b>show venmo on public page: </b>
         {privateMusicianInfo.venmo_show.toString()}
-        <button onClick={() => updatePrivateMusicianInfo({venmo_show: !privateMusicianInfo.venmo_show})} className='ml-5'>
-          edit
+        <button
+          onClick={() => updatePrivateMusicianInfo({venmo_show: !privateMusicianInfo.venmo_show})}
+          className='ml-5'
+        >
+          toggle
         </button>
       </span>
+
       <span>
         <b>repertoire (spotify playlist): </b>
         {privateMusicianInfo.spotify_playlist_id && <a href={privateMusicianInfo.spotify_playlist_url} target="_blank">{privateMusicianInfo.spotify_playlist_name}</a>}
+        <button
+          className='ml-5'
+        >
+          <span className="text-red-600">sync</span>
+        </button>
+        <button
+          id="toggle-playlists-modal"
+          onClick={() => setShowPlaylistsModal(true)}
+          className='ml-5'
+        >
+        <span className="text-red-600">edit</span>
+        </button>
       </span>
+
       <span>
         <b>bio: </b>
         {privateMusicianInfo.bio}
+        <button
+          className='ml-5'
+        >
+          <span className="text-red-600">edit</span>
+        </button>
       </span>
 
       <br />
 
-      <i>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id though; and make handle a separate page since it changes the name of the current route.)</i>
+      <i>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id though. note that changing the handle will involve redirecting to a new route, since the current route includes the handle.)</i>
 
-      <button
-        id="toggle-playlists-modal"
-        onClick={() => setShowPlaylistModal(true)}
-        className={styles.buttonSmall}
-      >
-        show playlists modal
-      </button>
+      
 
 
-      {/* see here for more: https://reactcommunity.org/react-modal/ */}
+      {/* only put comments on this instance of ReactModal.
+      see here for more: https://reactcommunity.org/react-modal/ */}
       <ReactModal
-        isOpen={showPlaylistModal}
+        isOpen={showPlaylistsModal}
         parentSelector={() => document.getElementById("root") || undefined}
         // the following is not recommended in ReactModal docs, but it gives an error otherwise
         ariaHideApp={false}
@@ -204,23 +250,37 @@ function PrivateMusicianContainer(){
         contentLabel={"playlist selector modal"}
       >
 
-        <PlaylistDisplayContainer
-          setShowPlaylistModal={setShowPlaylistModal}
+        <PlaylistsDisplayContainer
+          setShowPlaylistsModal={setShowPlaylistsModal}
           setPlaylist={setPlaylist}
         />
 
-        {/* put radio buttons on the playlists, attach them to the playlist id's, and then give the following button an onClick that grabs the playlist id and sends it to the database */}
-        {/* <button className={styles.buttonSmall}>
-          apply
-        </button>
+      </ReactModal>
 
-        <button onClick={() => setShowPlaylistModal(false)} className={styles.buttonSmall}>
-          cancel
-        </button> */}
+      <ReactModal
+        isOpen={showTextFieldSmallModal}
+        parentSelector={() => document.getElementById("root") || undefined}
+        ariaHideApp={false}
+        className={"ReactModal__Content" + " " + styles.altFade}
+      >
+
+        <TextFieldSmall
+          field={targetForTextFieldSmallModal.field} 
+          fieldName={targetForTextFieldSmallModal.fieldName}
+          setShowTextFieldSmallModal={setShowTextFieldSmallModal}
+          updatePrivateMusicianInfo={updatePrivateMusicianInfo}
+        />
 
       </ReactModal>
 
+
+
+
       <br />
+
+      {/* <PublicMusicianInfo info={privateMusicianInfo} /> */}
+
+      {/* <br /> */}
 
       <SongDisplayContainer handle={handle} />
 

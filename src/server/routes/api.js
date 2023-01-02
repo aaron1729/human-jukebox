@@ -134,7 +134,7 @@ router.get(
 )
 
 
-// this endpoint is triggered when the musician attempts to update their private info from their private page.
+// this endpoint is triggered when the musician attempts to update their private info from their private page. the request body should be a JSON-stringified "update object".
 router.patch(
     '/updateMusicianInfo/:spotify_id',
     authController.checkCookies,

@@ -4,7 +4,7 @@ import { Form } from 'react-router-dom';
 import PlaylistDisplay from '../Components/PlaylistDisplay';
 import { styles } from '../styles'
 
-const PlaylistDisplayContainer = (props: any) => {
+const PlaylistsDisplayContainer = (props: any) => {
 
 
   ////////////////////////////////////////
@@ -15,7 +15,7 @@ const PlaylistDisplayContainer = (props: any) => {
   // playlistArray is an array of PlaylistDisplay *components*
   const [ playlistArray, setPlaylistArray ] = useState([]);
 
-  // fetch musician's playlists from Spotify API and update PlaylistDisplayContainer therefrom
+  // fetch musician's playlists from Spotify API and update PlaylistsDisplayContainer therefrom
   const getAllPlaylists = async () => {
     const response = await fetch('/api/getAllPlaylists');
     const playlists = await response.json();
@@ -40,7 +40,6 @@ const PlaylistDisplayContainer = (props: any) => {
         id={spotifyId}
         playlistChoice={playlistChoice}
         handleRadioChange={handleRadioChange}
-        handleRadioChange2={handleRadioChange2}
       />;
       return newPlaylistDisplay;
     }
@@ -69,18 +68,13 @@ const PlaylistDisplayContainer = (props: any) => {
     const target = e.target as typeof e.target & {
       value: string
     };
-    console.log('inside of handleRadioChange function, and target.value is', target.value)
+    console.log('inside of handleRadioChange function, and target.value is', target.value);
     // note that setPlaylistChoice happens asynchronously, so it won't show up in a simple console.log (or even one with a setTimeout).
-    setPlaylistChoice(target.value)
+    setPlaylistChoice(target.value);
   }
 
 
 
-  const handleRadioChange2 = (id: string) => {
-    setPlaylistChoice(id)
-    console.log('handleRadioChange2 triggered, with argument', id)
-    console.log('and now playlistChoice is', playlistChoice)
-  }
 
 
   const logPlaylistChoice = () => {
@@ -94,13 +88,13 @@ const PlaylistDisplayContainer = (props: any) => {
     e.preventDefault();
     console.log('handleSubmit function triggered, and playlistChoice is:', playlistChoice)
     props.setPlaylist(playlistChoice)
-    props.setShowPlaylistModal(false)
+    props.setShowPlaylistsModal(false)
   }
 
   const handleCancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
     console.log('handleCancel function triggered')
-    props.setShowPlaylistModal(false)
+    props.setShowPlaylistsModal(false)
   }
 
 
@@ -212,4 +206,4 @@ const PlaylistDisplayContainer = (props: any) => {
   )
 }
 
-export default PlaylistDisplayContainer;
+export default PlaylistsDisplayContainer;
