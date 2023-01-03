@@ -1,33 +1,22 @@
-import { style } from '@mui/system';
 import React, { useEffect, useState } from 'react';
-import { Form } from 'react-router-dom';
 import PlaylistDisplay from '../Components/PlaylistDisplay';
 import { styles } from '../styles'
 
 const PlaylistsDisplayContainer = (props: any) => {
 
-
-  ////////////////////////////////////////
-  // the following relates to the playlistArray
-
-  ////////////////////////////////////////
+  const setShowPlaylistsModal = props.setShowPlaylistsModal;
+  const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
 
   // playlistArray is an array of PlaylistDisplay *components*
   const [ playlistArray, setPlaylistArray ] = useState([]);
 
-  // fetch musician's playlists from Spotify API and update PlaylistsDisplayContainer therefrom
+  // fetch musician's playlists from Spotify API and update playlistArray therefrom
   const getAllPlaylists = async () => {
     const response = await fetch('/api/getAllPlaylists');
     const playlists = await response.json();
     console.log('playlists from getAllPlaylists:', playlists);
 
-    type Playlist = {
-      playlistName: string,
-      playlistSpotifyId: string,
-      playlistSpotifyUrl: string
-    }
-
-    const playlistObjectToComponent = (playlistObj: Playlist) => {
+    const playlistObjectToComponent = (playlistObj: PlaylistObj) => {
       const {playlistName, playlistSpotifyId, playlistSpotifyUrl}: {playlistName: string, playlistSpotifyId: string, playlistSpotifyUrl: string} = playlistObj;
       const name: string = playlistName;
       const spotifyUrl: string = playlistSpotifyUrl;
@@ -44,10 +33,10 @@ const PlaylistsDisplayContainer = (props: any) => {
       return newPlaylistDisplay;
     }
 
-    setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToComponent(playlistObj)));
+    setPlaylistArray(playlists.map((playlistObj: PlaylistObj) => playlistObjectToComponent(playlistObj)));
   }
 
-  // see the description of useEffect in SongDisplayContainer. however, in this case we might actually *want* to update the list of playlists, in case the user has more than the limiting number dictated by the Spotify API call.
+  // see the description of useEffect in SongDisplayContainer. note that here we might want to update the list of playlists, in case the user has more than the limiting number dictated by the Spotify API call.
   useEffect(
     () => {getAllPlaylists()},
     []
@@ -77,6 +66,8 @@ const PlaylistsDisplayContainer = (props: any) => {
 
 
 
+  
+
   const logPlaylistChoice = () => {
     console.log('playlistChoice is:', playlistChoice)
   }
@@ -87,14 +78,32 @@ const PlaylistsDisplayContainer = (props: any) => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     console.log('handleSubmit function triggered, and playlistChoice is:', playlistChoice)
-    props.setPlaylist(playlistChoice)
-    props.setShowPlaylistsModal(false)
+
+    let spotify_playlist_name, spotify_playlist_id, spotify_playlist_url;
+    playlistArray.forEach((playlistComponent) => {
+      if (playlistComponent.props.id === playlistChoice) {
+        spotify_playlist_name = playlistComponent.props.name;
+        spotify_playlist_id = playlistComponent.props.id;
+        spotify_playlist_url = playlistComponent.props.spotifyUrl;
+      }
+    })
+
+    if (!spotify_playlist_name) {
+      console.log('playlistArray is:', playlistArray)
+      alert('error: no playlist chosen');
+      return;
+    }
+
+    const update: UpdateObj = {spotify_playlist_name, spotify_playlist_id, spotify_playlist_url};
+
+    updatePrivateMusicianInfo(update);
+    setShowPlaylistsModal(false);
   }
 
   const handleCancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
     console.log('handleCancel function triggered')
-    props.setShowPlaylistsModal(false)
+    setShowPlaylistsModal(false)
   }
 
 
@@ -119,87 +128,6 @@ const PlaylistsDisplayContainer = (props: any) => {
           <button onClick={handleCancel} className={styles.buttonSmall}>
             cancel
           </button>
-
-
-{/* 
-            <label htmlFor="playlist1">
-            <input
-              type="radio"
-              id="playlist1"
-              key="playlist1"
-              checked={playlistChoice === "value1"}
-              value="value1"
-              onChange={handleRadioChange}
-              // name="test-group"
-            />
-              test label 1
-            </label>
-
-            <br />
-
-            <label htmlFor="4lAjVOyWSUZmtS6dK0tGab">
-              <input
-                type="radio"
-                id="4lAjVOyWSUZmtS6dK0tGab"
-                key="4lAjVOyWSUZmtS6dK0tGab"
-                checked={playlistChoice === "4lAjVOyWSUZmtS6dK0tGab"}
-                value="4lAjVOyWSUZmtS6dK0tGab"
-                onChange={handleRadioChange}
-              />
-              hard-coded: Where My Girls At
-            </label>
-
-            <br />
-
-            <label htmlFor="playlist2">
-            <input
-              type="radio"
-              id="playlist2"
-              key="playlist2"
-              checked={playlistChoice === "value2"}
-              value="value2"
-              onChange={handleRadioChange}
-              // name="test-group"
-            />
-              test label 2
-            </label>
-
-            <br />
-
-            <label htmlFor="playlist3">
-            <input
-              type="radio"
-              id="playlist3"
-              key="playlist3"
-              checked={playlistChoice === "value3"}
-              value="value3"
-              onChange={handleRadioChange}
-              // name="test-group"
-            />
-              test label 3
-            </label>
-
-            <br />
-
-            <label htmlFor="playlist3">
-            <input
-              type="radio"
-              id="playlist4"
-              key="playlist4"
-              checked={playlistChoice === "value4"}
-              value="value4"
-              onChange={handleRadioChange}
-              // name="test-group"
-            />
-              test label 4
-            </label>
-
-
-            <br />
-
-            */}
-
-
 
         </form>
     </div>

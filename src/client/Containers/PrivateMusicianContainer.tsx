@@ -83,24 +83,6 @@ function PrivateMusicianContainer(){
 
 
 
-
-  // IN PROGRESS (must write back-end stuff as well). this one is more complicated, so do simpler ones first.  or it might even be supplanted by the updatePrivateMusicianInfo function...
-
-  // this is fired by a button-click inside of the modal (in the PlaylistDisplayContainer component), and saves the current value of playlistChoice to the database.
-  const setPlaylist = async (playlistId: string) => {
-    // this will take a new playlist id, and:
-    // save it to the database (in the public.musicians table)
-    // update the songs in the database to match
-    // update the `info` object here.... or perhaps that needs to be refactored to use useState, too.
-    console.log('setPlaylist triggered, with argument:', playlistId)
-    
-    const response = await fetch(`/api/setPlaylist/${playlistId}`);
-    console.log('inside of setPlaylist function, the response is:', response)
-    const response4real = await response.json();
-    console.log('response4real is:', response4real);
-
-  }
-  
   
   
 
@@ -164,7 +146,11 @@ function PrivateMusicianContainer(){
 
       <span>
         <b>instagram: </b>
-        {privateMusicianInfo.instagram}
+        {privateMusicianInfo.instagram &&
+        <a href={'https://instagram.com/' + privateMusicianInfo.instagram} target='_blank'>
+          {privateMusicianInfo.instagram}
+        </a>
+        }
         <button
           onClick={() => {
             setTargetForTextFieldModal({
@@ -193,7 +179,11 @@ function PrivateMusicianContainer(){
 
       <span>
         <b>venmo: </b>
-        {privateMusicianInfo.venmo}
+        {privateMusicianInfo.venmo &&
+        <a href={'https://venmo.com/' + privateMusicianInfo.venmo} target='_blank' >
+          {privateMusicianInfo.venmo}
+        </a>
+        }
         <button
           onClick={() => {
             setTargetForTextFieldModal({
@@ -221,7 +211,7 @@ function PrivateMusicianContainer(){
       </span>
 
       <span>
-        <b>repertoire (spotify playlist): </b>
+        <b>repertoire (a Spotify playlist): </b>
         {privateMusicianInfo.spotify_playlist_id && <a href={privateMusicianInfo.spotify_playlist_url} target="_blank">{privateMusicianInfo.spotify_playlist_name}</a>}
         <button
           className='ml-5'
@@ -233,7 +223,7 @@ function PrivateMusicianContainer(){
           onClick={() => setShowPlaylistsModal(true)}
           className='ml-5'
         >
-        <span className="text-red-600">edit</span>
+        <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
       </span>
 
@@ -255,17 +245,12 @@ function PrivateMusicianContainer(){
         </button>
       </span>
 
-      <br />
+      <hr className="w-full my-10" />
 
-      <hr className="w-full" />
+      <SongDisplayContainer handle={handle} />
+   
 
-      {/* <div className="relative flex py-5 items-center">
-        <div className="flex-grow border-t border-gray-400"></div>
-      </div> */}
 
-      
-
-      
 
 
       {/* only put comments on this instance of ReactModal.
@@ -276,14 +261,13 @@ function PrivateMusicianContainer(){
         // the following is not recommended in ReactModal docs, but it gives an error otherwise
         ariaHideApp={false}
         className={"ReactModal__Content" + " " + styles.altFade}
-        // @apply bg-gradient-to-r from-red-400 to-blue-500"
         overlayClassName={"ReactModal__Overlay"}
         contentLabel={"playlist selector modal"}
       >
 
         <PlaylistsDisplayContainer
           setShowPlaylistsModal={setShowPlaylistsModal}
-          setPlaylist={setPlaylist}
+          updatePrivateMusicianInfo={updatePrivateMusicianInfo}
         />
 
       </ReactModal>
@@ -293,6 +277,8 @@ function PrivateMusicianContainer(){
         parentSelector={() => document.getElementById("root") || undefined}
         ariaHideApp={false}
         className={"ReactModalSmall__Content" + " " + styles.altFade}
+        overlayClassName={"ReactModal__Overlay"}
+        contentLabel={"selector modal for various short strings"}
       >
 
         <TextFieldSmall
@@ -310,6 +296,8 @@ function PrivateMusicianContainer(){
         parentSelector={() => document.getElementById("root") || undefined}
         ariaHideApp={false}
         className={"ReactModal__Content" + " " + styles.altFade}
+        overlayClassName={"ReactModal__Overlay"}
+        contentLabel={"selector modal for biography"}
       >
 
         <TextFieldLarge
@@ -321,19 +309,6 @@ function PrivateMusicianContainer(){
         />
 
       </ReactModal>
-
-
-
-
-
-
-      <br />
-
-      {/* <PublicMusicianInfo info={privateMusicianInfo} /> */}
-
-      {/* <br /> */}
-
-      <SongDisplayContainer handle={handle} />
 
     </div>
 

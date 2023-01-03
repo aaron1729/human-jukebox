@@ -19,12 +19,13 @@ const styles: StyleObj = {
         "rounded",
         "font-bold",
         "text-fuchsia-700",
-        "mx-10",
+        "mx-5",
         "my-5",
         "px-2",
         "rounded-full",
         // "hover:bg-fuchsia-200",
         "hover:bg-cyan-400"
+        // "hover:bg-green-500"
     ].join(" "),
     buttonBig: [
         "bg-green-500",
@@ -69,7 +70,6 @@ const styles: StyleObj = {
         "text-xs",
         "font-normal",
         "py-1"
-        // "text-cyan-400"
     ].join(" "),
     altFade: [
         "bg-gradient-to-r",

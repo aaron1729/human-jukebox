@@ -2,8 +2,12 @@ export {};
 
 declare global {
 
-
-
+  type PlaylistObj = {
+    playlistName: string,
+    playlistSpotifyId: string,
+    playlistSpotifyUrl: string
+  }
+  
     // in comparison with privateMusicianInfo, this is (purposely) missing: access, handle, and spotify_id
     type UpdateObj = {
         bio?: string

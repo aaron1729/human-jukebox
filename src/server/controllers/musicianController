@@ -72,24 +72,31 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
         console.log('and the spotify_id is:', spotify_id);
 
         ///// this assumes there's only one KVP in the update object!! if that changes, change this.
-        let key, value;
-        for (const theKey in update) {
-            key = theKey;
-            value = update[key];
+        let kvpStringArray = [];
+        for (const key in update) {
+            let value = update[key];            
             console.log('the key is:', key);
             console.log('the value is:', value);
+            // if the value is a string, prepare it for the SQL query: escape its single-quote-marks (i.e. double them) and then wrap the whole thing in single-quote-marks. (but if it's a boolean, we _don't_ want to have quote marks around it.)
+            if (typeof value === "string") {
+                value = value.replaceAll("'", "''");
+                value = `'${value}'`
+                console.log('and now the updated value is:', value);
+            }
+            kvpStringArray.push(key + " = " + value);
         }
 
-        // if the value is a string, prepare it for the SQL query: escape its single-quote-marks (i.e. double them) and then wrap the whole thing in single-quote-marks.
-        if (typeof value === "string") {
-            value = value.replaceAll("'", "''");
-            value = `'${value}'`
-            console.log('and now the updated value is:', value);
+        console.log('kvpStringArray is:', kvpStringArray);
+
+        if (!kvpStringArray) {
+            return next();
         }
 
+        const kvpString = kvpStringArray.join(", ");
 
-        ////// in the following, ${value} doesn't have quotes around it. be careful for how this works with strings (perhaps go through and escape some quote-marks).
-        const updateKVPInDbQueryString = `UPDATE public.musicians SET ${key} = ${value} WHERE spotify_id = '${spotify_id}'`;
+        console.log('kvpString is:', kvpString)
+
+        const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpString} WHERE spotify_id = '${spotify_id}'`;
         console.log('the query string is:', updateKVPInDbQueryString);
         db.query(updateKVPInDbQueryString).then(data => {
             console.log('after attempting to update the database, it returned the data:', data);

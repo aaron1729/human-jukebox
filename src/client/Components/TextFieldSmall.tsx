@@ -27,14 +27,9 @@ const TextFieldSmall = (props: any) => {
     const target = document.getElementById("text-field-small")
 
     console.log('in TextFieldSmall component, handleSubmit function triggered, and target value is:', (target as any).value);
-    
-    
-    
+        
     const update: UpdateObj = {}
     update[field] = `${(target as any).value}`
-
-    // TO DO: add more validation here, depending on which field we're updating. (e.g. might reject anything too short, too long, or including spaces or special characters. for handle probably just letters, numbers, dashes, and underscores. for display name, apostrophes but no quote-marks.)
-
 
     // data validation
 
@@ -70,8 +65,6 @@ const TextFieldSmall = (props: any) => {
       }
     }
     
-
-
     updatePrivateMusicianInfo(update);
     setShowTextFieldSmallModal(false);
   }
