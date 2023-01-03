@@ -111,7 +111,7 @@ function PrivateMusicianContainer(){
 
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center px-10">
 
       <span className="flex flex-row">
 
@@ -169,7 +169,7 @@ function PrivateMusicianContainer(){
           onClick={() => {
             setTargetForTextFieldModal({
               field: 'instagram',
-              fieldName: 'instagram',
+              fieldName: 'Instagram handle',
               oldValue: privateMusicianInfo.instagram
             })
             setShowTextFieldSmallModal(true)
@@ -198,7 +198,7 @@ function PrivateMusicianContainer(){
           onClick={() => {
             setTargetForTextFieldModal({
               field: 'venmo',
-              fieldName: 'venmo',
+              fieldName: 'Venmo handle',
               oldValue: privateMusicianInfo.venmo
             })
             setShowTextFieldSmallModal(true)
@@ -257,7 +257,13 @@ function PrivateMusicianContainer(){
 
       <br />
 
-      <i>above, most/all will be input fields so that the musician can edit their name, handle, venmo link, bio, etc. (not spotify id though. note that changing the handle will involve redirecting to a new route, since the current route includes the handle.)</i>
+      <hr className="w-full" />
+
+      {/* <div className="relative flex py-5 items-center">
+        <div className="flex-grow border-t border-gray-400"></div>
+      </div> */}
+
+      
 
       
 

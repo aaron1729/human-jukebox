@@ -4,6 +4,7 @@ type StyleObj = {
     textButtonForDbUpdates: string
     searchField: string
     textArea: string
+    helperText: string
     altFade: string
 };
 
@@ -14,13 +15,16 @@ const styles: StyleObj = {
     buttonSmall: [
         "border-2",
         "border-black",
+        // "border-fuchsia-700",
         "rounded",
         "font-bold",
         "text-fuchsia-700",
-        "mx-100",
+        "mx-10",
         "my-5",
         "px-2",
-        "rounded-full"
+        "rounded-full",
+        // "hover:bg-fuchsia-200",
+        "hover:bg-cyan-400"
     ].join(" "),
     buttonBig: [
         "bg-green-500",
@@ -29,12 +33,20 @@ const styles: StyleObj = {
         "font-bold",
         "py-2",
         "px-4",
-        "mt-5",
-        "mb-10",
         "rounded-full"
     ].join(" "),
-    textButtonForDbUpdates: "text-blue-800",
-    // textButtonForDbUpdates: 'bg-white hover:bg-gray-200 text-gray-800 font-semibold border border-gray-400 rounded shadow',
+    textButtonForDbUpdates: [
+        // "hover:bg-gray-400",
+        // "hover:bg-fuchsia-200",
+        "hover:bg-cyan-400",
+        "p-0.5",
+        "text-xs",
+        "text-fuchsia-700",
+        "border",
+        // "border-gray-900",
+        "border-fuchsia-700",
+        "rounded shadow"
+    ].join(" "),
     searchField: [
         "border",
         "border-blue-700",
@@ -44,17 +56,20 @@ const styles: StyleObj = {
     ].join(" "),
     textArea: [
         "block",
-        // "p-2.5",
         "w-full",
-        "h-96",
+        "h-64",
         "text-sm",
         "text-gray-900",
         "bg-gray-50",
         "rounded-lg",
         "border",
         "border-gray-300",
-        // "focus:ring-blue-500",
-        // "focus:border-blue-500",
+    ].join(" "),
+    helperText: [
+        "text-xs",
+        "font-normal",
+        "py-1"
+        // "text-cyan-400"
     ].join(" "),
     altFade: [
         "bg-gradient-to-r",

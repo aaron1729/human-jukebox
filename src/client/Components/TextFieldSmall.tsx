@@ -10,6 +10,17 @@ const TextFieldSmall = (props: any) => {
   const setShowTextFieldSmallModal = props.setShowTextFieldSmallModal;
   const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
 
+  let helperText;
+  if (field === "display_name") {
+    helperText = "This is the name that's shown at the top of your page. You can use emojis if you like 😁"
+  }
+  if (field === "instagram") {
+    helperText = "This allows audience members to connect with you! (And in the future, we'll give the option to use your IG profile pic here.) Don't include the @ sign."
+  }
+  if (field === "venmo") {
+    helperText = "This allows audience members to tip you! Don't include the @ sign."
+  }
+
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
@@ -24,8 +35,11 @@ const TextFieldSmall = (props: any) => {
 
     // TO DO: add more validation here, depending on which field we're updating. (e.g. might reject anything too short, too long, or including spaces or special characters. for handle probably just letters, numbers, dashes, and underscores. for display name, apostrophes but no quote-marks.)
 
+
+    // data validation
+
     if (update[field].includes("''")) {
-      alert("sorry, string cannot contain doubled single-quote-marks.")
+      alert("sorry, input cannot contain doubled single-quote-marks.")
       return;
     }
 
@@ -36,6 +50,22 @@ const TextFieldSmall = (props: any) => {
       }
       if (update[field].length > 100) {
         alert("display name cannot be more than 100 characters");
+        return;
+      }
+    }
+
+    if (field === "instagram") {
+      const re = /[^A-Za-z0-9.]/;
+      if (update[field].match(re) || update[field].length > 30) {
+        alert("instagram handles can only be up to 30 characters long, and they can only contain letters, numbers, and periods.")
+        return;
+      }
+    }
+
+    if (field === "venmo") {
+      const re = /[^A-Za-z0-9\-\_]/;
+      if (update[field].match(re) || update[field].length > 30) {
+        alert("venmo handles can only be up to 30 characters, and can only contain letters, numbers, en-dashes (-), and underscores (_).");
         return;
       }
     }
@@ -59,7 +89,7 @@ const TextFieldSmall = (props: any) => {
       <form>
 
         <label htmlFor="text-field-small">
-          Enter a new {fieldName}: 
+          Enter your {fieldName} here: 
         </label>
         <input
           type="text"
@@ -67,9 +97,9 @@ const TextFieldSmall = (props: any) => {
           className="ml-1"
           defaultValue={oldValue}
         >
-          
         </input>
-
+        <p className={styles.helperText}>{helperText}</p>
+        
         <br />
 
         <button onClick={handleSubmit} className={styles.buttonSmall}>

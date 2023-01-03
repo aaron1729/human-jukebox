@@ -72,7 +72,7 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
         console.log('and the spotify_id is:', spotify_id);
 
         ///// this assumes there's only one KVP in the update object!! if that changes, change this.
-        let key;
+        let key, value;
         for (const theKey in update) {
             key = theKey;
             value = update[key];

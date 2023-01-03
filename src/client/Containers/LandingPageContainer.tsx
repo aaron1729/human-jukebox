@@ -60,17 +60,17 @@ function LandingPageContainer(){
 
   ///////// TO BE REMOVED after moving this to musician private page
   
-  const getAllPlaylists = async () => {
+  // const getAllPlaylists = async () => {
 
-    const res = await fetch('/api/getAllPlaylists');
-    console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
-    if (res.status !== 200) {
-      console.log('error getting all playlists');
-      return;
-    }
-    const playlists = await res.json();
-    console.log('playlists is:', playlists);
-  }
+  //   const res = await fetch('/api/getAllPlaylists');
+  //   console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
+  //   if (res.status !== 200) {
+  //     console.log('error getting all playlists');
+  //     return;
+  //   }
+  //   const playlists = await res.json();
+  //   console.log('playlists is:', playlists);
+  // }
 
 
   const getPlaylist = async () => {
@@ -98,8 +98,8 @@ function LandingPageContainer(){
 
   return(
     // this className used to have "landing-page" in it, which seems not to do anything at the moment (it should be a custom tailwind class or something).
-    <div className="flex flex-col items-center">
-      <h1 className ="fl text-4xl font-bold text-fuchsia-700 mx-10 my-5">Welcome to Human Jukebox!</h1>
+    <div className="flex flex-col justify-end justify-items-center items-center place-content-center">
+      <h1 className ="fl text-3xl font-bold text-fuchsia-700 mx-5 my-10">Welcome to Human Jukebox!</h1>
       <br />
       <SearchInput />
       <br />
@@ -118,9 +118,9 @@ function LandingPageContainer(){
 
       {/* the placement of these buttons is temporary, just to save a step of clickthrough when testing. later, delete them as well as the functions above. */}
 
-      <button onClick={getAllPlaylists} className={styles.buttonBig}>
+      {/* <button onClick={getAllPlaylists} className={styles.buttonBig}>
         test: get my playlists
-      </button>
+      </button> */}
 
       <button onClick={getPlaylist} className={styles.buttonSmall}>
         test: get a playlist
