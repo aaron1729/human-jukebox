@@ -6,6 +6,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { styles } from '../styles';
 import TextFieldSmall from '../Components/TextFieldSmall';
+import TextFieldLarge from '../Components/TextFieldLarge';
 
 
 // the PrivateMusicianContainer component is substantially more complicated that PublicMusicianContainer, because the musician can CRUD info.
@@ -24,11 +25,13 @@ function PrivateMusicianContainer(){
   // toggle whether to show or hide the various modals
   const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
   const [showTextFieldSmallModal, setShowTextFieldSmallModal] = useState(false);
+  const [showTextFieldLargeModal, setShowTextFieldLargeModal] = useState(false);
 
   // determine what the TextFieldSmall modal is allowing input for
-  const [targetForTextFieldSmallModal, setTargetForTextFieldSmallModal] = useState({
+  const [targetForTextFieldModal, setTargetForTextFieldModal] = useState({
     field: '',
-    fieldName: ''
+    fieldName: '',
+    oldValue: ''
   });
 
   // musician info (from database).
@@ -75,9 +78,6 @@ function PrivateMusicianContainer(){
       alert('sorry, attempt to update failed');
     }
   }
-
-
-
 
 
 
@@ -139,15 +139,16 @@ function PrivateMusicianContainer(){
         {privateMusicianInfo.display_name}
         <button
           onClick={() => {
-            setTargetForTextFieldSmallModal({
+            setTargetForTextFieldModal({
               field: 'display_name',
-              fieldName: 'display name'
+              fieldName: 'display name',
+              oldValue: privateMusicianInfo.display_name
             })
             setShowTextFieldSmallModal(true)
           }}
           className='ml-5'
         >
-          <span className="text-red-600">edit</span>
+          <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
       </span>
 
@@ -165,9 +166,17 @@ function PrivateMusicianContainer(){
         <b>instagram: </b>
         {privateMusicianInfo.instagram}
         <button
-          className='ml-5'
+          onClick={() => {
+            setTargetForTextFieldModal({
+              field: 'instagram',
+              fieldName: 'instagram',
+              oldValue: privateMusicianInfo.instagram
+            })
+            setShowTextFieldSmallModal(true)
+          }}
+          className={'ml-5'}
         >
-          <span className="text-red-600">edit</span>
+          <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
       </span>
 
@@ -178,7 +187,7 @@ function PrivateMusicianContainer(){
           onClick={() => updatePrivateMusicianInfo({instagram_show: !privateMusicianInfo.instagram_show})}
           className='ml-5'
         >
-          toggle
+          <span className={styles.textButtonForDbUpdates}>toggle</span>
         </button>
       </span>
 
@@ -186,9 +195,17 @@ function PrivateMusicianContainer(){
         <b>venmo: </b>
         {privateMusicianInfo.venmo}
         <button
+          onClick={() => {
+            setTargetForTextFieldModal({
+              field: 'venmo',
+              fieldName: 'venmo',
+              oldValue: privateMusicianInfo.venmo
+            })
+            setShowTextFieldSmallModal(true)
+          }}
           className='ml-5'
         >
-          <span className="text-red-600">edit</span>
+          <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
       </span>
 
@@ -199,7 +216,7 @@ function PrivateMusicianContainer(){
           onClick={() => updatePrivateMusicianInfo({venmo_show: !privateMusicianInfo.venmo_show})}
           className='ml-5'
         >
-          toggle
+          <span className={styles.textButtonForDbUpdates}>toggle</span>
         </button>
       </span>
 
@@ -224,9 +241,17 @@ function PrivateMusicianContainer(){
         <b>bio: </b>
         {privateMusicianInfo.bio}
         <button
-          className='ml-5'
+          onClick={() => {
+            setTargetForTextFieldModal({
+              field: 'bio',
+              fieldName: 'bio',
+              oldValue: privateMusicianInfo.bio
+            })
+            setShowTextFieldLargeModal(true)
+          }}
+          className={'ml-5'}
         >
-          <span className="text-red-600">edit</span>
+          <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
       </span>
 
@@ -261,17 +286,37 @@ function PrivateMusicianContainer(){
         isOpen={showTextFieldSmallModal}
         parentSelector={() => document.getElementById("root") || undefined}
         ariaHideApp={false}
-        className={"ReactModal__Content" + " " + styles.altFade}
+        className={"ReactModalSmall__Content" + " " + styles.altFade}
       >
 
         <TextFieldSmall
-          field={targetForTextFieldSmallModal.field} 
-          fieldName={targetForTextFieldSmallModal.fieldName}
+          field={targetForTextFieldModal.field} 
+          fieldName={targetForTextFieldModal.fieldName}
+          oldValue={targetForTextFieldModal.oldValue}
           setShowTextFieldSmallModal={setShowTextFieldSmallModal}
           updatePrivateMusicianInfo={updatePrivateMusicianInfo}
         />
 
       </ReactModal>
+
+      <ReactModal
+        isOpen={showTextFieldLargeModal}
+        parentSelector={() => document.getElementById("root") || undefined}
+        ariaHideApp={false}
+        className={"ReactModal__Content" + " " + styles.altFade}
+      >
+
+        <TextFieldLarge
+          field={targetForTextFieldModal.field} 
+          fieldName={targetForTextFieldModal.fieldName}
+          oldValue={targetForTextFieldModal.oldValue}
+          setShowTextFieldLargeModal={setShowTextFieldLargeModal}
+          updatePrivateMusicianInfo={updatePrivateMusicianInfo}
+        />
+
+      </ReactModal>
+
+
 
 
 

@@ -1,7 +1,9 @@
 type StyleObj = {
     buttonSmall: string
     buttonBig: string
+    textButtonForDbUpdates: string
     searchField: string
+    textArea: string
     altFade: string
 };
 
@@ -31,11 +33,28 @@ const styles: StyleObj = {
         "mb-10",
         "rounded-full"
     ].join(" "),
-    searchField: ["border",
-    "border-blue-700",
-    "rounded",
-    "px-1",
-    "mr-2"
+    textButtonForDbUpdates: "text-blue-800",
+    // textButtonForDbUpdates: 'bg-white hover:bg-gray-200 text-gray-800 font-semibold border border-gray-400 rounded shadow',
+    searchField: [
+        "border",
+        "border-blue-700",
+        "rounded",
+        "px-1",
+        "mr-2"
+    ].join(" "),
+    textArea: [
+        "block",
+        // "p-2.5",
+        "w-full",
+        "h-96",
+        "text-sm",
+        "text-gray-900",
+        "bg-gray-50",
+        "rounded-lg",
+        "border",
+        "border-gray-300",
+        // "focus:ring-blue-500",
+        // "focus:border-blue-500",
     ].join(" "),
     altFade: [
         "bg-gradient-to-r",

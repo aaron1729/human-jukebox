@@ -19,5 +19,6 @@ declare global {
 
     // for musician private page; this is a subset of the keys in an object of type UpdateObj
     type SmallTextField = 'display_name' | 'instagram' | 'venmo';
+    type LargeTextField = 'bio'
 
 }
