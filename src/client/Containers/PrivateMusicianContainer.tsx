@@ -8,6 +8,16 @@ import { styles } from '../styles';
 import TextFieldSmall from '../Components/TextFieldSmall';
 import TextFieldLarge from '../Components/TextFieldLarge';
 
+// these are from: https://mui.com/material-ui/material-icons/
+import SyncIcon from '@mui/icons-material/Sync';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 // the PrivateMusicianContainer component is substantially more complicated that PublicMusicianContainer, because the musician can CRUD info.
 // it will contain a PrivateMusicianInfo component and a SongDisplayContainer component (or perhaps even the full PublicMusicianContainer?).
@@ -111,6 +121,19 @@ function PrivateMusicianContainer(){
 
       </span>
 
+      <Link to="/">
+        <SyncIcon fontSize="small" />
+        <SyncIcon fontSize="medium" />
+        <SyncIcon fontSize="large" />
+      </Link>
+      <Tooltip title="edit" arrow><EditIcon /></Tooltip>
+      <CheckBoxOutlinedIcon />
+      <CheckBoxOutlineBlankIcon />
+      <Button startIcon={<EditIcon />} size="small">edit</Button>
+      <IconButton>
+        <CheckBoxOutlinedIcon />
+      </IconButton>
+
       <span className="text-gray-500">
         <b>spotify id: </b>
         {privateMusicianInfo.spotify_id}
@@ -132,6 +155,7 @@ function PrivateMusicianContainer(){
         >
           <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
+        <Button endIcon={<EditIcon />} size="small">edit</Button>
       </span>
 
       <span>
@@ -248,6 +272,8 @@ function PrivateMusicianContainer(){
       <hr className="w-full my-10" />
 
       <SongDisplayContainer handle={handle} />
+
+      
    
 
 
