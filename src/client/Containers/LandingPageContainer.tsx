@@ -29,11 +29,7 @@ function LandingPageContainer(){
       console.log('inside of the "login" function, cookies did not exist or did not match');
       const newWindow = window.open('/api/auth');
     }
-  }
-
-
-  // ridiculously, some filler such as the following line needs to be here, otherwise the login2 function gets red-squiggled by the linter.
-  const B: number = 7;
+  };
 
 
   // this is essentially a copy of the login function above (both are used!), but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
@@ -46,7 +42,7 @@ function LandingPageContainer(){
     if (resObj.cookieMatch) {
       navigate(`/musician/private?musician=${resObj.handle}`);
     }
-  }
+  };
 
 
 
@@ -123,7 +119,7 @@ function LandingPageContainer(){
       </button> */}
 
       <button onClick={getPlaylist} className={styles.buttonSmall}>
-        test: get a playlist
+        test: get a playlist in aaron's spotify account
       </button>
 
 

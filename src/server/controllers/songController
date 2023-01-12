@@ -21,6 +21,15 @@ songController.getSongs = (req, res, next) => {
     })
 }
 
+songController.setPlaylistInDb = (req, res, next) => {
+    const addSongsToSongsTableQueryString = `REPLACE INTO songs
+    (name, album_name, spotify_id, popularity, preview_url)
+    VALUES
+    ` // here, add the long string of values, in parentheses, separated by \n (newline)
+
+}
+
+
 
 
 
@@ -47,6 +56,38 @@ songController.getSpotifyPlaylist = (req, res, next) => {
         .then(data => {
             res.locals.playlist = data.body.tracks.items
             console.log('the data returned from spotifyApi.getPlaylist is', res.locals.playlist)
+
+
+
+
+
+            // this is temporary -- just to play around and figure out how they shape their data.
+
+            const mySong = res.locals.playlist[0].track
+
+            // console.log('and mySong is:', mySong)
+
+            // these are based on the columns in the "songs" table, to peel off of the spotify song data:
+
+            const mySong_spotify_id = mySong.id
+            const mySong_name = mySong.name
+            const mySong_artist = mySong.artists.map(artistObj => artistObj.name).join(", ")
+            const mySong_album_name = mySong.album.name
+            const mySong_popularity = mySong.popularity
+            const mySong_preview_url = mySong.preview_url
+
+            console.log('and these data are: \n',
+            mySong_spotify_id, '\n',
+            mySong_name, '\n',
+            mySong_artist, '\n',
+            mySong_album_name, '\n',
+            mySong_popularity, '\n',
+            mySong_preview_url)
+
+
+
+
+
             return next();
         })
     } catch(err) {

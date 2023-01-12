@@ -13,21 +13,6 @@ function PublicMusicianContainer(){
   const handle = searchParams.get('musician');
   console.log('inside of PublicMusicianContainer component, and handle (coming from query parameter) is:', handle);
 
-  // musician info
-  type PublicMusicianInfo = {
-    handle: string,
-    bio?: string,
-    display_name?: string,
-    instagram_show?: boolean,
-    instagram?: string,
-    venmo_show?: boolean,
-    venmo?: string,
-    spotify_playlist_id?: string,
-    spotify_playlist_name?: string,
-    spotify_playlist_url?: string,
-    loading?: boolean
-  }
-
   const [publicMusicianInfo, setPublicMusicianInfo] = useState<PublicMusicianInfo>({handle: handle, loading: true});
 
   // fetch musician info from database
