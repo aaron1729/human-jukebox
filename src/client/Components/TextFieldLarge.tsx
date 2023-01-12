@@ -23,11 +23,6 @@ const TextFieldLarge = (props: any) => {
 
     // TO DO: add more validation here, depending on which field we're updating. (e.g. might reject anything too short, too long, or including spaces or special characters. for handle probably just letters, numbers, dashes, and underscores. for display name, apostrophes but no quote-marks.)
 
-    if (update[field].includes("''")) {
-      alert("sorry, string cannot contain doubled single-quote-marks.");
-      return;
-    }
-
     if (update[field].length > 1800) {
       alert("sorry, bio cannot be longer than one page (1800 characters).");
       return;

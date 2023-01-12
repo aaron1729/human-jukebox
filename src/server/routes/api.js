@@ -122,7 +122,7 @@ router.get(
 
 // UNDER CONSTRUCTION
 // this endpoint is triggered when a musician updates their spotify_playlist_id in the database.
-router.get(
+router.put(
     '/setPlaylist/:playlistId',
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
@@ -135,7 +135,7 @@ router.get(
 
 
 // this endpoint is triggered when the musician attempts to update their private info from their private page. the request body should be a JSON-stringified "update object".
-router.patch(
+router.put(
     '/updateMusicianInfo/:spotify_id',
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
@@ -153,7 +153,8 @@ router.patch(
 
 
 
-// this endpoint is triggered when a musician wants to add or sync their repertoire against a given spotify playlist. (it might be unnecessary? it's mostly just a request to the spotify API, but maybe it's important to keep this to make sure there's a usable access token.)
+// this endpoint is triggered when a musician wants to add or sync their repertoire against a given spotify playlist.
+// THIS MIGHT BE UNNECESSARY??!? it's mostly just a request to the spotify API. but maybe it's important to keep this to make sure there's a usable access token.
 router.get(
     '/getPlaylist/:playlistId',
     authController.checkCookies,

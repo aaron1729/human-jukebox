@@ -53,7 +53,7 @@ function PrivateMusicianContainer(){
     instagram: "",
     instagram_show: false,
     spotify_id: "",
-    spotify_playlist_id: "",
+    spotify_playlist_id: null,
     spotify_playlist_name: "",
     spotify_playlist_url: "",
     venmo: "",
@@ -75,7 +75,7 @@ function PrivateMusicianContainer(){
   
   const updatePrivateMusicianInfo = async (update: UpdateObj) => {
     const requestOptions = {
-      method: 'PATCH',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(update)
     }
@@ -88,13 +88,6 @@ function PrivateMusicianContainer(){
       alert('sorry, attempt to update failed');
     }
   }
-
-
-
-
-
-  
-  
 
     
     const deleteCookies = () => {
@@ -294,6 +287,7 @@ function PrivateMusicianContainer(){
         <PlaylistsDisplayContainer
           setShowPlaylistsModal={setShowPlaylistsModal}
           updatePrivateMusicianInfo={updatePrivateMusicianInfo}
+          spotifyPlaylistId={privateMusicianInfo.spotify_playlist_id}
         />
 
       </ReactModal>

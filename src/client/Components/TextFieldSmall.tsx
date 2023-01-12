@@ -33,11 +33,6 @@ const TextFieldSmall = (props: any) => {
 
     // data validation
 
-    if (update[field].includes("''")) {
-      alert("sorry, input cannot contain doubled single-quote-marks.")
-      return;
-    }
-
     if (field === "display_name") {
       if (update[field].length === 0) {
         alert("display name cannot be empty");

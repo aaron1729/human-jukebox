@@ -6,6 +6,7 @@ const PlaylistsDisplayContainer = (props: any) => {
 
   const setShowPlaylistsModal = props.setShowPlaylistsModal;
   const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
+  const spotifyPlaylistId = props.spotifyPlaylistId;
 
   // playlistArray is an array of PlaylistDisplay *components*
   const [ playlistArray, setPlaylistArray ] = useState([]);
@@ -50,7 +51,7 @@ const PlaylistsDisplayContainer = (props: any) => {
   // record choice of playlist
   // TO DO: this should default to the current value, if there's one that's already saved in the database.
   // TO DO: allow to load more playlists, since spotify API limits the number that are returned.
-  const [playlistChoice, setPlaylistChoice] = useState(null)
+  const [playlistChoice, setPlaylistChoice] = useState(spotifyPlaylistId)
 
   const handleRadioChange = (e: React.SyntheticEvent) => {
     // make target into a union type.
@@ -58,7 +59,7 @@ const PlaylistsDisplayContainer = (props: any) => {
       value: string
     };
     console.log('inside of handleRadioChange function, and target.value is', target.value);
-    // note that setPlaylistChoice happens asynchronously, so it won't show up in a simple console.log (or even one with a setTimeout).
+    // note that setPlaylistChoice happens asynchronously, so it won't show up in a simple console.log (or even one with a setTimeout). this can be gotten around by having a temporary button that triggers a temporary "log playlistChoice to the console" function.
     setPlaylistChoice(target.value);
   }
 

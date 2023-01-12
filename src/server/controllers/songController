@@ -32,11 +32,7 @@ songController.setPlaylistInDb = (req, res, next) => {
 
 
 
-
-
-
-// UNDER CONSTRUCTION!!!
-// this middleware function gets a playlist id (to which a musician has access) and retrieves it from the spotify API.
+// this middleware function gets a playlist id (to which a musician has access), retrieves it from the spotify API, and saves the bits that are relevant for our db.
 songController.getSpotifyPlaylist = (req, res, next) => {
     console.log('inside of songController.getSpotifyPlaylist, and cookies are', req.cookies);
     const {playlistId} = req.params;
@@ -54,40 +50,24 @@ songController.getSpotifyPlaylist = (req, res, next) => {
         console.log('inside of songController.getSpotifyPlaylist, and just set access and refresh tokens on spotifyApi object');
         spotifyApi.getPlaylist(playlistId)
         .then(data => {
-            res.locals.playlist = data.body.tracks.items
-            console.log('the data returned from spotifyApi.getPlaylist is', res.locals.playlist)
-
-
-
-
-
-            // this is temporary -- just to play around and figure out how they shape their data.
-
-            const mySong = res.locals.playlist[0].track
-
-            // console.log('and mySong is:', mySong)
-
-            // these are based on the columns in the "songs" table, to peel off of the spotify song data:
-
-            const mySong_spotify_id = mySong.id
-            const mySong_name = mySong.name
-            const mySong_artist = mySong.artists.map(artistObj => artistObj.name).join(", ")
-            const mySong_album_name = mySong.album.name
-            const mySong_popularity = mySong.popularity
-            const mySong_preview_url = mySong.preview_url
-
-            console.log('and these data are: \n',
-            mySong_spotify_id, '\n',
-            mySong_name, '\n',
-            mySong_artist, '\n',
-            mySong_album_name, '\n',
-            mySong_popularity, '\n',
-            mySong_preview_url)
-
-
-
-
-
+            res.locals.playlist = data.body.tracks.items.map(trackObj => {
+                const songObj = trackObj.track;
+                const spotify_id = songObj.id;
+                const name = songObj.name;
+                const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
+                const album_name = songObj.album.name;
+                const popularity = songObj.popularity;
+                const preview_url = songObj.preview_url;
+                return {
+                    spotify_id,
+                    name,
+                    artist,
+                    album_name,
+                    popularity,
+                    preview_url
+                }
+            });
+            console.log('inside of songController.getSpotifyPlaylist, and res.locals.playlist is:', res.locals.playlist);
             return next();
         })
     } catch(err) {
@@ -96,7 +76,6 @@ songController.getSpotifyPlaylist = (req, res, next) => {
             status: err.statusCode,
             message: {error: 'failed to get spotify playlist.'}
         })
-        
     }
 }
 
@@ -104,7 +83,7 @@ songController.getSpotifyPlaylist = (req, res, next) => {
 // this middleware function gets the musician's list of spotify playlists (or at least the first N or so of them) from the spotify API.
 songController.getAllSpotifyPlaylists = (req, res, next) => {
     console.log('inside of songController.getAllSpotifyPlaylists, and cookies are', req.cookies);
-    // as of now (12/20/2022), this middleware function is only called after previous authentication stuff, so these variables ought to have been stored on res.locals. in particular, the access token will have changed! so it's *not* the same one that came on req.cookies .
+    // as of 12/20/2022, this middleware function is only called after previous authentication stuff, so these variables ought to have been stored on res.locals. in particular, the access token will have changed! so it's *not* the same one that came on req.cookies .
     const spotifyId = res.locals.spotifyId;
     const access = res.locals.access;
     const refresh = res.locals.refresh;
