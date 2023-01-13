@@ -185,7 +185,7 @@ function PrivateMusicianContainer(){
 
       <span>
         <b>show instagram on public page: </b>
-        {privateMusicianInfo.instagram_show.toString()}
+        {privateMusicianInfo.instagram_show ? 'yes' : 'no'}
         <button
           onClick={() => updatePrivateMusicianInfo({instagram_show: !privateMusicianInfo.instagram_show})}
           className='ml-5'
@@ -218,7 +218,7 @@ function PrivateMusicianContainer(){
 
       <span>
         <b>show venmo on public page: </b>
-        {privateMusicianInfo.venmo_show.toString()}
+        {privateMusicianInfo.venmo_show ? 'yes' : 'no'}
         <button
           onClick={() => updatePrivateMusicianInfo({venmo_show: !privateMusicianInfo.venmo_show})}
           className='ml-5'
