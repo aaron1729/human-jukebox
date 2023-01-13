@@ -240,7 +240,9 @@ function PrivateMusicianContainer(){
           onClick={() => setShowPlaylistsModal(true)}
           className='ml-5'
         >
-        <span className={styles.textButtonForDbUpdates}>edit</span>
+        <span className={styles.textButtonForDbUpdates}>
+          {privateMusicianInfo.spotify_playlist_id ? 'change' : 'choose'}
+        </span>
         </button>
       </span>
 
