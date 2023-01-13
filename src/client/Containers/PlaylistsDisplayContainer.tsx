@@ -6,6 +6,9 @@ const PlaylistsDisplayContainer = (props: any) => {
 
   const setShowPlaylistsModal = props.setShowPlaylistsModal;
   const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
+  // spotifyPlaylistId starts life as a property on the privateMusicianInfo state object in the PrivateMusicianContainer component (which calls this component). that gets updated:
+    // inside of getPrivateMusicianInfo (from database), which gets called immediately with a useEffect;
+    // inside of updatePrivateMusicianInfo, upon a successful PUT request to the database.
   const spotifyPlaylistId = props.spotifyPlaylistId;
 
   // playlistArray is an array of PlaylistDisplay *components*
@@ -50,6 +53,7 @@ const PlaylistsDisplayContainer = (props: any) => {
 
   // record choice of playlist
   // TO DO: this should default to the current value, if there's one that's already saved in the database.
+    // we could do useState(spotifyPlaylistId).
   // TO DO: allow to load more playlists, since spotify API limits the number that are returned.
   const [playlistChoice, setPlaylistChoice] = useState(spotifyPlaylistId)
 

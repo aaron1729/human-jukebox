@@ -22,17 +22,34 @@ songController.getSongs = (req, res, next) => {
 }
 
 songController.setPlaylistInDb = (req, res, next) => {
-    const addSongsToSongsTableQueryString = `REPLACE INTO songs
-    (name, album_name, spotify_id, popularity, preview_url)
+
+    // temporary, just to get going with the database
+    const song = res.locals.playlist[0]
+
+    const addSongsToSongsTableQueryString = `INSERT INTO songs
+    (name, artist, album_name, spotify_id, popularity, preview_url)
     VALUES
-    ` // here, add the long string of values, in parentheses, separated by \n (newline)
+    ('${song.name}', '${song.artist}', '${song.album_name}', '${song.spotify_id}', ${song.popularity}, '${song.preview_url}')
+    ON CONFLICT (spotify_id) DO UPDATE SET
+    name = '${song.name}!',
+    `;
+
+    db.query(addSongsToSongsTableQueryString).then(data => {
+        console.log('inside of songController.setPlaylistInDb, and the returned data is:', data)
+        return next();
+    })
 
 }
 
 
 
 
-// this middleware function gets a playlist id (to which a musician has access), retrieves it from the spotify API, and saves the bits that are relevant for our db.
+
+
+
+
+
+// this middleware function gets a playlist id (to which a musician has access), retrieves it from the spotify API, and saves as res.locals.playlist an array containing the pieces of data that are relevant for our db.
 songController.getSpotifyPlaylist = (req, res, next) => {
     console.log('inside of songController.getSpotifyPlaylist, and cookies are', req.cookies);
     const {playlistId} = req.params;
