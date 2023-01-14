@@ -137,34 +137,25 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
         const access = res.locals.access;
-        const musicianInfoQueryString = `SELECT * FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
-        query(musicianInfoQueryString).then(data => {
-            console.log('the array of musician data (which should have 0 or 1 elements) is:', data.rows)
-            if (data.rows.length) {
-                console.log('found musician in db');
-                const updateAccessInDbQueryString = `UPDATE public.musicians SET access = '${access}' WHERE spotify_id = '${spotifyId}'`;
-                query(updateAccessInDbQueryString).then(data => {
-                    if (data.rowCount === 1) {
-                        return next();
-                    } else {
-                        return next({
-                            log: 'error updating access token in db',
-                            status: err.statusCode,
-                            message: {error: 'failed to update access token in db'}
-                        });
-                    }
-                })
-            } else {
-                const addMusicianToDbQueryString = `INSERT INTO public.musicians (display_name, bio, handle, spotify_id, access) VALUES ('temp display name', 'This is the bio of musician ${spotifyId}.', '${spotifyId}', '${spotifyId}', '${access}')`;
-                query(addMusicianToDbQueryString).then(data => {
-                    console.log('added new musician to db, and returned data is:', data);
-                    return next();
-                })
-            }
+
+        // this is meant to avoid the possibility that one user's spotify id is another user's handle. of course, there is still some _tiny_ possibility of a collision.
+        const randomString = Math.floor(Math.random() * 10000).toString();
+
+        const upsertMusicianInfoQueryString = `INSERT INTO public.musicians
+            (display_name, bio, handle, spotify_id, access, spotify_playlist_name)
+        VALUES
+            ('temp display name -- edit me!', 'temp bio -- edit me!', '${spotifyId + randomString}', '${spotifyId}', '${access}',)
+        ON CONFLICT (spotify_id) DO UPDATE SET
+            access = '${access}';`
+
+        query(upsertMusicianInfoQueryString).then(data => {
+            console.log('just executed upsertMusicianInfoQueryString, and the returned data is:', data);
+            return next();
         })
+
     } catch(err) {
         return next({
-            log: 'error syncing spotify id and access token with db',
+            log: 'error adding/syncing spotify id and access token in db',
             status: err.statusCode,
             message: {error: 'failed to sync spotify id and access token with db'}
         });

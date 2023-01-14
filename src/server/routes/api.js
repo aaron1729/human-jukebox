@@ -126,7 +126,10 @@ router.put(
     '/setPlaylist/:playlistId',
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
-    // once it's written, the new middleware function songController.setPlaylistInDb goes here
+    authController.getNewAccessToken,
+    authController.spotifyIdAndAccessToDb,
+    songController.getSpotifyPlaylist,
+    // once it's written, the middleware function songController.setPlaylistInDb goes here
     (req, res) => {
         console.log('at the end of the /api/setPlaylist router handler');
         return res.status(200).json({message: 'we are at the end of the /api/setPlaylist router handler'})

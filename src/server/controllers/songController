@@ -21,6 +21,10 @@ songController.getSongs = (req, res, next) => {
     })
 }
 
+
+
+
+// UNDER CONSTRUCTION
 songController.setPlaylistInDb = (req, res, next) => {
 
     // temporary, just to get going with the database
@@ -55,10 +59,9 @@ songController.getSpotifyPlaylist = (req, res, next) => {
     const {playlistId} = req.params;
     console.log('and playlistId is', playlistId);
 
-    res.locals.playlist = ['test', 'playlist', 'array']
- 
-    // const spotifyId = req.cookies.spotifyId;
-    const access = req.cookies.access;
+    // this should always come after authController.getNewAccessToken, in case the access token in the cookie has expired. (that function gets a new access token and saves it as res.locals.access .)
+    const access = res.locals.access;
+    // by contrast, this should be fine regardless (and isn't get reset anyways).
     const refresh = req.cookies.refresh;
 
     try {

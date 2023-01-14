@@ -91,7 +91,7 @@ const PlaylistsDisplayContainer = (props: any) => {
       }
     })
 
-    // this can only occur for a new user who hasn't yet chosen a playlist. (otherwise, playlistChoice is initialized at the previous choice.)
+    // this can only occur for a user who has _never_ chosen a playlist. (otherwise, playlistChoice is initialized at the previous choice.)
     if (!spotify_playlist_name) {
       console.log('playlistArray is:', playlistArray)
       alert('error: no playlist chosen');
