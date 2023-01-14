@@ -88,6 +88,7 @@ function PrivateMusicianContainer(){
     console.log('results is:', results);
     if (results.success) {
       setPrivateMusicianInfo({...privateMusicianInfo, ...update});
+      syncPlaylistToDb();
     } else {
       alert('sorry, attempt to update failed');
     }
