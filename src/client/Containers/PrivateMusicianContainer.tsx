@@ -89,6 +89,18 @@ function PrivateMusicianContainer(){
     }
   }
 
+
+  const syncPlaylistToDb = async () => {
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    }
+    const response = await fetch(`/api/setPlaylist/${privateMusicianInfo.spotify_playlist_id}`, requestOptions);
+    const results = await response.json();
+    console.log('inside of syncPlaylistToDb, and results is:', results);
+  }
+
+
     
     const deleteCookies = () => {
       fetch('/api/logout')
@@ -230,11 +242,16 @@ function PrivateMusicianContainer(){
       <span>
         <b>repertoire (a Spotify playlist): </b>
         {privateMusicianInfo.spotify_playlist_id && <a href={privateMusicianInfo.spotify_playlist_url} target="_blank">{privateMusicianInfo.spotify_playlist_name}</a>}
+        {privateMusicianInfo.spotify_playlist_id &&
         <button
+          onClick={() => syncPlaylistToDb()}
           className='ml-5'
         >
-          <span className="text-red-600">sync</span>
+          <span className={styles.textButtonForDbUpdates}>
+            sync
+          </span>
         </button>
+        }
         <button
           id="toggle-playlists-modal"
           onClick={() => setShowPlaylistsModal(true)}

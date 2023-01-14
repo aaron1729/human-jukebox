@@ -1,5 +1,5 @@
 const spotifyApi = require('../utils/apiWrapper');
-const { query } = require('../models/models');
+const db = require('../models/models');
 
 
 const authController = {};
@@ -21,7 +21,7 @@ authController.checkCookies = (req, res, next) => {
             return next();
         }
         const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
-        query(getHandleAndAccessFromDbQueryString).then(data => {
+        db.query(getHandleAndAccessFromDbQueryString).then(data => {
             console.log('after db query inside of authController.checkCookies, the data is:', data.rows)
             const accessFromDb = data.rows[0].access;
             const handleFromDb = data.rows[0].handle;
@@ -130,25 +130,25 @@ authController.getSpotifyId = (req, res, next) => {
 }
 
 
-// given a spotify id and an access token (saved as res.locals.spotifyId and res.locals.access), check if the spotify id is in the database.
-    // if so, update its access token there.
-    // if not, create a new row in the database with some default values.
+// upsert the spotify id and access token (saved as res.locals.spotifyId and res.locals.access) to the database. more specifically, check if the spotify id is in the database, and:
+    // if so, update its access token there;
+    // if not, create a new row in the database with some default values. in particular, the new handle is a 
 authController.spotifyIdAndAccessToDb = (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
         const access = res.locals.access;
 
-        // this is meant to avoid the possibility that one user's spotify id is another user's handle. of course, there is still some _tiny_ possibility of a collision.
+        // this is meant to avoid the possibility that one user's spotify id is another user's handle. of course, there is still some _tiny_ possibility of a collision, which should eventually be handled as well.
         const randomString = Math.floor(Math.random() * 10000).toString();
 
-        const upsertMusicianInfoQueryString = `INSERT INTO public.musicians
-            (display_name, bio, handle, spotify_id, access, spotify_playlist_name)
+        const upsertMusicianInfoQueryString = `INSERT INTO musicians
+            (display_name, bio, handle, spotify_id, access)
         VALUES
-            ('temp display name -- edit me!', 'temp bio -- edit me!', '${spotifyId + randomString}', '${spotifyId}', '${access}',)
+            ('temp display name -- edit me!', 'temp bio -- edit me!', 'temp-handle-${spotifyId}-${randomString}', '${spotifyId}', '${access}')
         ON CONFLICT (spotify_id) DO UPDATE SET
             access = '${access}';`
 
-        query(upsertMusicianInfoQueryString).then(data => {
+        db.query(upsertMusicianInfoQueryString).then(data => {
             console.log('just executed upsertMusicianInfoQueryString, and the returned data is:', data);
             return next();
         })

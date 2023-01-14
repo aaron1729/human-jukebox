@@ -1,4 +1,4 @@
-const db = require('../models/models.js');
+const db = require('../models/models');
 const spotifyApi = require('../utils/apiWrapper');
 
 const songController = {};
@@ -25,23 +25,93 @@ songController.getSongs = (req, res, next) => {
 
 
 // UNDER CONSTRUCTION
+// take a playlist-array (saved as res.locals.playlist by songController.getSpotifyPlaylist).
+    // upsert its entries into the songs table.
+    // upsert its intries into the musicians_songs join table.
+    // in the musicians_songs join table, delete any old songs that aren't in it.
 songController.setPlaylistInDb = (req, res, next) => {
 
-    // temporary, just to get going with the database
-    const song = res.locals.playlist[0]
+    try {
 
-    const addSongsToSongsTableQueryString = `INSERT INTO songs
-    (name, artist, album_name, spotify_id, popularity, preview_url)
-    VALUES
-    ('${song.name}', '${song.artist}', '${song.album_name}', '${song.spotify_id}', ${song.popularity}, '${song.preview_url}')
-    ON CONFLICT (spotify_id) DO UPDATE SET
-    name = '${song.name}!',
-    `;
+        const spotifyId = req.cookies.spotifyId;
 
-    db.query(addSongsToSongsTableQueryString).then(data => {
-        console.log('inside of songController.setPlaylistInDb, and the returned data is:', data)
-        return next();
-    })
+        const upsertPlaylistSongsIntoSongTableQueryString = res.locals.playlist.map(songObj => `INSERT INTO songs
+                (name, artist, album_name, spotify_id, popularity, preview_url)
+            VALUES
+                ('${songObj.name}', '${songObj.artist}', '${songObj.album_name}', '${songObj.spotify_id}', '${songObj.popularity}', '${songObj.preview_url}')
+            ON CONFLICT DO NOTHING;`).join("\n");
+
+        db.query(upsertPlaylistSongsIntoSongTableQueryString).then(data => {
+
+            console.log('just executed upsertPlaylistSongsIntoSongTableQueryString, and the returned data is:', data);
+
+            const upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString = res.locals.playlist.map((songObj, index) => `INSERT INTO musicians_songs
+                (musician_spotify_id, song_spotify_id, repertoire_index)
+            VALUES
+                ('${spotifyId}', '${songObj.spotify_id}', ${index})
+            ON CONFLICT (musician_spotify_id, song_spotify_id) DO UPDATE SET
+                repertoire_index = ${index};`).join("\n");
+            
+            db.query(upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString).then(data => {
+
+                console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+
+                const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId}';`;
+
+                db.query(getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString).then(data => {
+
+                    const rowsInDb = data.rows;
+
+                    console.log('just executed getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString, and rowsInDb (the returned data) is:', rowsInDb);
+
+
+
+
+                    // /*
+
+
+                    const songSpotifyIdsToDrop = [];
+                    const songSpotifyIdsToKeep = res.locals.playlist.map(songObj => songObj.spotify_id);
+                    rowsInDb.forEach(row => {
+                        if (!songSpotifyIdsToKeep.includes(row.song_spotify_id)) {
+                            songSpotifyIdsToDrop.push(row.song_spotify_id);
+                        };
+                    })
+
+                    if (!songSpotifyIdsToDrop.length) {
+                        return next();
+                    }
+
+                    const dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString = songSpotifyIdsToDrop.map(songSpotifyId => `DELETE FROM musicians_songs
+                    WHERE (musician_spotify_id = '${spotifyId}' AND song_spotify_id = '${songSpotifyId}');`).join("\n");
+
+                    db.query(dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString).then(data => {
+                        console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+
+                        return next();
+
+                    })
+
+                    // */
+
+                    // // TEMPORARY
+                    // return next();
+
+
+
+
+                })
+            })
+        })
+    }
+
+    catch(err) {
+        return next({
+            log: 'error upserting playlist songs to songs table and/or musicians_songs table',
+            status: err.statusCode,
+            message: {error: 'failed to upsert playlist songs to songs table and/or musicians_songs table'}
+        });
+    }
 
 }
 
@@ -59,9 +129,9 @@ songController.getSpotifyPlaylist = (req, res, next) => {
     const {playlistId} = req.params;
     console.log('and playlistId is', playlistId);
 
-    // this should always come after authController.getNewAccessToken, in case the access token in the cookie has expired. (that function gets a new access token and saves it as res.locals.access .)
+    // the present middleware function should always come after authController.getNewAccessToken, in case the access token in the cookie has expired. (that function gets a new access token and saves it as res.locals.access .)
     const access = res.locals.access;
-    // by contrast, this should be fine regardless (and isn't get reset anyways).
+    // by contrast, this should be fine regardless (and isn't getting reset anyways).
     const refresh = req.cookies.refresh;
 
     try {

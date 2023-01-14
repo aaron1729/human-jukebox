@@ -121,7 +121,7 @@ router.get(
 
 
 // UNDER CONSTRUCTION
-// this endpoint is triggered when a musician updates their spotify_playlist_id in the database.
+// this endpoint is triggered when a musician updates their spotify_playlist_id in the database -- and/or just when they sync their spotify playlist with the database.
 router.put(
     '/setPlaylist/:playlistId',
     authController.checkCookies,
@@ -129,7 +129,7 @@ router.put(
     authController.getNewAccessToken,
     authController.spotifyIdAndAccessToDb,
     songController.getSpotifyPlaylist,
-    // once it's written, the middleware function songController.setPlaylistInDb goes here
+    songController.setPlaylistInDb,
     (req, res) => {
         console.log('at the end of the /api/setPlaylist router handler');
         return res.status(200).json({message: 'we are at the end of the /api/setPlaylist router handler'})
