@@ -17,15 +17,21 @@ authController.checkCookies = (req, res, next) => {
         const access = res.locals.access;
 
         if (!spotifyId || !access) {
+            console.log('missing a spotifyId cookie or access cookie');
             res.locals.cookieMatch = false;
             return next();
         }
         const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
         db.query(getHandleAndAccessFromDbQueryString).then(data => {
             console.log('after db query inside of authController.checkCookies, the data is:', data.rows)
+            if (!data.rows.length) {
+                console.log('no corresponding musician found in db');
+                res.locals.cookieMatch = false;
+                return next();
+            }
             const accessFromDb = data.rows[0].access;
             const handleFromDb = data.rows[0].handle;
-            if (access === accessFromDb) {
+            if (accessFromDb && access === accessFromDb) {
                 res.locals.cookieMatch = true;
                 res.locals.handle = handleFromDb;
             } else {
@@ -130,6 +136,10 @@ authController.getSpotifyId = (req, res, next) => {
 }
 
 
+
+// TO DO: change the temp-handle stuff, once sorting out the first-time-login flow.
+
+
 // upsert the spotify id and access token (saved as res.locals.spotifyId and res.locals.access) to the database. more specifically, check if the spotify id is in the database, and:
     // if so, update its access token there;
     // if not, create a new row in the database with some default values. in particular, the new handle is a 
@@ -138,13 +148,10 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
         const spotifyId = res.locals.spotifyId;
         const access = res.locals.access;
 
-        // this is meant to avoid the possibility that one user's spotify id is another user's handle. of course, there is still some _tiny_ possibility of a collision, which should eventually be handled as well.
-        const randomString = Math.floor(Math.random() * 10000).toString();
-
         const upsertMusicianInfoQueryString = `INSERT INTO musicians
             (display_name, bio, handle, spotify_id, access)
         VALUES
-            ('temp display name -- edit me!', 'temp bio -- edit me!', 'temp-handle-${spotifyId}-${randomString}', '${spotifyId}', '${access}')
+            ('temp display name -- edit me!', 'temp bio -- edit me!', 'temp-handle-${spotifyId}', '${spotifyId}', '${access}')
         ON CONFLICT (spotify_id) DO UPDATE SET
             access = '${access}';`
 

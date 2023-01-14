@@ -30,7 +30,6 @@ function PrivateMusicianContainer(){
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
   const handle = searchParams.get('musician');
-  console.log('inside of PrivateMusicianContainer component, and handle (coming from query parameter) is:', handle);
 
   // toggle whether to show or hide the various modals
   const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
@@ -88,7 +87,10 @@ function PrivateMusicianContainer(){
     console.log('results is:', results);
     if (results.success) {
       setPrivateMusicianInfo({...privateMusicianInfo, ...update});
-      syncPlaylistToDb();
+      if (update.spotify_playlist_id) {
+        console.log('inside of "if update.spotify_playlist_id" block');
+        syncPlaylistToDb();
+      }
     } else {
       alert('sorry, attempt to update failed');
     }
@@ -104,6 +106,7 @@ function PrivateMusicianContainer(){
     const results = await response.json();
     console.log('inside of syncPlaylistToDb, and results is:', results);
     setDummyVarForSongDisplayContainer(dummyVarForSongDisplayContainer + 1);
+    console.log('and dummyVarForSongDisplayContainer is:', dummyVarForSongDisplayContainer);
   }
 
 

@@ -88,18 +88,17 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
 
         console.log('kvpStringArray is:', kvpStringArray);
 
-        if (!kvpStringArray) {
-            return next();
-        }
-
         const kvpString = kvpStringArray.join(", ");
 
         console.log('kvpString is:', kvpString)
 
+        if (!kvpString) {
+            return next();
+        }
+
         const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpString} WHERE spotify_id = '${spotify_id}'`;
-        console.log('the query string is:', updateKVPInDbQueryString);
         db.query(updateKVPInDbQueryString).then(data => {
-            console.log('after attempting to update the database, it returned the data:', data);
+            console.log('after executing updateKVPInDbQueryString, the returned data is:', data);
             if (data.rowCount === 1) {
                 res.locals.success = true;
             } else {
