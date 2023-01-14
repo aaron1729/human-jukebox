@@ -89,7 +89,7 @@ function PrivateMusicianContainer(){
       setPrivateMusicianInfo({...privateMusicianInfo, ...update});
       if (update.spotify_playlist_id) {
         console.log('inside of "if update.spotify_playlist_id" block');
-        syncPlaylistToDb();
+        syncPlaylistToDb(update.spotify_playlist_id);
       }
     } else {
       alert('sorry, attempt to update failed');
@@ -97,12 +97,16 @@ function PrivateMusicianContainer(){
   }
 
 
-  const syncPlaylistToDb = async () => {
+  // the reason for the default parameter is the following. it gets used in case the musician clicks the "update" button. however, if the musician selects a new playlist, then that triggers the updatePrivateMusicianInfo function, which in turn triggers this function. but the setPrivateMusicianInfo in the former is asynchronous, and so the value of privateMusicianInfo.spotify_playlist_id will not have changed by then.
+  const syncPlaylistToDb = async (spotifyPlaylistId = privateMusicianInfo.spotify_playlist_id) => {
+    
+    console.log('inside of syncPlaylistToDb, and privateMusicianInfo.spotify_playlist_name is:', privateMusicianInfo.spotify_playlist_name);
+
     const requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
     }
-    const response = await fetch(`/api/setPlaylist/${privateMusicianInfo.spotify_playlist_id}`, requestOptions);
+    const response = await fetch(`/api/setPlaylist/${spotifyPlaylistId}`, requestOptions);
     const results = await response.json();
     console.log('inside of syncPlaylistToDb, and results is:', results);
     setDummyVarForSongDisplayContainer(dummyVarForSongDisplayContainer + 1);

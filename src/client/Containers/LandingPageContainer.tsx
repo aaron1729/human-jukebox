@@ -11,7 +11,6 @@ function LandingPageContainer(){
 
   const navigate = useNavigate();
   
-
   const login = async function () {
     const res = await fetch('/api/checkCookies');
     // console.log('typeof res is: ', typeof res);
@@ -31,7 +30,6 @@ function LandingPageContainer(){
     }
   };
 
-
   // this is essentially a copy of the login function above (both are used!), but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
   (window as any).login2 = async function () {
     console.log('login2 triggered');
@@ -44,54 +42,6 @@ function LandingPageContainer(){
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-  ///////// TO BE REMOVED after moving this to musician private page
-  
-  // const getAllPlaylists = async () => {
-
-  //   const res = await fetch('/api/getAllPlaylists');
-  //   console.log('res data in getAllPlaylists function (in LandingPageContainer) is:', res);
-  //   if (res.status !== 200) {
-  //     console.log('error getting all playlists');
-  //     return;
-  //   }
-  //   const playlists = await res.json();
-  //   console.log('playlists is:', playlists);
-  // }
-
-
-  const getPlaylist = async () => {
-    
-    // here's a hard-coded playlist id attached to ethan's spotify account:
-    // const playlistId = '1dNwPETQVowrqMwUILsiaz';
-    // const playlistId = '20AQPwz2tutPb3XLSlReGE';
-
-    // and here's a PRIVATE playlist attached to aaron's spotify account. and it works from aaron's account but not from ethan's!
-    const playlistId = '5cpnzcAZTtQl17IlPNucht';
-
-
-    const res = await fetch(`/api/getPlaylist/${playlistId}`);
-    console.log('res data in getPlaylist function (in LandingPageContainer) is:', res);
-    if (res.status !== 200) {
-      console.log('error getting playlist');
-      return;
-    }
-    const playlist = await res.json();
-    console.log('playlist is:', playlist);
-  }
-
-
-
-
   return(
     // this className used to have "landing-page" in it, which seems not to do anything at the moment (it should be a custom tailwind class or something).
     <div className="flex flex-col justify-end justify-items-center items-center place-content-center">
@@ -102,30 +52,6 @@ function LandingPageContainer(){
       <button onClick={login} className={styles.buttonBig}>
         Spotify signup/login for musicians
       </button>
-
-
-      <br />
-
-      <br />
-
-      <br />
-
-
-
-      {/* the placement of these buttons is temporary, just to save a step of clickthrough when testing. later, delete them as well as the functions above. */}
-
-      {/* <button onClick={getAllPlaylists} className={styles.buttonBig}>
-        test: get my playlists
-      </button> */}
-
-      <button onClick={getPlaylist} className={styles.buttonSmall}>
-        test: get a playlist in aaron's spotify account
-      </button>
-
-
-
-
-
 
       {/* <br />
       <Link to="/DNE">

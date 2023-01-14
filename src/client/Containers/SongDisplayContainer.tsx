@@ -30,13 +30,13 @@ const SongDisplayContainer = (props: any) => {
   // the first argument is the effect function. the second argument (which is optional) indicates the dependencies of the effect function. upon each rerender (such as *after* running the effect function the first time), React checks the dependencies to determine whether to run the effect function again. if the second argument is omitted, React will execute the effect function upon every rerender. in this case, omitting the second argument causes the database to be queried over and over. so we instead pass an empty array of dependencies, which ensures that the effect function is only run once.
   useEffect(
     () => {getAllSongs()},
-    []
+    [dummyVar]
   )
 
   return (
     <div>
       <div>
-        <h4 className='flex flex-row justify-center'><b>Click a song title to hear a preview!</b></h4>
+        <h4 className='flex flex-row justify-center'><b>Click a song title to hear a preview! {dummyVar && 'dummyVar exists and is: ' + dummyVar}</b></h4>
       </div>
       <div className='px-4 py-2 flex flex-row justify-center'>
         <table className='table-fixed'>
