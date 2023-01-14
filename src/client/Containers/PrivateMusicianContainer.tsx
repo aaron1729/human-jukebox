@@ -44,6 +44,9 @@ function PrivateMusicianContainer(){
     oldValue: ''
   });
 
+  // dummy variable to force a rerender of SongDisplayContainer
+  const [dummyVarForSongDisplayContainer, setDummyVarForSongDisplayContainer] = useState(0);
+
   // musician info (from database).
   const [privateMusicianInfo, setPrivateMusicianInfo] = useState({
     access: "",
@@ -60,6 +63,7 @@ function PrivateMusicianContainer(){
     venmo_show: false
   })
 
+
   const getPrivateMusicianInfo = async () => {
     const response = await fetch(`/api/info_private/${handle}`);
     const privateMusicianInfoFromDb = await response.json();
@@ -72,7 +76,7 @@ function PrivateMusicianContainer(){
     []
   )
 
-  
+
   const updatePrivateMusicianInfo = async (update: UpdateObj) => {
     const requestOptions = {
       method: 'PUT',
@@ -98,6 +102,7 @@ function PrivateMusicianContainer(){
     const response = await fetch(`/api/setPlaylist/${privateMusicianInfo.spotify_playlist_id}`, requestOptions);
     const results = await response.json();
     console.log('inside of syncPlaylistToDb, and results is:', results);
+    setDummyVarForSongDisplayContainer(dummyVarForSongDisplayContainer + 1);
   }
 
 
@@ -283,7 +288,7 @@ function PrivateMusicianContainer(){
 
       <hr className="w-full my-10" />
 
-      <SongDisplayContainer handle={handle} />
+      <SongDisplayContainer handle={handle} dummyVar={dummyVarForSongDisplayContainer} />
 
       
    

@@ -2,6 +2,18 @@ export {};
 
 declare global {
 
+  type Song = {
+    album_name: string,
+    artist: string,
+    displayed: boolean,
+    familiarity: number | null,
+    name: string,
+    popularity: number,
+    preview_url: string,
+    spotify_id: string,
+    repertoire_index?: number
+  }
+
   type PlaylistObj = {
     playlistName: string,
     playlistSpotifyId: string,

@@ -6,6 +6,7 @@ const SongDisplayContainer = (props: any) => {
   // songArray is an array of song *components*
   const [ songArray, setSongArray ] = useState([]);
 
+  const dummyVar = props.dummyVar;
   const handle = props.handle;
   console.log('current musician handle from SongDisplayContainer props:', handle);
 
@@ -15,17 +16,6 @@ const SongDisplayContainer = (props: any) => {
     const songs = await response.json();
     console.log('songs from getAllSongs:', songs);
 
-    type Song = {
-      album_name: string,
-      artist: string,
-      displayed: boolean,
-      familiarity: number | null,
-      name: string,
-      popularity: number,
-      preview_url: string,
-      spotify_id: string
-    }
-
     const songObjectToComponent = (songObj: Song) => {
       const {name, artist, preview_url, spotify_id}: {name: string, artist: string, preview_url: string, spotify_id: string} = songObj;
       const previewUrl: string = preview_url
@@ -33,7 +23,7 @@ const SongDisplayContainer = (props: any) => {
       return <SongDisplay name={name} artist={artist} previewUrl={previewUrl} key={songSpotifyId} />
     }
 
-    setSongArray(songs.map((songObj: Song) => songObjectToComponent(songObj)));
+    setSongArray(songs.sort((songObj: Song) => songObj.repertoire_index).map((songObj: Song) => songObjectToComponent(songObj)));
   }
 
 

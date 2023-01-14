@@ -4,7 +4,7 @@ const spotifyApi = require('../utils/apiWrapper');
 const songController = {};
 
 
-// this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId) retrieves their array of songs from the database, and saves it as res.locals.songs
+// this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId), retrieves their array of songs from the database, and saves it as res.locals.songs .
 songController.getSongs = (req, res, next) => {
     const spotifyId = res.locals.info.spotify_id;
     if (!spotifyId) {
@@ -22,13 +22,10 @@ songController.getSongs = (req, res, next) => {
 }
 
 
-
-
-// UNDER CONSTRUCTION
-// take a playlist-array (saved as res.locals.playlist by songController.getSpotifyPlaylist).
-    // upsert its entries into the songs table.
-    // upsert its intries into the musicians_songs join table.
-    // in the musicians_songs join table, delete any old songs that aren't in it.
+// this middleware function takes a playlist-array (saved as res.locals.playlist by songController.getSpotifyPlaylist), and:
+    // upserts its entries into the songs table;
+    // upserts its intries into the musicians_songs join table;
+    // in the musicians_songs join table, deletes any old songs that aren't in it.
 songController.setPlaylistInDb = (req, res, next) => {
 
     try {
@@ -64,12 +61,6 @@ songController.setPlaylistInDb = (req, res, next) => {
 
                     console.log('just executed getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString, and rowsInDb (the returned data) is:', rowsInDb);
 
-
-
-
-                    // /*
-
-
                     const songSpotifyIdsToDrop = [];
                     const songSpotifyIdsToKeep = res.locals.playlist.map(songObj => songObj.spotify_id);
                     rowsInDb.forEach(row => {
@@ -91,14 +82,6 @@ songController.setPlaylistInDb = (req, res, next) => {
                         return next();
 
                     })
-
-                    // */
-
-                    // // TEMPORARY
-                    // return next();
-
-
-
 
                 })
             })

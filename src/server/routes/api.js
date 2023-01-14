@@ -113,15 +113,13 @@ router.get(
     authController.spotifyIdAndAccessToDb,
     songController.getAllSpotifyPlaylists,
     (req, res) => {
-        console.log('at the end of /api/getAllPlaylists route handler, sending back the data', res.locals.playlistArr);
+        console.log('at the end of the /api/getAllPlaylists route handler');
         return res.status(200).json(res.locals.playlistArr);
     }
 )
 
 
-
-// UNDER CONSTRUCTION
-// this endpoint is triggered when a musician updates their spotify_playlist_id in the database -- and/or just when they sync their spotify playlist with the database.
+// this endpoint is triggered when a musician clicks the "sync" button; it takes their spotify_playlist_id and syncs the corresponding playlist to the database.
 router.put(
     '/setPlaylist/:playlistId',
     authController.checkCookies,
@@ -131,7 +129,7 @@ router.put(
     songController.getSpotifyPlaylist,
     songController.setPlaylistInDb,
     (req, res) => {
-        console.log('at the end of the /api/setPlaylist router handler');
+        console.log('at the end of the /api/setPlaylist route handler');
         return res.status(200).json({message: 'we are at the end of the /api/setPlaylist router handler'})
     }
 )
