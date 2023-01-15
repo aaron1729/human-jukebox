@@ -10,8 +10,12 @@ songController.getSongs = (req, res, next) => {
     if (!spotifyId) {
         return next();
     }
-    console.log('inside of songController.getSongs, and spotifyId is', spotifyId)
-    const getMusicianSongsQueryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId.replaceAll("'", "''")}'`
+    console.log('inside of songController.getSongs, and spotifyId is', spotifyId);
+
+    const getMusicianSongsQueryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity, musicians_songs.repertoire_index
+    FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id
+    WHERE musicians_songs.musician_spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
+    
     db.query(getMusicianSongsQueryString).then(data => {
         console.log('inside of songController.getSongs, and data.rows is:', data.rows)
         res.locals.songs = data.rows;
@@ -31,6 +35,8 @@ songController.setPlaylistInDb = (req, res, next) => {
     try {
 
         const spotifyId = req.cookies.spotifyId;
+
+        console.log('inside of songController.setPlaylistInDb, and spotifyId is:', spotifyId);
 
         const upsertPlaylistSongsIntoSongTableQueryString = res.locals.playlist.map(songObj => `INSERT INTO songs
                 (name, artist, album_name, spotify_id, popularity, preview_url)

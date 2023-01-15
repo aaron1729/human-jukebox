@@ -100,6 +100,7 @@ router.get(
     musicianController.getMusicianInfoFromDb,
     songController.getSongs,
     (req, res) => {
+    console.log('at the end of the /api/songs route handler');
     return res.status(200).json(res.locals.songs);
 })
 

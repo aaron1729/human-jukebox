@@ -3,6 +3,8 @@ import SongDisplay from '../Components/SongDisplay';
 
 const SongDisplayContainer = (props: any) => {
 
+  console.log('inside of SongDisplayContainer component, and props are:', props);
+
   // songArray is an array of song *components*
   const [ songArray, setSongArray ] = useState([]);
 
@@ -13,8 +15,10 @@ const SongDisplayContainer = (props: any) => {
   // fetch songs from db for current user and update songArray therefrom
   const getAllSongs = async () => {
     const response = await fetch(`/api/songs/${handle}`);
-    const songs = await response.json();
-    console.log('songs from getAllSongs:', songs);
+    const songObjArr = await response.json();
+    console.log('songs from getAllSongs:', songObjArr);
+    songObjArr.sort((songObj0: Song, songObj1: Song) => songObj0.repertoire_index - songObj1.repertoire_index);
+    console.log('after sorting, songObjArr is:', songObjArr);
 
     const songObjectToComponent = (songObj: Song) => {
       const {name, artist, preview_url, spotify_id}: {name: string, artist: string, preview_url: string, spotify_id: string} = songObj;
@@ -23,7 +27,9 @@ const SongDisplayContainer = (props: any) => {
       return <SongDisplay name={name} artist={artist} previewUrl={previewUrl} key={songSpotifyId} />
     }
 
-    setSongArray(songs.sort((songObj: Song) => songObj.repertoire_index).map((songObj: Song) => songObjectToComponent(songObj)));
+    const songCompArr = songObjArr.map((songObj: Song) => songObjectToComponent(songObj));
+
+    setSongArray(songCompArr);
   }
 
 
