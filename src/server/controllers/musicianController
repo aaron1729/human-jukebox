@@ -33,7 +33,7 @@ musicianController.getMusicianInfoFromDb = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error getting public musician info from database',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to get public musician info from database'}
         })
 
@@ -65,13 +65,12 @@ musicianController.removePrivateInfo = (req, res, next) => {
 // this middleware function is given an object of updates to the musician info (living on req.body) and tries to make them in the database.
 musicianController.updateMusicianInfoInDb = (req, res, next) => {
     try {
-        const spotify_id = req.params.spotify_id;
+        const spotifyId = req.params.spotify_id;
         const update = req.body;
 
         console.log('inside of musicianController.updateInfo, and the update object is:', update);
-        console.log('and the spotify_id is:', spotify_id);
+        console.log('and the spotifyId is:', spotifyId);
 
-        ///// this assumes there's only one KVP in the update object!! if that changes, change this.
         let kvpStringArray = [];
         for (const key in update) {
             let value = update[key];            
@@ -86,17 +85,15 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
             kvpStringArray.push(key + " = " + value);
         }
 
-        console.log('kvpStringArray is:', kvpStringArray);
+        const kvpsString = kvpStringArray.join(", ");
 
-        const kvpString = kvpStringArray.join(", ");
+        console.log('kvpString is:', kvpsString)
 
-        console.log('kvpString is:', kvpString)
-
-        if (!kvpString) {
+        if (!kvpsString) {
             return next();
         }
 
-        const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpString} WHERE spotify_id = '${spotify_id}'`;
+        const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpsString} WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
         db.query(updateKVPInDbQueryString).then(data => {
             console.log('after executing updateKVPInDbQueryString, the returned data is:', data);
             if (data.rowCount === 1) {

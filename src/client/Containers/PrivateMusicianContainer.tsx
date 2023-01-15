@@ -76,7 +76,7 @@ function PrivateMusicianContainer(){
   )
 
 
-  const updatePrivateMusicianInfo = async (update: UpdateObj) => {
+  const updatePrivateMusicianInfo = async (update: Update) => {
     const requestOptions = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -144,7 +144,8 @@ function PrivateMusicianContainer(){
         <SyncIcon fontSize="medium" />
         <SyncIcon fontSize="large" />
       </Link>
-      <Tooltip title="edit" arrow><EditIcon /></Tooltip>
+      <Tooltip title="EDIT" arrow><EditIcon /></Tooltip>
+      <Button endIcon={<EditIcon />} size="small">edit</Button>
       <CheckBoxOutlinedIcon />
       <CheckBoxOutlineBlankIcon />
       <Button startIcon={<EditIcon />} size="small">edit</Button>
@@ -173,7 +174,6 @@ function PrivateMusicianContainer(){
         >
           <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
-        <Button endIcon={<EditIcon />} size="small">edit</Button>
       </span>
 
       <span>

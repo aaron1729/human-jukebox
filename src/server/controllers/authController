@@ -21,7 +21,7 @@ authController.checkCookies = (req, res, next) => {
             res.locals.cookieMatch = false;
             return next();
         }
-        const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId}'`;
+        const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
         db.query(getHandleAndAccessFromDbQueryString).then(data => {
             console.log('after db query inside of authController.checkCookies, the data is:', data.rows)
             if (!data.rows.length) {
@@ -42,7 +42,7 @@ authController.checkCookies = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error checking cookies',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to check cookies'}
         });
     }
@@ -81,7 +81,7 @@ authController.getTokens = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error getting access and refresh tokens',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to get access and refresh tokens'}
         });
     }
@@ -109,7 +109,7 @@ authController.getNewAccessToken = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error refreshing access token',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to refresh access token.'}
         })
     }
@@ -129,7 +129,7 @@ authController.getSpotifyId = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error getting spotify id',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to get spotify id. (perhaps you\'re in dev mode and the user isn\'t whitelisted in your spotify developer dashboard?)'}
         });
     }
@@ -137,8 +137,11 @@ authController.getSpotifyId = (req, res, next) => {
 
 
 
-// TO DO: change the temp-handle stuff, once sorting out the first-time-login flow.
 
+
+
+
+// TO DO: change the temp-handle stuff, once sorting out the first-time-login flow.
 
 // upsert the spotify id and access token (saved as res.locals.spotifyId and res.locals.access) to the database. more specifically, check if the spotify id is in the database, and:
     // if so, update its access token there;
@@ -151,9 +154,9 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
         const upsertMusicianInfoQueryString = `INSERT INTO musicians
             (display_name, bio, handle, spotify_id, access)
         VALUES
-            ('temp display name -- edit me!', 'temp bio -- edit me!', 'temp-handle-${spotifyId}', '${spotifyId}', '${access}')
+            ('temp display name -- edit me!', 'temp bio -- edit me!', 'temp-handle-${spotifyId.replaceAll("'", "''")}', '${spotifyId.replaceAll("'", "''")}', '${access.replaceAll("'", "''")}')
         ON CONFLICT (spotify_id) DO UPDATE SET
-            access = '${access}';`
+            access = '${access.replaceAll("'", "''")}';`
 
         db.query(upsertMusicianInfoQueryString).then(data => {
             console.log('just executed upsertMusicianInfoQueryString, and the returned data is:', data);
@@ -163,7 +166,7 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error adding/syncing spotify id and access token in db',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to sync spotify id and access token with db'}
         });
     }

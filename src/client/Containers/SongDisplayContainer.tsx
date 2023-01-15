@@ -36,7 +36,7 @@ const SongDisplayContainer = (props: any) => {
   return (
     <div>
       <div>
-        <h4 className='flex flex-row justify-center'><b>Click a song title to hear a preview! {dummyVar && 'dummyVar exists and is: ' + dummyVar}</b></h4>
+        <h4 className='flex flex-row justify-center'><b>Click a song title to hear a preview!</b></h4>
       </div>
       <div className='px-4 py-2 flex flex-row justify-center'>
         <table className='table-fixed'>

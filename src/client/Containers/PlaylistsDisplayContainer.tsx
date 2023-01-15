@@ -20,7 +20,7 @@ const PlaylistsDisplayContainer = (props: any) => {
     const playlists = await response.json();
     console.log('playlists from getAllPlaylists:', playlists);
 
-    const playlistObjectToComponent = (playlistObj: PlaylistObj) => {
+    const playlistObjectToComponent = (playlistObj: Playlist) => {
       const {playlistName, playlistSpotifyId, playlistSpotifyUrl}: {playlistName: string, playlistSpotifyId: string, playlistSpotifyUrl: string} = playlistObj;
       const name: string = playlistName;
       const spotifyUrl: string = playlistSpotifyUrl;
@@ -37,7 +37,7 @@ const PlaylistsDisplayContainer = (props: any) => {
       return newPlaylistDisplay;
     }
 
-    setPlaylistArray(playlists.map((playlistObj: PlaylistObj) => playlistObjectToComponent(playlistObj)));
+    setPlaylistArray(playlists.map((playlistObj: Playlist) => playlistObjectToComponent(playlistObj)));
   }
 
   // see the description of useEffect in SongDisplayContainer. note that here we might want to update the list of playlists, in case the user has more than the limiting number dictated by the Spotify API call.
@@ -98,7 +98,7 @@ const PlaylistsDisplayContainer = (props: any) => {
       return;
     }
 
-    const update: UpdateObj = {spotify_playlist_name, spotify_playlist_id, spotify_playlist_url};
+    const update: Update = {spotify_playlist_name, spotify_playlist_id, spotify_playlist_url};
 
     updatePrivateMusicianInfo(update);
     setShowPlaylistsModal(false);

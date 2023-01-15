@@ -18,7 +18,7 @@ const TextFieldLarge = (props: any) => {
     
     
     
-    const update: UpdateObj = {}
+    const update: Update = {}
     update[field] = `${(target as any).value}`
 
     // TO DO: add more validation here, depending on which field we're updating. (e.g. might reject anything too short, too long, or including spaces or special characters. for handle probably just letters, numbers, dashes, and underscores. for display name, apostrophes but no quote-marks.)

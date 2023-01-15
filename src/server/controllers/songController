@@ -11,7 +11,7 @@ songController.getSongs = (req, res, next) => {
         return next();
     }
     console.log('inside of songController.getSongs, and spotifyId is', spotifyId)
-    const getMusicianSongsQueryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId}'`
+    const getMusicianSongsQueryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id WHERE musicians_songs.musician_spotify_id = '${spotifyId.replaceAll("'", "''")}'`
     db.query(getMusicianSongsQueryString).then(data => {
         console.log('inside of songController.getSongs, and data.rows is:', data.rows)
         res.locals.songs = data.rows;
@@ -35,7 +35,7 @@ songController.setPlaylistInDb = (req, res, next) => {
         const upsertPlaylistSongsIntoSongTableQueryString = res.locals.playlist.map(songObj => `INSERT INTO songs
                 (name, artist, album_name, spotify_id, popularity, preview_url)
             VALUES
-                ('${songObj.name}', '${songObj.artist}', '${songObj.album_name}', '${songObj.spotify_id}', '${songObj.popularity}', '${songObj.preview_url}')
+                ('${songObj.name.replaceAll("'", "''")}', '${songObj.artist.replaceAll("'", "''")}', '${songObj.album_name.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', '${songObj.popularity}', '${songObj.preview_url.replaceAll("'", "''")}')
             ON CONFLICT DO NOTHING;`).join("\n");
 
         db.query(upsertPlaylistSongsIntoSongTableQueryString).then(data => {
@@ -45,7 +45,7 @@ songController.setPlaylistInDb = (req, res, next) => {
             const upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString = res.locals.playlist.map((songObj, index) => `INSERT INTO musicians_songs
                 (musician_spotify_id, song_spotify_id, repertoire_index)
             VALUES
-                ('${spotifyId}', '${songObj.spotify_id}', ${index})
+                ('${spotifyId.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', ${index})
             ON CONFLICT (musician_spotify_id, song_spotify_id) DO UPDATE SET
                 repertoire_index = ${index};`).join("\n");
             
@@ -53,7 +53,7 @@ songController.setPlaylistInDb = (req, res, next) => {
 
                 console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
 
-                const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId}';`;
+                const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId.replaceAll("'", "''")}';`;
 
                 db.query(getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString).then(data => {
 
@@ -74,7 +74,7 @@ songController.setPlaylistInDb = (req, res, next) => {
                     }
 
                     const dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString = songSpotifyIdsToDrop.map(songSpotifyId => `DELETE FROM musicians_songs
-                    WHERE (musician_spotify_id = '${spotifyId}' AND song_spotify_id = '${songSpotifyId}');`).join("\n");
+                    WHERE (musician_spotify_id = '${spotifyId.replaceAll("'", "''")}' AND song_spotify_id = '${songSpotifyId.replaceAll("'", "''")}');`).join("\n");
 
                     db.query(dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString).then(data => {
                         console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
@@ -91,19 +91,12 @@ songController.setPlaylistInDb = (req, res, next) => {
     catch(err) {
         return next({
             log: 'error upserting playlist songs to songs table and/or musicians_songs table',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to upsert playlist songs to songs table and/or musicians_songs table'}
         });
     }
 
 }
-
-
-
-
-
-
-
 
 
 // this middleware function gets a playlist id (to which a musician has access), retrieves it from the spotify API, and saves as res.locals.playlist an array containing the pieces of data that are relevant for our db.
@@ -146,7 +139,7 @@ songController.getSpotifyPlaylist = (req, res, next) => {
     } catch(err) {
         return next({
             log: 'error getting spotify playlist',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to get spotify playlist.'}
         })
     }
@@ -164,7 +157,7 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
         console.log('inside of songController.getAllSpotifyPlaylists, and just set access and refresh tokens on spotifyApi object');
-        spotifyApi.getUserPlaylists(spotifyId, {limit: 10})
+        spotifyApi.getUserPlaylists(spotifyId, {limit: 20})
         .then(data => {
             console.log('just got musician\'s playlists from spotify API');
             res.locals.playlistArr = data.body.items.map(obj => {
@@ -182,7 +175,7 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
     catch(err) {
         return next({
             log: 'error getting spotify playlists',
-            status: err.statusCode,
+            status: err.statusCode || 418,
             message: {error: 'failed to get spotify playlists.'}
         })
     }

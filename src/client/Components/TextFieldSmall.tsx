@@ -28,7 +28,7 @@ const TextFieldSmall = (props: any) => {
 
     console.log('in TextFieldSmall component, handleSubmit function triggered, and target value is:', (target as any).value);
         
-    const update: UpdateObj = {}
+    const update: Update = {}
     update[field] = `${(target as any).value}`
 
     // data validation

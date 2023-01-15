@@ -148,28 +148,6 @@ router.put(
 )
 
 
-
-
-
-
-
-
-// this endpoint is triggered when a musician wants to add or sync their repertoire against a given spotify playlist.
-// THIS MIGHT BE UNNECESSARY??!? it's mostly just a request to the spotify API. but maybe it's important to keep this to make sure there's a usable access token.
-router.get(
-    '/getPlaylist/:playlistId',
-    authController.checkCookies,
-    authController.endCycleIfCookiesUnmatched,
-    authController.getNewAccessToken,
-    authController.spotifyIdAndAccessToDb,
-    songController.getSpotifyPlaylist,
-    (req, res) => {
-        console.log('at the end of the /api/getPlaylist route handler');
-        return res.status(200).json(res.locals.playlist);
-    }
-)
-
-
 // this endpoint receives a request based on the musician clicking the "logout" button on their private page
 router.get(
     '/logout',

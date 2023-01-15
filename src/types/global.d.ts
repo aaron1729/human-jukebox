@@ -14,14 +14,14 @@ declare global {
     repertoire_index?: number
   }
 
-  type PlaylistObj = {
+  type Playlist = {
     playlistName: string,
     playlistSpotifyId: string,
     playlistSpotifyUrl: string
   }
   
     // in comparison with privateMusicianInfo, this is (purposely) missing: access, handle, and spotify_id
-    type UpdateObj = {
+    type Update = {
         bio?: string
         display_name?: string,
         instagram?: string,
@@ -47,7 +47,7 @@ declare global {
       loading?: boolean
     };
 
-    // for musician private page; this is a subset of the keys in an object of type UpdateObj
+    // for musician private page; this is a subset of the keys in an object of type Update
     type SmallTextField = 'display_name' | 'instagram' | 'venmo';
     type LargeTextField = 'bio'
 
