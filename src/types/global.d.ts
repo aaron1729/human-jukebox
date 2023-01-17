@@ -30,7 +30,8 @@ declare global {
         spotify_playlist_name?: string,
         spotify_playlist_url?: string,
         venmo?: string,
-        venmo_show?: boolean
+        venmo_show?: boolean,
+        handle?: string
       };
 
     type PublicMusicianInfo = {
@@ -48,7 +49,7 @@ declare global {
     };
 
     // for musician private page; this is a subset of the keys in an object of type Update
-    type SmallTextField = 'display_name' | 'instagram' | 'venmo';
+    type SmallTextField = 'display_name' | 'instagram' | 'venmo' | 'handle';
     type LargeTextField = 'bio'
 
 }

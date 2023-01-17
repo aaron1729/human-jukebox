@@ -1,7 +1,10 @@
-import React from 'react'
-import { styles } from '../styles'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { styles } from '../styles';
 
 const TextFieldSmall = (props: any) => {
+
+  const navigate = useNavigate();
 
   const field: SmallTextField = props.field; // e.g. 'display_name'
   const fieldName = props.fieldName; // e.g. 'display name'
@@ -20,6 +23,9 @@ const TextFieldSmall = (props: any) => {
   if (field === "venmo") {
     helperText = "This allows audience members to tip you! Don't include the @ sign."
   }
+  if (field === "handle") {
+    helperText = "Your handle is your unique identifier in the Human Jukebox app. It can be between 1 and 30 characters long, and can contain letters (not case-sensitive), numbers, dashes (-), and underscores(_)."
+  }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -27,7 +33,7 @@ const TextFieldSmall = (props: any) => {
     const target = document.getElementById("text-field-small")
 
     console.log('in TextFieldSmall component, handleSubmit function triggered, and target value is:', (target as any).value);
-        
+
     const update: Update = {}
     update[field] = `${(target as any).value}`
 
@@ -59,16 +65,30 @@ const TextFieldSmall = (props: any) => {
         return;
       }
     }
+
+    if (field === "handle") {
+      const re = /[^A-Za-z0-9\-\_]/;
+      if (update[field].match(re) || update[field].length === 0 || update[field].length > 30) {
+        alert("handles cannot be empty, cannot have more than 30 characters, and can only contain letters, numbers, en-dashes (-), and underscores (_).");
+        return;
+      }
+    }
     
     updatePrivateMusicianInfo(update);
-    setShowTextFieldSmallModal(false);
+    if (field !== "handle") {
+      setShowTextFieldSmallModal(false);
+    }
   }
 
   const handleCancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
     console.log('handleCancel function triggered')
-    setShowTextFieldSmallModal(false);
-
+    if (field !== "handle") {
+      setShowTextFieldSmallModal(false);
+      return;
+    }
+    navigate(
+      `/musician/private?musician=${oldValue}`);
   }
 
   return (

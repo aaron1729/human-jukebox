@@ -4,6 +4,7 @@ import { Routes, Route, Outlet, Link } from "react-router-dom";
 import NoPage from './Components/NoPage';
 import PublicMusicianContainer from './Containers/PublicMusicianContainer';
 import PrivateMusicianContainer from './Containers/PrivateMusicianContainer';
+import HandleChooserContainer from './Containers/HandleChooserContainer';
 
 function App(){
   return (
@@ -20,6 +21,10 @@ function App(){
         <Route
           path="musician/private/"
           element={<PrivateMusicianContainer />}
+        />
+        <Route
+          path="musician/private/handle/"
+          element={<HandleChooserContainer />}
         />
         <Route
           path="*"

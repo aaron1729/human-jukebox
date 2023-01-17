@@ -130,7 +130,7 @@ songController.getSpotifyPlaylist = (req, res, next) => {
         console.log('inside of songController.getSpotifyPlaylist, and just set access and refresh tokens on spotifyApi object');
         spotifyApi.getPlaylist(playlistId)
         .then(data => {
-            console.log('inside of songController.getSpotifyPlaylist, and data.tracks is:', data.tracks);
+            // console.log('inside of songController.getSpotifyPlaylist, and data.body.tracks.items[n].track are:', data.body.tracks.items.map(itemObj => itemObj.track));
             res.locals.playlist = data.body.tracks.items.map(trackObj => {
                 const songObj = trackObj.track;
                 const spotify_id = songObj.id;

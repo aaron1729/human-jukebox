@@ -133,6 +133,18 @@ router.get(
 )
 
 
+router.put(
+    '/setHandle',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/setHandle route handler');
+    },
+    (req, res) => {
+        console.log('at the end of the /api/setHandle route handler');
+        return res.status(200).json({message: 'this is a test message'});
+    }
+)
+
+
 // this endpoint is triggered when a musician clicks the "sync" button; it takes their spotify_playlist_id and syncs the corresponding playlist to the database.
 router.put(
     '/setPlaylist/:playlistId',

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SongDisplayContainer from './SongDisplayContainer';
 // import PublicMusicianInfo from '../Components/PublicMusicianInfo';
 import PlaylistsDisplayContainer from './PlaylistsDisplayContainer';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import { styles } from '../styles';
 import TextFieldSmall from '../Components/TextFieldSmall';
@@ -18,7 +18,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
-
 // the PrivateMusicianContainer component is substantially more complicated that PublicMusicianContainer, because the musician can CRUD info.
 // it will contain a PrivateMusicianInfo component and a SongDisplayContainer component (or perhaps even the full PublicMusicianContainer?).
 // it might seem that its own state should just be the handle, since that's all that's needed to make the SongDisplayContainer.
@@ -26,6 +25,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 // then, we can use a useEffect inside of SongDisplayContainer, with the playlist id (coming down as a prop) living in its dependency array.
 
 function PrivateMusicianContainer(){
+
+  const navigate = useNavigate();
 
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,7 +47,7 @@ function PrivateMusicianContainer(){
   // dummy variable to force a rerender of SongDisplayContainer
   const [dummyVarForSongDisplayContainer, setDummyVarForSongDisplayContainer] = useState(0);
 
-  // musician info (from database).
+  // musician info (from database)
   const [privateMusicianInfo, setPrivateMusicianInfo] = useState({
     access: "",
     bio: "",
@@ -163,9 +164,10 @@ function PrivateMusicianContainer(){
         <b>handle: </b>
         {privateMusicianInfo.handle}
         <button
+          onClick={() => navigate(`/musician/private/handle?musician=${privateMusicianInfo.handle}&spotifyId=${privateMusicianInfo.spotify_id}`)}
           className='ml-5'
         >
-          <span className="text-red-600">edit</span>
+          <span className={styles.textButtonForDbUpdates}>change</span>
         </button>
       </span>
 
@@ -185,7 +187,7 @@ function PrivateMusicianContainer(){
             })
             setShowTextFieldSmallModal(true)
           }}
-          className={'ml-5'}
+          className='ml-5'
         >
           <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
@@ -354,7 +356,7 @@ function PrivateMusicianContainer(){
       >
 
         <TextFieldLarge
-          field={targetForTextFieldModal.field} 
+          field={targetForTextFieldModal.field}
           fieldName={targetForTextFieldModal.fieldName}
           oldValue={targetForTextFieldModal.oldValue}
           setShowTextFieldLargeModal={setShowTextFieldLargeModal}

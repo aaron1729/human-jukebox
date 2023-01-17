@@ -67,39 +67,59 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
 
         console.log('inside of musicianController.updateMusicianInfoInDb, and the update object is:', update);
         console.log('and the spotifyId is:', spotifyId);
+        console.log('and update.handle is:', update.handle);
 
-        let kvpStringArray = [];
-        for (const key in update) {
-            let value = update[key];            
-            console.log('the key is:', key);
-            console.log('the value is:', value);
-            // if the value is a string, prepare it for the SQL query: escape its single-quote-marks (i.e. double them) and then wrap the whole thing in single-quote-marks. (but if it's a boolean, we _don't_ want to have quote marks around it.)
-            if (typeof value === "string") {
-                value = value.replaceAll("'", "''");
-                value = `'${value}'`
-                console.log('and now the updated value is:', value);
+        // handle handle updates separately, as they require uniqueness. and in this case, _only_ update the handle.
+        if (update.handle) {
+            console.log('inside of musicianController.updateMusicianInfoInDb, and specifically updating the _handle_ in db.');
+            const updateHandleInDbQueryString = `UPDATE public.musicians SET handle = '${update.handle}' WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}' RETURNING (handle, spotify_id);`;
+            db.query(updateHandleInDbQueryString).then(data => {
+                console.log('after executing updateHandleInDbQueryString, the returned data is:', data);
+                if (data.rowCount === 1) {
+                    res.locals.success = true;
+                } else {
+                    res.locals.success = false;
+                }
+                return next();
+            })
+        } else {
+
+            // we only reach this point when we're updating non-unique columns (i.e. not the handle).
+
+            let kvpStringArray = [];
+            for (const key in update) {
+                let value = update[key];            
+                console.log('the key is:', key);
+                console.log('the value is:', value);
+                // if the value is a string, prepare it for the SQL query: escape its single-quote-marks (i.e. double them) and then wrap the whole thing in single-quote-marks. (but if it's a boolean, we _don't_ want to have quote marks around it.)
+                if (typeof value === "string") {
+                    value = value.replaceAll("'", "''");
+                    value = `'${value}'`
+                    console.log('and now the updated value is:', value);
+                }
+                kvpStringArray.push(key + " = " + value);
             }
-            kvpStringArray.push(key + " = " + value);
-        }
 
-        const kvpsString = kvpStringArray.join(", ");
+            const kvpsString = kvpStringArray.join(", ");
 
-        console.log('kvpString is:', kvpsString)
+            console.log('kvpString is:', kvpsString)
 
-        if (!kvpsString) {
-            return next();
-        }
-
-        const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpsString} WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
-        db.query(updateKVPInDbQueryString).then(data => {
-            console.log('after executing updateKVPInDbQueryString, the returned data is:', data);
-            if (data.rowCount === 1) {
-                res.locals.success = true;
-            } else {
-                res.locals.success = false;
+            if (!kvpsString) {
+                return next();
             }
-            return next();
-        })
+
+            const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpsString} WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
+            db.query(updateKVPInDbQueryString).then(data => {
+                console.log('after executing updateKVPInDbQueryString, the returned data is:', data);
+                if (data.rowCount === 1) {
+                    res.locals.success = true;
+                } else {
+                    res.locals.success = false;
+                }
+                return next();
+            })
+
+        }
 
     } catch(err) {
         return next({
