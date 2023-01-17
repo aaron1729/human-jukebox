@@ -124,34 +124,17 @@ function PrivateMusicianContainer(){
     <div className="flex flex-col items-center px-10">
 
       <span className="flex flex-row">
-
-      <Link to="/">
-        <button className={styles.buttonSmall}>
-          Home
-        </button>
-      </Link>
-
-      <Link to="/">
-        <button onClick={deleteCookies} className={styles.buttonSmall}>
-          Logout
-        </button>
-      </Link>
-
+        <Link to="/">
+          <button className={styles.buttonSmall}>
+            Home
+          </button>
+        </Link>
+        <Link to="/">
+          <button onClick={deleteCookies} className={styles.buttonSmall}>
+            Logout
+          </button>
+        </Link>
       </span>
-
-      <Link to="/">
-        <SyncIcon fontSize="small" />
-        <SyncIcon fontSize="medium" />
-        <SyncIcon fontSize="large" />
-      </Link>
-      <Tooltip title="EDIT" arrow><EditIcon /></Tooltip>
-      <Button endIcon={<EditIcon />} size="small">edit</Button>
-      <CheckBoxOutlinedIcon />
-      <CheckBoxOutlineBlankIcon />
-      <Button startIcon={<EditIcon />} size="small">edit</Button>
-      <IconButton>
-        <CheckBoxOutlinedIcon />
-      </IconButton>
 
       <span className="text-gray-500">
         <b>spotify id: </b>
@@ -300,6 +283,24 @@ function PrivateMusicianContainer(){
 
       
    
+
+      <br />
+      <br />
+      <br />
+
+      <Link to="/">
+        <SyncIcon fontSize="small" />
+        <SyncIcon fontSize="medium" />
+        <SyncIcon fontSize="large" />
+      </Link>
+        <Tooltip title="EDIT" arrow><EditIcon /></Tooltip>
+        <Button endIcon={<EditIcon />} size="small">edit</Button>
+        <CheckBoxOutlinedIcon />
+        <CheckBoxOutlineBlankIcon />
+        <Button startIcon={<EditIcon />} size="small">edit</Button>
+        <IconButton>
+          <CheckBoxOutlinedIcon />
+        </IconButton>
 
 
 

@@ -150,6 +150,7 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
     try {
         const spotifyId = res.locals.spotifyId;
         const access = res.locals.access;
+        console.log('inside of authController.spotifyIdAndAccessToDb');
 
         const upsertMusicianInfoQueryString = `INSERT INTO musicians
             (display_name, bio, handle, spotify_id, access)

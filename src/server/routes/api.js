@@ -82,10 +82,15 @@ router.get(
 // this endpoint receives a musician's handle, checks their cookies (so a random person can't just send a request to this endpoint), and if they're valid gets all info.
 router.get(
     '/info_private/:handle',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/info_private route handler');
+        return next();
+    },
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
     musicianController.getMusicianInfoFromDb,
     (req, res) => {
+        console.log('at the end of the /api/info_private route handler');
         return res.status(200).json(res.locals.info);
     }
 )
@@ -97,6 +102,10 @@ router.get(
     // sends that back.
 router.get(
     '/songs/:handle',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/songs route handler');
+        return next();
+    },
     musicianController.getMusicianInfoFromDb,
     songController.getSongs,
     (req, res) => {
@@ -108,6 +117,10 @@ router.get(
 // this endpoint is accessed by a musician from their private page, and fetches all (or really the first N) playlists attached to their spotify account.
 router.get(
     '/getAllPlaylists',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/getAllPlaylists route handler');
+        return next();
+    },
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
     authController.getNewAccessToken,
@@ -123,6 +136,10 @@ router.get(
 // this endpoint is triggered when a musician clicks the "sync" button; it takes their spotify_playlist_id and syncs the corresponding playlist to the database.
 router.put(
     '/setPlaylist/:playlistId',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/setPlaylist route handler');
+        return next();
+    },
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
     authController.getNewAccessToken,
@@ -139,6 +156,10 @@ router.put(
 // this endpoint is triggered when the musician attempts to update their private info from their private page. the request body should be a JSON-stringified "update object".
 router.put(
     '/updateMusicianInfo/:spotify_id',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/updateMusicianInfo route handler');
+        return next();
+    },
     authController.checkCookies,
     authController.endCycleIfCookiesUnmatched,
     musicianController.updateMusicianInfoInDb,

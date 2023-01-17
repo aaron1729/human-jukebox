@@ -36,13 +36,21 @@ songController.setPlaylistInDb = (req, res, next) => {
 
         const spotifyId = req.cookies.spotifyId;
 
-        console.log('inside of songController.setPlaylistInDb, and spotifyId is:', spotifyId);
-
-        const upsertPlaylistSongsIntoSongTableQueryString = res.locals.playlist.map(songObj => `INSERT INTO songs
-                (name, artist, album_name, spotify_id, popularity, preview_url)
+        const upsertPlaylistSongsIntoSongTableQueryString = res.locals.playlist.map(songObj => {
+            const existsPreviewUrl = !!songObj.preview_url;
+            let previewUrlColumnNameText = "";
+            let previewUrlColumnEntryText = "";
+            if (existsPreviewUrl) {
+                previewUrlColumnNameText = ", preview_url";
+                previewUrlColumnEntryText = `, '${songObj.preview_url.replaceAll("'", "''")}'`;
+            }
+            return `INSERT INTO songs
+            (name, artist, album_name, spotify_id, popularity` + previewUrlColumnNameText + `)
             VALUES
-                ('${songObj.name.replaceAll("'", "''")}', '${songObj.artist.replaceAll("'", "''")}', '${songObj.album_name.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', '${songObj.popularity}', '${songObj.preview_url.replaceAll("'", "''")}')
-            ON CONFLICT DO NOTHING;`).join("\n");
+            ('${songObj.name.replaceAll("'", "''")}', '${songObj.artist.replaceAll("'", "''")}', '${songObj.album_name.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', ${songObj.popularity}` + previewUrlColumnEntryText + `)
+            ON CONFLICT DO NOTHING;`}).join("\n");
+            
+        console.log('inside of songController.setPlaylistInDb, and upsertPlaylistSongsIntoSongTableQueryString is:\n', upsertPlaylistSongsIntoSongTableQueryString);
 
         db.query(upsertPlaylistSongsIntoSongTableQueryString).then(data => {
 
@@ -122,6 +130,7 @@ songController.getSpotifyPlaylist = (req, res, next) => {
         console.log('inside of songController.getSpotifyPlaylist, and just set access and refresh tokens on spotifyApi object');
         spotifyApi.getPlaylist(playlistId)
         .then(data => {
+            console.log('inside of songController.getSpotifyPlaylist, and data.tracks is:', data.tracks);
             res.locals.playlist = data.body.tracks.items.map(trackObj => {
                 const songObj = trackObj.track;
                 const spotify_id = songObj.id;
@@ -174,7 +183,7 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
                 }
             }
             );
-            console.log('in songController.getAllSpotifyPlaylists, a bit of res.locals.playlistArr is:', res.locals.playlistArr.slice(0,2));
+            console.log('in songController.getAllSpotifyPlaylists, and res.locals.playlistArr is:', res.locals.playlistArr);
             return next();
         });
         }

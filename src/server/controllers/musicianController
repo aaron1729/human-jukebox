@@ -59,16 +59,13 @@ musicianController.removePrivateInfo = (req, res, next) => {
 }
 
 
-
-
-// UNDER CONSTRUCTION
 // this middleware function is given an object of updates to the musician info (living on req.body) and tries to make them in the database.
 musicianController.updateMusicianInfoInDb = (req, res, next) => {
     try {
         const spotifyId = req.params.spotify_id;
         const update = req.body;
 
-        console.log('inside of musicianController.updateInfo, and the update object is:', update);
+        console.log('inside of musicianController.updateMusicianInfoInDb, and the update object is:', update);
         console.log('and the spotifyId is:', spotifyId);
 
         let kvpStringArray = [];
