@@ -29,8 +29,10 @@ function HandleChooserContainer(){
     if (results.success) {
       console.log('success in updateHandle function');
       navigate(`/musician/private?musician=${update.handle}`)
+      return;
     } else {
-      alert('failure in updateHandle function (placeholder text)');
+      alert('sorry, that handle is taken! please try another.');
+      return;
     }
   }
 

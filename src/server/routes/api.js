@@ -187,7 +187,7 @@ router.get(
     '/logout',
     authController.deleteCookies,
     (req, res) => {
-        return res.status(200).send('cookies deleted');
+        return res.status(200).json({message: 'cookies deleted'});
     }
 )
 

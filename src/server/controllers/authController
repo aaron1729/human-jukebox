@@ -55,6 +55,7 @@ authController.endCycleIfCookiesUnmatched = (req, res, next) => {
     if (!res.locals.cookieMatch) {
         return res.status(200).json({error: 'sorry, cookies did not match'})
     } else {
+        console.log('...and cookies matched');
         return next();
     }
 }
@@ -141,7 +142,7 @@ authController.getSpotifyId = (req, res, next) => {
 
 
 
-// TO DO: change the temp-handle stuff, once sorting out the first-time-login flow.
+// TO DO: change the temp-handle stuff, once i've sorted out the first-time-login flow.
 
 // upsert the spotify id and access token (saved as res.locals.spotifyId and res.locals.access) to the database. more specifically, check if the spotify id is in the database, and:
     // if so, update its access token there;

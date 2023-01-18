@@ -1,3 +1,4 @@
+const { NextPlanRounded } = require('@mui/icons-material');
 const { query } = require('express');
 const db = require('../models/models');
 
@@ -59,20 +60,27 @@ musicianController.removePrivateInfo = (req, res, next) => {
 }
 
 
+
+
+
+// TO DO: THIS IS NOT FULLY WORKING. the error-handling for an attempt to enter a duplicate handle is confusing. it seems not actually to be going into the catch-block?
+
+
 // this middleware function is given an object of updates to the musician info (living on req.body) and tries to make them in the database.
 musicianController.updateMusicianInfoInDb = (req, res, next) => {
+
     try {
+
         const spotifyId = req.params.spotify_id;
         const update = req.body;
 
         console.log('inside of musicianController.updateMusicianInfoInDb, and the update object is:', update);
         console.log('and the spotifyId is:', spotifyId);
-        console.log('and update.handle is:', update.handle);
 
         // handle handle updates separately, as they require uniqueness. and in this case, _only_ update the handle.
         if (update.handle) {
             console.log('inside of musicianController.updateMusicianInfoInDb, and specifically updating the _handle_ in db.');
-            const updateHandleInDbQueryString = `UPDATE public.musicians SET handle = '${update.handle}' WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}' RETURNING (handle, spotify_id);`;
+            const updateHandleInDbQueryString = `UPDATE public.musicians SET handle = '${update.handle.toLowerCase()}' WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}' RETURNING (handle, spotify_id);`;
             db.query(updateHandleInDbQueryString).then(data => {
                 console.log('after executing updateHandleInDbQueryString, the returned data is:', data);
                 if (data.rowCount === 1) {
@@ -81,7 +89,15 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
                     res.locals.success = false;
                 }
                 return next();
-            })
+            }).catch(err => {
+                console.log('inside of the promise-catch (not the try/catch) and the error object is:', err);
+
+                res.locals.success = false;
+
+                res.status(200).json({success: res.locals.success});
+
+            }
+            )
         } else {
 
             // we only reach this point when we're updating non-unique columns (i.e. not the handle).
@@ -122,11 +138,28 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
         }
 
     } catch(err) {
+
+        console.log('inside of the error-catcher for musicianController.updateMusicianInfoInDb, and the error object is:', err);
+
+        console.log('and notice is:', notice);
+
+        console.log('and message is:', message);
+
+        // handle db error caused by a violation of a uniqueness constraint (which should just be a handle).
+        if (err.code === 23505) {
+            console.log('inside of the error-catcher for musicianController.updateMusicianInfoInDb, with error code 23505.');
+            res.locals.success = false;
+            return next();
+        }
+
+        // return next(err);
+
         return next({
             log: 'error updating musician info in db',
             status: err.statusCode || 418,
             message: {error: 'failed to update musician info in db'}
         })
+
     }
 }
 

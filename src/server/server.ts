@@ -44,10 +44,11 @@ app.use('/api', router);
 
 
 
-// // handle requests past api route
-// app.get('/api/*', (req: any, res: any) => {
-//     res.status(200).send('reached the /api/* route handler');
-// })
+// handle requests past api route
+app.use('/api/*', (req: any, res: any) => {
+    res.status(200).send('reached the /api/* route handler');
+});
+
 
 
 
@@ -68,7 +69,8 @@ app.use((err: any, req: any, res: any, next: any) => {
         message: {err: 'An error has occurred: you have reached the local error handler.'},
     };
     const errorObj = Object.assign({}, defaultErr, err);
-    return res.status(errorObj.status).json(errorObj.message);
+    console.log('reached the local error handler, and the error object is:', errorObj);
+    return res.status(errorObj.status).json(errorObj);
 })
 
 

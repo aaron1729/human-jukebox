@@ -67,7 +67,9 @@ const TextFieldSmall = (props: any) => {
     }
 
     if (field === "handle") {
-      const re = /[^A-Za-z0-9\-\_]/;
+      update.handle = update.handle.toLowerCase();
+      console.log('after lowercasing, the update object is:', update);
+      const re = /[^a-z0-9\-\_]/;
       if (update[field].match(re) || update[field].length === 0 || update[field].length > 30) {
         alert("handles cannot be empty, cannot have more than 30 characters, and can only contain letters, numbers, en-dashes (-), and underscores (_).");
         return;

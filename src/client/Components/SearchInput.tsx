@@ -12,7 +12,7 @@ function SearchInput(){
       handle: { value: string };
     };
 
-    const handle = target.handle.value;
+    const handle = target.handle.value.toLowerCase();
     console.log('the handle (inside of the SearchInput component) is:', handle)
     navigate(`/musician/public?musician=${handle}`)
     // // an alternative way to write this:
