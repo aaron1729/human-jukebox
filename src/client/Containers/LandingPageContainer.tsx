@@ -57,16 +57,6 @@ function LandingPageContainer(){
         Spotify signup/login for musicians
       </button>
 
-      <br />
-      <Link to="musician/private/handle/">
-        a temporary link to the musician/private/handle route
-      </Link>
-
-      <br />
-      <Link to="musician/private/handle?spotifyId=.a.m.g.&musician=aaron1729">
-      a temporary link to the musician/private/handle route with query parameters
-      </Link>
-
       {/* <br />
       <Link to="/DNE">
         a Link to a route that DNE

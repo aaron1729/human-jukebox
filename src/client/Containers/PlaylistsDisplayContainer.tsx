@@ -62,19 +62,15 @@ const PlaylistsDisplayContainer = (props: any) => {
       value: string
     };
     console.log('inside of handleRadioChange function, and target.value is', target.value);
-    // note that setPlaylistChoice happens asynchronously, so it won't show up in a simple console.log (or even one with a setTimeout). this can be gotten around by having a temporary button that triggers a temporary "log playlistChoice to the console" function.
+    // note that setPlaylistChoice happens asynchronously, so it won't show up in a simple console.log (or even one with a setTimeout). this can be gotten around by having a temporary button that triggers a temporary "log playlistChoice to the console" function. this is commented-out, but still present:
+      // the logPlaylistChoice function, and
+      // the button that calls it in its onClick attribute.
     setPlaylistChoice(target.value);
   }
 
-
-
-
-
-  
-
-  const logPlaylistChoice = () => {
-    console.log('playlistChoice is:', playlistChoice)
-  }
+  // const logPlaylistChoice = () => {
+  //   console.log('playlistChoice is:', playlistChoice)
+  // }
 
 
 
@@ -118,10 +114,9 @@ const PlaylistsDisplayContainer = (props: any) => {
     <div className='flex flex-col justify-center'>
       <h4><b>Click a playlist title to see it on Spotify!</b></h4>
 
-      <button onClick={logPlaylistChoice} className={styles.buttonSmall}>
+      {/* <button onClick={logPlaylistChoice} className={styles.buttonSmall}>
               log playlistChoice to the console
-      </button>
-
+      </button> */}
 
         <form>
 

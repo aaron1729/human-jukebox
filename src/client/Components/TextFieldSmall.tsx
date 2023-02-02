@@ -11,7 +11,6 @@ const TextFieldSmall = (props: any) => {
   const oldValue = props.oldValue;
   console.log('oldValue is:', oldValue);
   const setShowTextFieldSmallModal = props.setShowTextFieldSmallModal;
-  console.log('inside of TextFieldSmall component, and setShowTextFieldSmallModal is:', setShowTextFieldSmallModal);
   const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
   const signup = props.signup;
 

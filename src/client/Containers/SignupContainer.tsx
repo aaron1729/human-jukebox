@@ -24,6 +24,7 @@ function SignupContainer(){
 
   // this is an array that determines the ordering of the modals.
   // note: handle should _not_ be last, otherwise the navigate might happen before the handle is set (since its setter is asynchronous). similarly, when the playlist was last, then the musician private page loaded _before_ the playlist was saved to the database! but it seems that having instagram or venmo last is alright.
+  type ModalTypeForSignup = SmallTextField | LargeTextField | "" | "playlist";
   const modalOrder: Array<ModalTypeForSignup> = [
     "display_name",
     "bio",
@@ -42,13 +43,13 @@ function SignupContainer(){
     // but of course, the handle _is_ changed here (among other things).
     // so, in the TextFieldSmall component we _don't_ 
   
-  const [modalNum, setModalNum] = useState<number>(0);
+  const [modalNum, setModalNum] = useState<number>(-1);
   
-  type ModalTypeForSignup = SmallTextField | LargeTextField | "" | "playlist";
   const [modal, setModal] = useState<ModalTypeForSignup>("");
   // the following function is passed as props to the various components inside of the modals. the argument is a boolean, which should be false when the modal is supposed to be closed (and, here, replaced with a new one.)
   const nextModal = (bool: Boolean) => {
     if (!bool) {
+      console.log('inside of nextModal function, and modalNum is:', modalNum);
       setModalNum(modalNum + 1);
     }
   }
@@ -128,7 +129,7 @@ function SignupContainer(){
           Welcome to the Human Jukebox signup page!
         </h1>
 
-        <button onClick={() => setModal(modalOrder[0])} className={styles.buttonSmall}>
+        <button onClick={() => setModalNum(0)} className={styles.buttonSmall}>
           let's get started!
         </button>
 
