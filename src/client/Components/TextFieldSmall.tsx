@@ -27,6 +27,9 @@ const TextFieldSmall = (props: any) => {
   if (field === "handle") {
     helperText = "Your handle is your unique identifier in the Human Jukebox app -- it's how people find you. It can be between 1 and 30 characters long, and can contain letters (not case-sensitive), numbers, dashes (-), and underscores(_)."
   }
+  if (field === "email") {
+    helperText = "Sharing your email address allows Human Jukebox to let you know when we've made updates and bug fixes. We'll never spam you."
+  }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -73,6 +76,15 @@ const TextFieldSmall = (props: any) => {
       const re = /[^a-z0-9\-\_]/;
       if (update[field].match(re) || update[field].length === 0 || update[field].length > 30) {
         alert("handles cannot be empty, cannot have more than 30 characters, and can only contain letters, numbers, en-dashes (-), and underscores (_).");
+        return;
+      }
+    }
+
+    if (field === "email") {
+      const re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/;
+      if (!update[field].toUpperCase().match(re)) {
+        console.log('match object is:', update[field].match(re))
+        alert("please enter a valid email address");
         return;
       }
     }

@@ -27,11 +27,12 @@ function SignupContainer(){
   type ModalTypeForSignup = SmallTextField | LargeTextField | "" | "playlist";
   const modalOrder: Array<ModalTypeForSignup> = [
     "display_name",
-    "bio",
     "handle",
     "playlist",
+    "bio",
     "instagram",
     "venmo",
+    "email",
   ];
 
   // the variable "modal" says which modal is open, if any.
@@ -228,6 +229,26 @@ function SignupContainer(){
           <TextFieldSmall
             field={'venmo'}
             fieldName={'venmo'}
+            oldValue={''}
+            updatePrivateMusicianInfo={updatePrivateMusicianInfo}
+            setShowTextFieldSmallModal={nextModal}
+            signup={true}
+          />
+
+        </ReactModal>
+
+        <ReactModal
+          isOpen={modal === "email"}
+          parentSelector={() => document.getElementById("root") || undefined}
+          ariaHideApp={false}
+          className={"ReactModalSmall__Content" + " " + styles.altFade}
+          overlayClassName={"ReactModal__Overlay"}
+          contentLabel={"selector modal for email"}
+        >
+          
+          <TextFieldSmall
+            field={'email'}
+            fieldName={'email'}
             oldValue={''}
             updatePrivateMusicianInfo={updatePrivateMusicianInfo}
             setShowTextFieldSmallModal={nextModal}

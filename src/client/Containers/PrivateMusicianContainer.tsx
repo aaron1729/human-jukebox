@@ -60,7 +60,8 @@ function PrivateMusicianContainer(){
     spotify_playlist_name: "",
     spotify_playlist_url: "",
     venmo: "",
-    venmo_show: false
+    venmo_show: false,
+    email: ""
   })
 
 
@@ -166,8 +167,28 @@ function PrivateMusicianContainer(){
           onClick={() => navigate(`/musician/private/handle?musician=${privateMusicianInfo.handle}&spotifyId=${privateMusicianInfo.spotify_id}`)}
           className='ml-5'
         >
-          <span className={styles.textButtonForDbUpdates}>change</span>
+          <span className={styles.textButtonForDbUpdates}>edit</span>
         </button>
+      </span>
+
+      <span>
+        <b>email: </b>
+        {privateMusicianInfo.email}
+        <button
+          onClick={() => {
+            setTargetForTextFieldModal({
+              field: 'email',
+              fieldName: 'email',
+              oldValue: privateMusicianInfo.email
+            })
+            setShowTextFieldSmallModal(true)
+          }}
+          className='ml-5'
+        >
+          <span className={styles.textButtonForDbUpdates}>edit</span>
+        </button>
+        
+
       </span>
 
       <span>
