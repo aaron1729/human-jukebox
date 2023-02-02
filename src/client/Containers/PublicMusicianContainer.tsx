@@ -33,9 +33,11 @@ function PublicMusicianContainer(){
 
       <div className="flex flex-col items-center">
 
-        {!publicMusicianInfo.loading && !publicMusicianInfo.display_name && <NoMusicianPage handle={handle} />}
+        {/* the handle is used here as a proxy for the existence of the musician. */}
 
-        {!publicMusicianInfo.loading && publicMusicianInfo.display_name && 
+        {!publicMusicianInfo.loading && !publicMusicianInfo.handle && <NoMusicianPage handle={handle} />}
+
+        {!publicMusicianInfo.loading && publicMusicianInfo.handle && 
 
         <div className="flex flex-col items-center">
 

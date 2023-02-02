@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 
 const PublicMusicianInfo = (props: any) => {
 
@@ -11,13 +11,13 @@ const PublicMusicianInfo = (props: any) => {
 
       <h2 className='text-4xl py-2'><span className='font-bold'>name:</span> {publicMusicianInfo.display_name} </h2>
 
-      <span className='text-2xl'><span className='font-bold'>bio:</span> {publicMusicianInfo.bio}</span>
+      {!!publicMusicianInfo.bio && <span className='text-2xl'><span className='font-bold'>bio:</span> {publicMusicianInfo.bio}</span>}
 
       <span className='flex flex-row items-center'>
       
-        {publicMusicianInfo.venmo && <a href={'https://venmo.com/' + publicMusicianInfo.venmo} target='_blank' ><img alt='Venmo logo' width='50vh' src='https://1000logos.net/wp-content/uploads/2021/12/Venmo_Logo_PNG7.png' /></a>}
+        {!!publicMusicianInfo.venmo && <a href={'https://venmo.com/' + publicMusicianInfo.venmo} target='_blank' ><img alt='Venmo logo' width='50vh' src='https://1000logos.net/wp-content/uploads/2021/12/Venmo_Logo_PNG7.png' /></a>}
 
-        {publicMusicianInfo.instagram && <a href={'https://instagram.com/' + publicMusicianInfo.instagram} target='_blank'><img alt='Instagram logo' width='50vh' src='https://1000logos.net/wp-content/uploads/2017/02/Instagram-Logo.png' /></a>}
+        {!!publicMusicianInfo.instagram && <a href={'https://instagram.com/' + publicMusicianInfo.instagram} target='_blank'><img alt='Instagram logo' width='50vh' src='https://1000logos.net/wp-content/uploads/2017/02/Instagram-Logo.png' /></a>}
 
       </span>
 

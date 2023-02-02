@@ -19,10 +19,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 
 // the PrivateMusicianContainer component is substantially more complicated that PublicMusicianContainer, because the musician can CRUD info.
-// it will contain a PrivateMusicianInfo component and a SongDisplayContainer component (or perhaps even the full PublicMusicianContainer?).
+// it will contain a PrivateMusicianInfo component and a SongDisplayContainer component (or perhaps even the full PublicMusicianContainer component?).
 // it might seem that its own state should just be the handle, since that's all that's needed to make the SongDisplayContainer.
-// however, if the musician changes their playlist, then this should update. so at least the musician's playlist should live as state here, and given that it seems cleanest for _all_ of the private musician info to live as state here.
-// then, we can use a useEffect inside of SongDisplayContainer, with the playlist id (coming down as a prop) living in its dependency array.
+// however, if the musician changes their playlist, then this should update. so at least the musician's playlist should live as state here; and given that, it seems cleanest for _all_ of the private musician info to live as state here.
+// then, we can use a useEffect inside of SongDisplayContainer, to re-trigger the "get all songs" function whenever the playlist is updated.
 
 function PrivateMusicianContainer(){
 
@@ -113,7 +113,6 @@ function PrivateMusicianContainer(){
     setDummyVarForSongDisplayContainer(dummyVarForSongDisplayContainer + 1);
     console.log('and dummyVarForSongDisplayContainer is:', dummyVarForSongDisplayContainer);
   }
-
 
     
     const deleteCookies = () => {

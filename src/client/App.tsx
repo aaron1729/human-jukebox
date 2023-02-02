@@ -5,6 +5,7 @@ import NoPage from './Components/NoPage';
 import PublicMusicianContainer from './Containers/PublicMusicianContainer';
 import PrivateMusicianContainer from './Containers/PrivateMusicianContainer';
 import HandleChooserContainer from './Containers/HandleChooserContainer';
+import SignupContainer from './Containers/SignupContainer';
 
 function App(){
   return (
@@ -25,6 +26,10 @@ function App(){
         <Route
           path="musician/private/handle/"
           element={<HandleChooserContainer />}
+        />
+        <Route
+          path="musician/private/signup/"
+          element={<SignupContainer />}
         />
         <Route
           path="*"

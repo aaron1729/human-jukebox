@@ -38,7 +38,11 @@ function LandingPageContainer(){
     const resObj = await res.json();
     console.log('resObj data is:', resObj);
     if (resObj.cookieMatch) {
-      navigate(`/musician/private?musician=${resObj.handle}`);
+      if (resObj.handle) {
+        navigate(`/musician/private?musician=${resObj.handle}`);
+      } else {
+        navigate('/musician/private/signup/');
+      }
     }
   };
 

@@ -28,13 +28,15 @@ function HandleChooserContainer(){
     console.log('results is:', results);
     if (results.success) {
       console.log('success in updateHandle function');
-      navigate(`/musician/private?musician=${update.handle}`)
+      navigate(`/musician/private?musician=${update.handle}`);
       return;
     } else {
       alert('sorry, that handle is taken! please try another.');
       return;
     }
   }
+
+  
 
 
 
@@ -58,6 +60,7 @@ function HandleChooserContainer(){
             fieldName={'handle'}
             oldValue={oldHandle}
             updatePrivateMusicianInfo={updateHandle}
+            setShowTextFieldSmallModal={() => navigate(`/musician/private?musician=${oldHandle}`)}
           />
 
         </ReactModal>

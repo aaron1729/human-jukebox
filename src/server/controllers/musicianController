@@ -94,13 +94,13 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
 
                 res.locals.success = false;
 
-                res.status(200).json({success: res.locals.success});
+                return next();
 
             }
             )
         } else {
 
-            // we only reach this point when we're updating non-unique columns (i.e. not the handle).
+            // we only reach this point when we're updating columns that aren't required to be unique (i.e. not the handle).
 
             let kvpStringArray = [];
             for (const key in update) {
@@ -138,21 +138,6 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
         }
 
     } catch(err) {
-
-        console.log('inside of the error-catcher for musicianController.updateMusicianInfoInDb, and the error object is:', err);
-
-        console.log('and notice is:', notice);
-
-        console.log('and message is:', message);
-
-        // handle db error caused by a violation of a uniqueness constraint (which should just be a handle).
-        if (err.code === 23505) {
-            console.log('inside of the error-catcher for musicianController.updateMusicianInfoInDb, with error code 23505.');
-            res.locals.success = false;
-            return next();
-        }
-
-        // return next(err);
 
         return next({
             log: 'error updating musician info in db',

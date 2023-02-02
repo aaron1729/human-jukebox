@@ -11,7 +11,9 @@ const TextFieldSmall = (props: any) => {
   const oldValue = props.oldValue;
   console.log('oldValue is:', oldValue);
   const setShowTextFieldSmallModal = props.setShowTextFieldSmallModal;
+  console.log('inside of TextFieldSmall component, and setShowTextFieldSmallModal is:', setShowTextFieldSmallModal);
   const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
+  const signup = props.signup;
 
   let helperText;
   if (field === "display_name") {
@@ -24,13 +26,13 @@ const TextFieldSmall = (props: any) => {
     helperText = "This allows audience members to tip you! Don't include the @ sign."
   }
   if (field === "handle") {
-    helperText = "Your handle is your unique identifier in the Human Jukebox app. It can be between 1 and 30 characters long, and can contain letters (not case-sensitive), numbers, dashes (-), and underscores(_)."
+    helperText = "Your handle is your unique identifier in the Human Jukebox app -- it's how people find you. It can be between 1 and 30 characters long, and can contain letters (not case-sensitive), numbers, dashes (-), and underscores(_)."
   }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    const target = document.getElementById("text-field-small")
+    const target = document.getElementById("text-field-small");
 
     console.log('in TextFieldSmall component, handleSubmit function triggered, and target value is:', (target as any).value);
 
@@ -77,6 +79,7 @@ const TextFieldSmall = (props: any) => {
     }
     
     updatePrivateMusicianInfo(update);
+    // this exception is because the handle is the only user-entered field that must be unique in its column. we don't want to close the modal if the attempt to set the handle failed.
     if (field !== "handle") {
       setShowTextFieldSmallModal(false);
     }
@@ -84,13 +87,8 @@ const TextFieldSmall = (props: any) => {
 
   const handleCancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log('handleCancel function triggered')
-    if (field !== "handle") {
-      setShowTextFieldSmallModal(false);
-      return;
-    }
-    navigate(
-      `/musician/private?musician=${oldValue}`);
+    console.log('handleCancel function triggered');
+    setShowTextFieldSmallModal(false);
   }
 
   return (
@@ -115,9 +113,11 @@ const TextFieldSmall = (props: any) => {
         <button onClick={handleSubmit} className={styles.buttonSmall}>
           submit
         </button>
-        <button onClick={handleCancel} className={styles.buttonSmall}>
-          cancel
-        </button>
+
+        {(field !== "handle" || !signup) && <button onClick={handleCancel} className={styles.buttonSmall}>
+          {signup && "skip"}
+          {!signup && "cancel"}
+        </button>}
 
       </form>
       

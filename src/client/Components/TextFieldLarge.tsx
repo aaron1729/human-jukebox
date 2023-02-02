@@ -8,6 +8,7 @@ const TextFieldLarge = (props: any) => {
   const oldValue = props.oldValue;
   const setShowTextFieldLargeModal = props.setShowTextFieldLargeModal;
   const updatePrivateMusicianInfo = props.updatePrivateMusicianInfo;
+  const signup = props.signup;
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -36,7 +37,6 @@ const TextFieldLarge = (props: any) => {
     e.preventDefault();
     console.log('handleCancel function triggered')
     setShowTextFieldLargeModal(false);
-
   }
 
   return (
@@ -63,7 +63,8 @@ const TextFieldLarge = (props: any) => {
           submit
         </button>
         <button onClick={handleCancel} className={styles.buttonSmall}>
-          cancel
+          {signup && "skip"}
+          {!signup && "cancel"}
         </button>
 
       </form>

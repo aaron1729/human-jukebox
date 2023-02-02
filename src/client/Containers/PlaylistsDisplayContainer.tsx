@@ -10,6 +10,7 @@ const PlaylistsDisplayContainer = (props: any) => {
     // inside of getPrivateMusicianInfo (from database), which gets called immediately with a useEffect;
     // inside of updatePrivateMusicianInfo, upon a successful PUT request to the database.
   const spotifyPlaylistId = props.spotifyPlaylistId;
+  const signup = props.signup;
 
   // playlistArray is an array of PlaylistDisplay *components*
   const [ playlistArray, setPlaylistArray ] = useState([]);
@@ -106,8 +107,8 @@ const PlaylistsDisplayContainer = (props: any) => {
 
   const handleCancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log('handleCancel function triggered')
-    setShowPlaylistsModal(false)
+    console.log('handleCancel function triggered');
+    setShowPlaylistsModal(false);
   }
 
 
@@ -130,7 +131,8 @@ const PlaylistsDisplayContainer = (props: any) => {
             submit
           </button>
           <button onClick={handleCancel} className={styles.buttonSmall}>
-            cancel
+            {signup && "skip"}
+            {!signup && "cancel"}
           </button>
 
         </form>

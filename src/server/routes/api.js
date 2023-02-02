@@ -47,14 +47,17 @@ router.get(
         // if not, add the musician and put in some default values for other columns.
     // send the auth.html page:
         // its body just says "redirecting..."
-        // it loads the auth.js file, which triggers the function window.login back in the LandingPageContainer
+        // it loads the auth.js file, which triggers the function window.login2 back in the LandingPageContainer
 router.get(
     '/getMusicianInfo',
     authController.getTokens,
     authController.getSpotifyId,
     authController.spotifyIdAndAccessToDb,
     (req, res) => {
-        return res.sendFile(path.join(__dirname, '../../client/auth.html'));
+        console.log('at the end of the /api/getMusicianInfo route handler, and res.locals.newMusician is:', res.locals.newMusician);
+        res.sendFile(path.join(__dirname, '../../client/auth.html'));
+        // res.redirect(path.join(__dirname, '../../client/auth.html?id=123'));
+        return;
     }
 )
 
