@@ -60,12 +60,6 @@ musicianController.removePrivateInfo = (req, res, next) => {
 }
 
 
-
-
-
-// TO DO: THIS IS NOT FULLY WORKING. the error-handling for an attempt to enter a duplicate handle is confusing. it seems not actually to be going into the catch-block?
-
-
 // this middleware function is given an object of updates to the musician info (living on req.body) and tries to make them in the database.
 musicianController.updateMusicianInfoInDb = (req, res, next) => {
 
@@ -138,14 +132,39 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
         }
 
     } catch(err) {
-
         return next({
             log: 'error updating musician info in db',
             status: err.statusCode || 418,
             message: {error: 'failed to update musician info in db'}
         })
-
     }
 }
+
+
+// this middleware function deletes a musician from the database: first all of their rows in the musicians_songs table, and then their row from the musicians table.
+musicianController.deleteMusicianFromDb = (req, res, next) => {
+    console.log('inside of musicianController.deleteMusicianFromDb');
+    try {
+        const spotifyId = req.cookies.spotifyId;
+        const deleteSongsFromMusiciansSongsJoinTableQueryString = `DELETE FROM musicians_songs
+        WHERE musician_spotify_id = '${spotifyId}'`;
+        db.query(deleteSongsFromMusiciansSongsJoinTableQueryString).then(data => {
+            console.log('just executed deleteSongsFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+            const deleteMusicianFromMusiciansTableQueryString = `DELETE FROM musicians
+            WHERE spotify_id = '${spotifyId}'`;
+            db.query(deleteMusicianFromMusiciansTableQueryString).then(data => {
+                console.log('just executed deleteMusicianFromMusiciansTableQueryString, and the returned data is:', data);
+                return next();
+            })
+        })
+    } catch(err) {
+        return next({
+            log: 'error deleting musician from db',
+            status: err.statusCode || 418,
+            message: {error: 'failed to delete musician from db'}
+        })
+    }
+}
+
 
 module.exports = musicianController;

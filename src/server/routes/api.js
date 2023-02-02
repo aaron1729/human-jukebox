@@ -136,18 +136,6 @@ router.get(
 )
 
 
-router.put(
-    '/setHandle',
-    (req, res, next) => {
-        console.log('at the beginning of the /api/setHandle route handler');
-    },
-    (req, res) => {
-        console.log('at the end of the /api/setHandle route handler');
-        return res.status(200).json({message: 'this is a test message'});
-    }
-)
-
-
 // this endpoint is triggered when a musician clicks the "sync" button; it takes their spotify_playlist_id and syncs the corresponding playlist to the database.
 router.put(
     '/setPlaylist/:playlistId',
@@ -181,6 +169,23 @@ router.put(
     (req, res) => {
         console.log('at the end of the /api/updateMusicianInfo route handler');
         return res.status(200).json({success: res.locals.success});
+    }
+)
+
+
+// this endpoint is triggered when the musician chooses to delete their account.
+router.delete(
+    '/deleteMusician',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/deleteMusician route handler');
+        return next();
+    },
+    authController.checkCookies,
+    authController.endCycleIfCookiesUnmatched,
+    musicianController.deleteMusicianFromDb,
+    (req, res) => {
+        console.log('at the end of the /api/deleteMusician route handler');
+        return res.status(200).json({message: 'musician deleted'});
     }
 )
 

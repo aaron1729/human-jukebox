@@ -7,6 +7,7 @@ import ReactModal from 'react-modal';
 import { styles } from '../styles';
 import TextFieldSmall from '../Components/TextFieldSmall';
 import TextFieldLarge from '../Components/TextFieldLarge';
+import DeleteAccount from '../Components/DeleteAccount';
 
 // these are from: https://mui.com/material-ui/material-icons/
 import SyncIcon from '@mui/icons-material/Sync';
@@ -36,6 +37,7 @@ function PrivateMusicianContainer(){
   const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
   const [showTextFieldSmallModal, setShowTextFieldSmallModal] = useState(false);
   const [showTextFieldLargeModal, setShowTextFieldLargeModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   // determine what the TextFieldSmall modal is allowing input for
   const [targetForTextFieldModal, setTargetForTextFieldModal] = useState({
@@ -115,10 +117,24 @@ function PrivateMusicianContainer(){
     console.log('and dummyVarForSongDisplayContainer is:', dummyVarForSongDisplayContainer);
   }
 
-    
-    const deleteCookies = () => {
-      fetch('/api/logout')
+
+  const deleteMusician = async () => {
+    console.log('inside of deleteMusician function in PrivateMusicianContainer');
+    // const response = await 
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
     }
+    fetch('/api/deleteMusician', requestOptions);
+    // const results = await response.json();
+    // console.log(results);
+    navigate('/');
+  }
+
+
+  const deleteCookies = () => {
+    fetch('/api/logout');
+  }
 
 
   return (
@@ -299,6 +315,13 @@ function PrivateMusicianContainer(){
         </button>
       </span>
 
+      <button
+        onClick={() => setShowDeleteAccountModal(true)}
+        className={'ml-5'}
+      >
+        <span className={styles.textButtonForDbUpdates}>delete account</span>
+      </button>
+
       <hr className="w-full my-10" />
 
       <SongDisplayContainer handle={handle} dummyVar={dummyVarForSongDisplayContainer} />
@@ -381,6 +404,22 @@ function PrivateMusicianContainer(){
           oldValue={targetForTextFieldModal.oldValue}
           setShowTextFieldLargeModal={setShowTextFieldLargeModal}
           updatePrivateMusicianInfo={updatePrivateMusicianInfo}
+        />
+
+      </ReactModal>
+
+      <ReactModal
+        isOpen={showDeleteAccountModal}
+        parentSelector={() => document.getElementById("root") || undefined}
+        ariaHideApp={false}
+        className={"ReactModalSmall__Content" + " " + styles.altFade}
+        overlayClassName={"ReactModal__Overlay"}
+        contentLabel={"modal for deleting account"}
+      >
+
+        <DeleteAccount
+          setShowDeleteAccountModal={setShowDeleteAccountModal}
+          deleteMusician={deleteMusician}
         />
 
       </ReactModal>
