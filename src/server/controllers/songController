@@ -116,7 +116,7 @@ songController.setPlaylistInDb = (req, res, next) => {
 
 
 // this middleware function gets a playlist id (to which a musician has access), retrieves it from the spotify API, and saves as res.locals.playlist an array containing the pieces of data that are relevant for our db.
-songController.getSpotifyPlaylist = (req, res, next) => {
+songController.getSpotifyPlaylist = async (req, res, next) => {
     console.log('inside of songController.getSpotifyPlaylist, and cookies are', req.cookies);
     const {playlistId} = req.params;
     console.log('and playlistId is', playlistId);
@@ -126,63 +126,63 @@ songController.getSpotifyPlaylist = (req, res, next) => {
     // by contrast, this should be fine regardless (and isn't getting reset anyways).
     const refresh = req.cookies.refresh;
 
-    const transformSpotifyTrackObj = trackObj => ({
-        spotify_id: trackObj.track.id,
-        name: trackObj.track.name,
-        artist: trackObj.track.artists.map(artistObj => artistObj.name).join(", "),
-        album_name: trackObj.track.album.name,
-        popularity: trackObj.track.popularity,
-        preview_url: trackObj.track.preview_url
-    })
-    
-    
-    // (trackObj) => {
-    //     const songObj = trackObj.track;
-    //     const spotify_id = songObj.id;
-    //     const name = songObj.name;
-    //     const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
-    //     const album_name = songObj.album.name;
-    //     const popularity = songObj.popularity;
-    //     const preview_url = songObj.preview_url;
-    //     return {
-    //         spotify_id,
-    //         name,
-    //         artist,
-    //         album_name,
-    //         popularity,
-    //         preview_url
-    //     }
+    const transformSpotifyTrackObj = trackObj => {
+        const songObj = trackObj.track;
+        const spotify_id = songObj.id;
+        const name = songObj.name;
+        const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
+        const album_name = songObj.album.name;
+        const popularity = songObj.popularity;
+        const preview_url = songObj.preview_url;
+        return {
+            spotify_id,
+            name,
+            artist,
+            album_name,
+            popularity,
+            preview_url,
+        }
+    }
 
     try {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
         console.log('inside of songController.getSpotifyPlaylist, and just set access and refresh tokens on spotifyApi object');
+        
+        const data = await spotifyApi.getPlaylist(playlistId);
+
+        console.log('the await data is:', data);
+
+        const limit = data.body.tracks.limit;
+        const total = data.body.tracks.total;
+
+        console.log('from the await data, limit and total are respectively', limit, 'and', total);
+        
+        res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj));
+        
+
+        if (total > limit) {
+            for (let i = 1; i < Math.ceil(total/limit); i++) {
+                const untransformedTracksToAdd = (await spotifyApi.getPlaylistTracks(playlistId, {offset: limit * i}));
+                untransformedTracksToAdd.body.items.forEach(trackObj => {res.locals.playlist.push(transformSpotifyTrackObj(trackObj))});
+                console.log('and now the length of res.locals.playlist is:', res.locals.playlist.length);
+            }
+        }
+
+        return next();
+        
+        /*
+
         spotifyApi.getPlaylist(playlistId)
         .then(data => {
-            if (longConsoleLogs) console.log('inside of songController.getSpotifyPlaylist, and data.body.tracks.items[n].track are:', data.body.tracks.items.map(itemObj => itemObj.track));
-            console.log('limit and total are respectively', data.body.tracks.limit, 'and', data.body.tracks.total);
-            res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj)
-            //     {
-            //     const songObj = trackObj.track;
-            //     const spotify_id = songObj.id;
-            //     const name = songObj.name;
-            //     const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
-            //     const album_name = songObj.album.name;
-            //     const popularity = songObj.popularity;
-            //     const preview_url = songObj.preview_url;
-            //     return {
-            //         spotify_id,
-            //         name,
-            //         artist,
-            //         album_name,
-            //         popularity,
-            //         preview_url
-            //     }
-            // }
-            );
+            res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj));
             if (longConsoleLogs) console.log('inside of songController.getSpotifyPlaylist, and res.locals.playlist is:', res.locals.playlist);
             return next();
         })
+
+        */
+
+
     } catch(err) {
         return next({
             log: 'error getting spotify playlist',
