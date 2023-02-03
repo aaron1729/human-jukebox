@@ -1,8 +1,10 @@
 const db = require('../models/models');
 const spotifyApi = require('../utils/apiWrapper');
 
-const songController = {};
+// toggle whether to execute the (potentially very) long console logs.
+const longConsoleLogs = false;
 
+const songController = {};
 
 // this middleware function is fed a musician's spotify id (saved as res.locals.spotifyId), retrieves their array of songs from the database, and saves it as res.locals.songs .
 songController.getSongs = (req, res, next) => {
@@ -17,7 +19,7 @@ songController.getSongs = (req, res, next) => {
     WHERE musicians_songs.musician_spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
     
     db.query(getMusicianSongsQueryString).then(data => {
-        console.log('inside of songController.getSongs, and data.rows is:', data.rows)
+        if (longConsoleLogs) console.log('inside of songController.getSongs, and data.rows is:', data.rows)
         res.locals.songs = data.rows;
         return next();
     }).catch(err => {
@@ -50,11 +52,11 @@ songController.setPlaylistInDb = (req, res, next) => {
             ('${songObj.name.replaceAll("'", "''")}', '${songObj.artist.replaceAll("'", "''")}', '${songObj.album_name.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', ${songObj.popularity}` + previewUrlColumnEntryText + `)
             ON CONFLICT DO NOTHING;`}).join("\n");
             
-        console.log('inside of songController.setPlaylistInDb, and upsertPlaylistSongsIntoSongTableQueryString is:\n', upsertPlaylistSongsIntoSongTableQueryString);
+        if (longConsoleLogs) console.log('inside of songController.setPlaylistInDb, and upsertPlaylistSongsIntoSongTableQueryString is:\n', upsertPlaylistSongsIntoSongTableQueryString);
 
         db.query(upsertPlaylistSongsIntoSongTableQueryString).then(data => {
 
-            console.log('just executed upsertPlaylistSongsIntoSongTableQueryString, and the returned data is:', data);
+            if (longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoSongTableQueryString, and the returned data is:', data);
 
             const upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString = res.locals.playlist.map((songObj, index) => `INSERT INTO musicians_songs
                 (musician_spotify_id, song_spotify_id, repertoire_index)
@@ -65,7 +67,7 @@ songController.setPlaylistInDb = (req, res, next) => {
             
             db.query(upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString).then(data => {
 
-                console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+                if (longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
 
                 const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId.replaceAll("'", "''")}';`;
 
@@ -73,7 +75,7 @@ songController.setPlaylistInDb = (req, res, next) => {
 
                     const rowsInDb = data.rows;
 
-                    console.log('just executed getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString, and rowsInDb (the returned data) is:', rowsInDb);
+                    if (longConsoleLogs) console.log('just executed getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString, and rowsInDb (the returned data) is:', rowsInDb);
 
                     const songSpotifyIdsToDrop = [];
                     const songSpotifyIdsToKeep = res.locals.playlist.map(songObj => songObj.spotify_id);
@@ -91,7 +93,7 @@ songController.setPlaylistInDb = (req, res, next) => {
                     WHERE (musician_spotify_id = '${spotifyId.replaceAll("'", "''")}' AND song_spotify_id = '${songSpotifyId.replaceAll("'", "''")}');`).join("\n");
 
                     db.query(dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString).then(data => {
-                        console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+                        if (longConsoleLogs) console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
 
                         return next();
 
@@ -124,31 +126,61 @@ songController.getSpotifyPlaylist = (req, res, next) => {
     // by contrast, this should be fine regardless (and isn't getting reset anyways).
     const refresh = req.cookies.refresh;
 
+    const transformSpotifyTrackObj = trackObj => ({
+        spotify_id: trackObj.track.id,
+        name: trackObj.track.name,
+        artist: trackObj.track.artists.map(artistObj => artistObj.name).join(", "),
+        album_name: trackObj.track.album.name,
+        popularity: trackObj.track.popularity,
+        preview_url: trackObj.track.preview_url
+    })
+    
+    
+    // (trackObj) => {
+    //     const songObj = trackObj.track;
+    //     const spotify_id = songObj.id;
+    //     const name = songObj.name;
+    //     const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
+    //     const album_name = songObj.album.name;
+    //     const popularity = songObj.popularity;
+    //     const preview_url = songObj.preview_url;
+    //     return {
+    //         spotify_id,
+    //         name,
+    //         artist,
+    //         album_name,
+    //         popularity,
+    //         preview_url
+    //     }
+
     try {
         spotifyApi.setAccessToken(access);
         spotifyApi.setRefreshToken(refresh);
         console.log('inside of songController.getSpotifyPlaylist, and just set access and refresh tokens on spotifyApi object');
         spotifyApi.getPlaylist(playlistId)
         .then(data => {
-            // console.log('inside of songController.getSpotifyPlaylist, and data.body.tracks.items[n].track are:', data.body.tracks.items.map(itemObj => itemObj.track));
-            res.locals.playlist = data.body.tracks.items.map(trackObj => {
-                const songObj = trackObj.track;
-                const spotify_id = songObj.id;
-                const name = songObj.name;
-                const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
-                const album_name = songObj.album.name;
-                const popularity = songObj.popularity;
-                const preview_url = songObj.preview_url;
-                return {
-                    spotify_id,
-                    name,
-                    artist,
-                    album_name,
-                    popularity,
-                    preview_url
-                }
-            });
-            console.log('inside of songController.getSpotifyPlaylist, and res.locals.playlist is:', res.locals.playlist);
+            if (longConsoleLogs) console.log('inside of songController.getSpotifyPlaylist, and data.body.tracks.items[n].track are:', data.body.tracks.items.map(itemObj => itemObj.track));
+            console.log('limit and total are respectively', data.body.tracks.limit, 'and', data.body.tracks.total);
+            res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj)
+            //     {
+            //     const songObj = trackObj.track;
+            //     const spotify_id = songObj.id;
+            //     const name = songObj.name;
+            //     const artist = songObj.artists.map(artistObj => artistObj.name).join(", ");
+            //     const album_name = songObj.album.name;
+            //     const popularity = songObj.popularity;
+            //     const preview_url = songObj.preview_url;
+            //     return {
+            //         spotify_id,
+            //         name,
+            //         artist,
+            //         album_name,
+            //         popularity,
+            //         preview_url
+            //     }
+            // }
+            );
+            if (longConsoleLogs) console.log('inside of songController.getSpotifyPlaylist, and res.locals.playlist is:', res.locals.playlist);
             return next();
         })
     } catch(err) {
@@ -183,7 +215,7 @@ songController.getAllSpotifyPlaylists = (req, res, next) => {
                 }
             }
             );
-            console.log('in songController.getAllSpotifyPlaylists, and res.locals.playlistArr is:', res.locals.playlistArr);
+            if (longConsoleLogs) console.log('in songController.getAllSpotifyPlaylists, and res.locals.playlistArr is:', res.locals.playlistArr);
             return next();
         });
         }
