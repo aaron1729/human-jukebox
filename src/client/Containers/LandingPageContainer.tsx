@@ -30,7 +30,7 @@ function LandingPageContainer(){
     }
   };
 
-  // this is essentially a copy of the login function above (both are used!), but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
+  // this is nearly a copy of the login function above (both are used!), but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
   (window as any).login2 = async function () {
     console.log('login2 triggered');
     const res = await fetch('/api/checkCookies');
@@ -38,6 +38,7 @@ function LandingPageContainer(){
     const resObj = await res.json();
     console.log('resObj data is:', resObj);
     if (resObj.cookieMatch) {
+      // any existing musician should have chosen a handle, so the truthiness of resObj.handle is a good proxy. (it's actually possible for a musician to not choose a handle, by exiting out partway through the signup flow, but then they really should go through it again anyways.)
       if (resObj.handle) {
         navigate(`/musician/private?musician=${resObj.handle}`);
       } else {

@@ -21,8 +21,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 
-
-
 // /// for testing production mode
 // app.use(express.static('dist'));
 // app.use('/musician', express.static('dist'));
@@ -43,13 +41,10 @@ app.use('/api', router);
 // });
 
 
-
 // handle requests past api route
 app.use('/api/*', (req: any, res: any) => {
     res.status(200).send('reached the /api/* route handler');
 });
-
-
 
 
 ////////////////////
