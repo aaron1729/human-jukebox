@@ -6,6 +6,7 @@ type StyleObj = {
     textArea: string
     helperText: string
     altFade: string
+    h1Text: string
 };
 
 // other possible button styles:
@@ -75,7 +76,15 @@ const styles: StyleObj = {
         "bg-gradient-to-r",
         "from-red-400",
         "to-blue-500"
-    ].join(" ")
+    ].join(" "),
+    h1Text: [
+        "fl",
+        "text-3xl",
+        "font-bold",
+        "text-fuchsia-700",
+        "mx-5",
+        "my-10"
+    ].join(" "),
 }
 
 export { styles };

@@ -50,7 +50,7 @@ function LandingPageContainer(){
   return(
     // this className used to have "landing-page" in it, which seems not to do anything at the moment (it should be a custom tailwind class or something).
     <div className="flex flex-col justify-end justify-items-center items-center place-content-center">
-      <h1 className ="fl text-3xl font-bold text-fuchsia-700 mx-5 my-10">Welcome to Human Jukebox!</h1>
+      <h1 className ={styles.h1Text}>Welcome to Human Jukebox!</h1>
       <br />
       <SearchInput />
       <br />

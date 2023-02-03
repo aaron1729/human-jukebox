@@ -315,6 +315,17 @@ function PrivateMusicianContainer(){
         </button>
       </span>
 
+      <br />
+
+      <button
+        onClick = {() => navigate(`/musician/private/preview?musician=${privateMusicianInfo.handle}`)}
+        className={'ml-5'}
+      >
+        <span className={styles.textButtonForDbUpdates}>preview public page</span>
+      </button>
+
+      <br />
+
       <button
         onClick={() => setShowDeleteAccountModal(true)}
         className={'ml-5'}

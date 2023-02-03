@@ -3,6 +3,7 @@ import LandingPageContainer from './Containers/LandingPageContainer';
 import { Routes, Route, Outlet, Link } from "react-router-dom";
 import NoPage from './Components/NoPage';
 import PublicMusicianContainer from './Containers/PublicMusicianContainer';
+import PublicMusicianPreviewContainer from './Containers/PublicMusicianPreviewContainer';
 import PrivateMusicianContainer from './Containers/PrivateMusicianContainer';
 import HandleChooserContainer from './Containers/HandleChooserContainer';
 import SignupContainer from './Containers/SignupContainer';
@@ -22,6 +23,10 @@ function App(){
         <Route
           path="musician/private/"
           element={<PrivateMusicianContainer />}
+        />
+        <Route
+          path="musician/private/preview/"
+          element={<PublicMusicianPreviewContainer />}
         />
         <Route
           path="musician/private/handle/"
