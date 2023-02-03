@@ -2,7 +2,7 @@ const db = require('../models/models');
 const spotifyApi = require('../utils/apiWrapper');
 
 // toggle whether to execute the (potentially very) long console logs.
-const longConsoleLogs = false;
+const longConsoleLogs = true;
 
 const songController = {};
 
@@ -160,28 +160,15 @@ songController.getSpotifyPlaylist = async (req, res, next) => {
         
         res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj));
         
-
         if (total > limit) {
             for (let i = 1; i < Math.ceil(total/limit); i++) {
                 const untransformedTracksToAdd = (await spotifyApi.getPlaylistTracks(playlistId, {offset: limit * i}));
                 untransformedTracksToAdd.body.items.forEach(trackObj => {res.locals.playlist.push(transformSpotifyTrackObj(trackObj))});
-                console.log('and now the length of res.locals.playlist is:', res.locals.playlist.length);
+                console.log('after adding [limit] many more tracks, now the length of res.locals.playlist is:', res.locals.playlist.length);
             }
         }
 
         return next();
-        
-        /*
-
-        spotifyApi.getPlaylist(playlistId)
-        .then(data => {
-            res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj));
-            if (longConsoleLogs) console.log('inside of songController.getSpotifyPlaylist, and res.locals.playlist is:', res.locals.playlist);
-            return next();
-        })
-
-        */
-
 
     } catch(err) {
         return next({
