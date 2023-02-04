@@ -13,6 +13,7 @@ module.exports = {
     entry: path.join(__dirname, "src/client", "index.tsx"),
     output: {
         path: path.resolve(__dirname, "dist"),
+        publicPath: '/',
     },
     module: {
         rules: [
@@ -53,6 +54,7 @@ module.exports = {
     proxy: {
       '/api': 'http://localhost:' + port,
       secure: false
-    }
+    },
+    historyApiFallback: true,
   },
 }
