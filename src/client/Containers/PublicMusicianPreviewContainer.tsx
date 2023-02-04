@@ -19,7 +19,6 @@ function PublicMusicianPreviewContainer(){
 
         <button
         onClick = {() => navigate(`/musician/private?musician=${handle}`)}
-        className={'ml-5'}
         >
         <span className={styles.textButtonForDbUpdates}>return to private page</span>
       </button>
@@ -29,7 +28,7 @@ function PublicMusicianPreviewContainer(){
         <PublicMusicianContainer />
 
       </div>
-      
+
     )
 }
 

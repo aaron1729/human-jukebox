@@ -71,6 +71,16 @@ router.get(
 )
 
 
+// this endpoint receives a possible spotifyId and, if it corresponds to a musician in the db, returns the corresponding handle.
+router.get(
+    '/getHandle/:spotifyId',
+    musicianController.getHandleFromDb,
+    (req, res) => {
+        return res.status(200).json({success: res.locals.success, handle: res.locals.handle});
+    }
+)
+
+
 // this endpoint receives a musician's handle, retrieves their public info from the database, and sends it back.
 router.get(
     '/info_public/:handle',

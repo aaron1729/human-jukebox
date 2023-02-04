@@ -5,6 +5,31 @@ const db = require('../models/models');
 const musicianController = {};
 
 
+musicianController.getHandleFromDb = (req, res, next) => {
+    try {
+        const {spotifyId} = req.params;
+        const getHandleQueryString = `SELECT handle FROM musicians WHERE spotify_id = '${spotifyId}'`;
+        db.query(getHandleQueryString).then(data => {
+            console.log('inside of musicianController.getHandleFromDb, and the data.rows are:', data.rows);
+            if (!data.rows[0]) {
+                res.locals.success = false;
+                return next();
+            } else {
+                res.locals.success = true;
+                res.locals.handle = data.rows[0].handle;
+                return next();
+            }
+        })
+    } catch(err) {
+        return next({
+            log: 'error getting handle from db',
+            status: err.statusCode || 418,
+            message: {error: 'failed to get handle from db'}
+        })
+    }
+}
+
+
 // this middleware function is fed a musician's handle (saved as req.params.handle), retrieves their info from the musicians table in the database, and saves it as res.locals.musicianInfo .
 musicianController.getMusicianInfoFromDb = (req, res, next) => {
     try {
@@ -17,18 +42,6 @@ musicianController.getMusicianInfoFromDb = (req, res, next) => {
             }
             res.locals.info = data.rows[0]
             console.log('inside of musicianController.getMusicianInfoFromDb, and the info is:', res.locals.info)
-            // res.locals.spotifyId = res.locals.info.spotify_id
-            // const info = data.rows[0];
-            // delete info.access;
-            // delete info.spotify_id;
-            // if (!info.instagram_show) {
-            //     delete info.instagram;
-            // };
-            // if (!info.venmo_show) {
-            //     delete info.venmo;
-            // };
-            // console.log('and now the info is:', info)
-            // res.locals.info = info;
             return next();
         })
     } catch(err) {
@@ -37,7 +50,6 @@ musicianController.getMusicianInfoFromDb = (req, res, next) => {
             status: err.statusCode || 418,
             message: {error: 'failed to get public musician info from database'}
         })
-
     }
 }
 

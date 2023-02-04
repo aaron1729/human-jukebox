@@ -3,13 +3,24 @@ import SearchInput from '../Components/SearchInput';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import {styles} from '../styles';
 
-// /Users/aaron/git/human-jukebox/src/client/styles.js
-
-
-
 function LandingPageContainer(){
 
   const navigate = useNavigate();
+  
+  // navigate to a musician's public page if client requests not just root but also with a query parameter.
+  const searchParams = (new URL((document as any).location)).searchParams;
+  const spotifyId = searchParams.get("spotifyId");
+  const possiblyNavigateToPublicPage = async () => {
+    const res = await fetch(`/api/getHandle/${spotifyId}`);
+    const data = await res.json();
+    console.log('inside of possiblyNavigateToPublicPage, and data is:', data);
+    if (data.success) {
+      navigate(`/musician/public?musician=${data.handle}`);
+    }
+  }
+  if (spotifyId) {
+    possiblyNavigateToPublicPage();
+  }
   
   const login = async function () {
     const res = await fetch('/api/checkCookies');
