@@ -1,8 +1,6 @@
 const db = require('../models/models');
 const spotifyApi = require('../utils/apiWrapper');
-
-// toggle whether to execute the (potentially very) long console logs.
-const longConsoleLogs = true;
+const globals = require('../../globals');
 
 const songController = {};
 
@@ -19,7 +17,7 @@ songController.getSongs = (req, res, next) => {
     WHERE musicians_songs.musician_spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
     
     db.query(getMusicianSongsQueryString).then(data => {
-        if (longConsoleLogs) console.log('inside of songController.getSongs, and data.rows is:', data.rows)
+        if (globals.longConsoleLogs) console.log('inside of songController.getSongs, and data.rows is:', data.rows)
         res.locals.songs = data.rows;
         return next();
     }).catch(err => {
@@ -52,11 +50,11 @@ songController.setPlaylistInDb = (req, res, next) => {
             ('${songObj.name.replaceAll("'", "''")}', '${songObj.artist.replaceAll("'", "''")}', '${songObj.album_name.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', ${songObj.popularity}` + previewUrlColumnEntryText + `)
             ON CONFLICT DO NOTHING;`}).join("\n");
             
-        if (longConsoleLogs) console.log('inside of songController.setPlaylistInDb, and upsertPlaylistSongsIntoSongTableQueryString is:\n', upsertPlaylistSongsIntoSongTableQueryString);
+        if (globals.longConsoleLogs) console.log('inside of songController.setPlaylistInDb, and upsertPlaylistSongsIntoSongTableQueryString is:\n', upsertPlaylistSongsIntoSongTableQueryString);
 
         db.query(upsertPlaylistSongsIntoSongTableQueryString).then(data => {
 
-            if (longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoSongTableQueryString, and the returned data is:', data);
+            if (globals.longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoSongTableQueryString, and the returned data is:', data);
 
             const upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString = res.locals.playlist.map((songObj, index) => `INSERT INTO musicians_songs
                 (musician_spotify_id, song_spotify_id, repertoire_index)
@@ -67,7 +65,7 @@ songController.setPlaylistInDb = (req, res, next) => {
             
             db.query(upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString).then(data => {
 
-                if (longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+                if (globals.longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
 
                 const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId.replaceAll("'", "''")}';`;
 
@@ -75,7 +73,7 @@ songController.setPlaylistInDb = (req, res, next) => {
 
                     const rowsInDb = data.rows;
 
-                    if (longConsoleLogs) console.log('just executed getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString, and rowsInDb (the returned data) is:', rowsInDb);
+                    if (globals.longConsoleLogs) console.log('just executed getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString, and rowsInDb (the returned data) is:', rowsInDb);
 
                     const songSpotifyIdsToDrop = [];
                     const songSpotifyIdsToKeep = res.locals.playlist.map(songObj => songObj.spotify_id);
@@ -93,7 +91,7 @@ songController.setPlaylistInDb = (req, res, next) => {
                     WHERE (musician_spotify_id = '${spotifyId.replaceAll("'", "''")}' AND song_spotify_id = '${songSpotifyId.replaceAll("'", "''")}');`).join("\n");
 
                     db.query(dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString).then(data => {
-                        if (longConsoleLogs) console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
+                        if (globals.longConsoleLogs) console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);
 
                         return next();
 
@@ -151,22 +149,33 @@ songController.getSpotifyPlaylist = async (req, res, next) => {
         
         const data = await spotifyApi.getPlaylist(playlistId);
 
-        if (longConsoleLogs) console.log('the await tracks data is:', data);
+        if (globals.longConsoleLogs) console.log('the await tracks data is:', data);
 
         const limit = data.body.tracks.limit;
         const total = data.body.tracks.total;
+
+        console.log('total and limit are respectively', total, 'and', limit);
         
         res.locals.playlist = data.body.tracks.items.map(trackObj => transformSpotifyTrackObj(trackObj));
-        
+
         if (total > limit) {
-            for (let i = 1; i < Math.ceil(total/limit); i++) {
+
+            // put a hard cap on how many songs are allowed to be stored in the database by any one musician. (this can be modified by whitelisting users who ask for a limit increase.)
+            const hardTotal = Math.min(total, globals.hardCutoffForPlaylistLength);
+            console.log('globals.hardCutoffForPlaylistLength is:', globals.hardCutoffForPlaylistLength);
+            console.log('total>limit, and hardTotal is:', hardTotal);
+            if (total > hardTotal) {
+                res.locals.hardCutoffReached = true;
+                console.log('hard cutoff for playlist length reached; globals.hardCutoffForPlaylistLength is', globals.hardCutoffForPlaylistLength, 'and length is', total);
+            }
+            for (let i = 1; i < Math.ceil(hardTotal/limit); i++) {
                 const untransformedTracksToAdd = await spotifyApi.getPlaylistTracks(playlistId, {offset: limit * i});
                 untransformedTracksToAdd.body.items.forEach(trackObj => {res.locals.playlist.push(transformSpotifyTrackObj(trackObj))});
                 console.log('after adding [up to limit many] more tracks, now the length of res.locals.playlist is:', res.locals.playlist.length);
             }
         }
 
-        if (longConsoleLogs) console.log('after assembling the whole playlist in songController.getSpotifyPlaylist, res.locals.playlist is:', res.locals.playlist);
+        if (globals.longConsoleLogs) console.log('after assembling the whole playlist in songController.getSpotifyPlaylist, res.locals.playlist is:', res.locals.playlist);
 
         return next();
 
@@ -201,7 +210,7 @@ songController.getAllSpotifyPlaylists = async (req, res, next) => {
 
         const data = await spotifyApi.getUserPlaylists(spotifyId, {limit: 50});
 
-        if (longConsoleLogs) console.log('the await playlists data is:', data);
+        if (globals.longConsoleLogs) console.log('the await playlists data is:', data);
 
         const limit = data.body.limit;
         const total = data.body.total;
@@ -217,7 +226,7 @@ songController.getAllSpotifyPlaylists = async (req, res, next) => {
             }
         }
 
-        if (longConsoleLogs) console.log('after assembling the whole list of playlists in songController.getAllSpotifyPlaylists, res.locals.playlistArr is:', res.locals.playlistArr);
+        if (globals.longConsoleLogs) console.log('after assembling the whole list of playlists in songController.getAllSpotifyPlaylists, res.locals.playlistArr is:', res.locals.playlistArr);
 
         return next();
 

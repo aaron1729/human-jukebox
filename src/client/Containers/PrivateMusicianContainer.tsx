@@ -8,6 +8,10 @@ import { styles } from '../styles';
 import TextFieldSmall from '../Components/TextFieldSmall';
 import TextFieldLarge from '../Components/TextFieldLarge';
 import DeleteAccount from '../Components/DeleteAccount';
+// import globals from '../../globals';
+
+const globals = require('../../globals');
+
 
 // these are from: https://mui.com/material-ui/material-icons/
 import SyncIcon from '@mui/icons-material/Sync';
@@ -115,6 +119,9 @@ function PrivateMusicianContainer(){
     console.log('inside of syncPlaylistToDb, and results is:', results);
     setDummyVarForSongDisplayContainer(dummyVarForSongDisplayContainer + 1);
     console.log('and dummyVarForSongDisplayContainer is:', dummyVarForSongDisplayContainer);
+    if (results.hardCutoffReached) {
+      alert(`to prevent server/database crashes, by default Human Jukebox only allows musicians to import ${globals.hardCutoffForPlaylistLength} songs to the database. please contact us at human.jukebox.app@gmail.com if you would like this limit raised for you!`)
+    }
   }
 
 

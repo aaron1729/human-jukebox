@@ -161,7 +161,7 @@ router.put(
     songController.setPlaylistInDb,
     (req, res) => {
         console.log('at the end of the /api/setPlaylist route handler');
-        return res.status(200).json({message: 'we are at the end of the /api/setPlaylist router handler'})
+        return res.status(200).json({message: 'we are at the end of the /api/setPlaylist router handler', hardCutoffReached: res.locals.hardCutoffReached});
     }
 )
 
