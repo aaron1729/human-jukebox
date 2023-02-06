@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/charizard-52/human-jukebox.git"
+    "url": "git+https://github.com/aaron1729/human-jukebox.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/charizard-52/human-jukebox/issues"
+    "url": "https://github.com/aaron1729/human-jukebox/issues"
   },
-  "homepage": "https://github.com/charizard-52/human-jukebox#readme",
+  "homepage": "https://github.com/aaron1729/human-jukebox#readme",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
