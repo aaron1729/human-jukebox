@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useFetch } from 'react-async';
 import SongDisplayContainer from './SongDisplayContainer';
 import { useSearchParams, Link } from 'react-router-dom';
 import PublicMusicianInfo from '../Components/PublicMusicianInfo';

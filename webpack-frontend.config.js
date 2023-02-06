@@ -9,11 +9,13 @@ const port = process.env.PORT || 3000;
 console.log('webpack dev port:', port)
 
 module.exports = {
-    mode: 'development',
+    target: 'web',
+    mode: process.env.NODE_ENV,
     entry: path.join(__dirname, "src/client", "index.tsx"),
     output: {
         path: path.resolve(__dirname, "dist"),
         publicPath: '/',
+        filename: 'bundle-frontend.js',
     },
     module: {
         rules: [
@@ -57,4 +59,5 @@ module.exports = {
     },
     historyApiFallback: true,
   },
+  devtool: 'inline-source-map',
 }

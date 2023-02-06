@@ -16,7 +16,7 @@ const TextFieldSmall = (props: any) => {
 
   let helperText;
   if (field === "display_name") {
-    helperText = "This is the name that's shown at the top of your page. You can use emojis if you like 😁"
+    helperText = "This is the name that's shown at the top of your page. You can use emojis if you like 😁 🎶 🔥"
   }
   if (field === "instagram") {
     helperText = "This allows audience members to connect with you! (And in the future, we'll give the option to use your IG profile pic here.) Don't include the @ sign."

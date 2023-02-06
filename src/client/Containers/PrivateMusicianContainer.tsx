@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import SongDisplayContainer from './SongDisplayContainer';
-// import PublicMusicianInfo from '../Components/PublicMusicianInfo';
 import PlaylistsDisplayContainer from './PlaylistsDisplayContainer';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import ReactModal from 'react-modal';
@@ -8,11 +7,13 @@ import { styles } from '../styles';
 import TextFieldSmall from '../Components/TextFieldSmall';
 import TextFieldLarge from '../Components/TextFieldLarge';
 import DeleteAccount from '../Components/DeleteAccount';
-// import globals from '../../globals';
 
 const globals = require('../../globals');
 
 
+
+/*
+// on 2/6/2023, commenting these out because they seem to be pulling with them some crappy old node packages that are messing up my backend webpack build.
 // these are from: https://mui.com/material-ui/material-icons/
 import SyncIcon from '@mui/icons-material/Sync';
 import EditIcon from '@mui/icons-material/Edit';
@@ -22,6 +23,10 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
+*/
+
+
+
 
 // the PrivateMusicianContainer component is substantially more complicated that PublicMusicianContainer, because the musician can CRUD info.
 // it will contain a PrivateMusicianInfo component and a SongDisplayContainer component (or perhaps even the full PublicMusicianContainer component?).
@@ -120,7 +125,7 @@ function PrivateMusicianContainer(){
     setDummyVarForSongDisplayContainer(dummyVarForSongDisplayContainer + 1);
     console.log('and dummyVarForSongDisplayContainer is:', dummyVarForSongDisplayContainer);
     if (results.hardCutoffReached) {
-      alert(`to prevent server/database crashes, by default Human Jukebox only allows musicians to import ${globals.hardCutoffForPlaylistLength} songs to the database. please contact us at human.jukebox.app@gmail.com if you would like this limit raised for you!`)
+      alert(`to prevent server/database crashes, by default Human Jukebox only allows musicians to import ${globals.hardCutoffForPlaylistLength} songs to the database. your current chosen playlist exceeds this limit. please contact us at human.jukebox.app@gmail.com if you would like this limit raised for you!`)
     }
   }
 
@@ -351,6 +356,10 @@ function PrivateMusicianContainer(){
       <br />
       <br />
 
+
+
+
+{/*     
       <Link to="/">
         <SyncIcon fontSize="small" />
         <SyncIcon fontSize="medium" />
@@ -364,6 +373,9 @@ function PrivateMusicianContainer(){
         <IconButton>
           <CheckBoxOutlinedIcon />
         </IconButton>
+ */}
+
+
 
 
 

@@ -1,9 +1,6 @@
-const { NextPlanRounded } = require('@mui/icons-material');
-const { query } = require('express');
 const db = require('../models/models');
 
 const musicianController = {};
-
 
 musicianController.getHandleFromDb = (req, res, next) => {
     try {
@@ -61,12 +58,19 @@ musicianController.removePrivateInfo = (req, res, next) => {
     }
     delete res.locals.info.access;
     delete res.locals.info.spotify_id;
+    delete res.locals.info.spotify_playlist_id;
+    delete res.locals.info.spotify_playlist_name;
+    delete res.locals.info.spotify_playlist_url;
+    delete res.locals.info.email;
     if (!res.locals.info.instagram_show) {
         delete res.locals.info.instagram;
     }
+    delete res.locals.info.instagram_show;
     if (!res.locals.info.venmo_show) {
         delete res.locals.info.venmo;
     }
+    delete res.locals.info.venmo_show;
+    
     console.log('after running musicianController.removePrivateInfo, the info is:', res.locals.info);
     return next();
 }
