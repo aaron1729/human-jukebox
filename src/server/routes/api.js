@@ -1,5 +1,4 @@
 const express = require('express');
-const querystring = require('node:querystring');
 
 const path = require('path');
 
@@ -29,12 +28,12 @@ router.get(
 router.get(
     '/auth',
     (req, res) => {
-        res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({
-            client_id: process.env.CLIENT_ID,
-            response_type: 'code',
-            redirect_uri: process.env.REDIRECT_URI,
-            scope: 'playlist-read-private playlist-read-collaborative'
-        }))
+        const params = new URLSearchParams();
+        params.set('response_type', 'code');
+        params.set('scope', 'playlist-read-private playlist-read-collaborative');
+        params.set('redirect_uri', process.env.REDIRECT_URI);
+        params.set('client_id', process.env.CLIENT_ID);
+        return res.redirect('https://accounts.spotify.com/authorize?' + params.toString());
     }
 )
 

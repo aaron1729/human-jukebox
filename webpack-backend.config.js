@@ -13,64 +13,29 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 
-
-
-/*
-the following delete command is because, when trying to run node bundle-backend.js (in the terminal), i kept getting errors on a particular line:
-
-  function save(namespaces) {
-    if (null == namespaces) {
-      // If you set a process.env field to null or undefined, it gets cast to the
-      // string 'null' or 'undefined'. Just delete instead.
-      delete {"NVM_INC":"/Users/aaron/.nvm/versions/node/v16.16.0/include/node", [...lots more stuff here...]}.DEBUG;
-    } else {
-      {"NVM_INC":"/Users/aaron/.nvm/versions/node/v16.16.0/include/node", [...lots more stuff here -- the same stuff...]}.DEBUG = namespaces;
-    }
-  }
-
-namely, it was getting hung up on the "else" line (and weirdly, not the prior line). see the above comments inside of the function definition. and this was the one property on process.env that was set to undefined. so i deleted it.
-
-however, sadly this doesn't seem to fix the error... so just to be safe, i'm back to not deleting it.
-*/
-
-// console.log('process.env is:', process.env);
-delete process.env.ORIGINAL_XDG_CURRENT_DESKTOP;
-// console.log('and now process.env is:', process.env);
-
-
-
-// this is to try and fix the error with colons. but it doesn't do it; even just these give the same error.
-// const newProcessEnv = {
-//   CLIENT_ID: process.env.CLIENT_ID,
-//   CLIENT_SECRET: process.env.CLIENT_SECRET,
-//   REDIRECT_URI: process.env.REDIRECT_URI,
-//   PG_URI: process.env.PG_URI,
-//   PORT: process.env.PORT,
-//   NODE_ENV: process.env.NODE_ENV,
-// }
-
-
-
 // the following code is copied from this file:
   // https://github.com/jlongster/backend-with-webpack/blob/part1/webpack.config.js
 // based on this article:
   // https://archive.jlongster.com/Backend-Apps-with-Webpack--Part-I
-// it also dictates the line:
+// it also dictates the line below:
   // externals: nodeModules,
+// the essential point of the article is that one should _not_ try to bundle node modules into a backend js file, because they're not written for that (e.g. "require" statements get screwed up). so, one must still install node packages on the server.
 
 var fs = require('fs');
   var nodeModules = {};
+  // this synchronously reads the contents of the directory, and returns an array with all the file names in it.
   fs.readdirSync('node_modules')
     .filter(function(x) {
+      // this seems to be a weird way of checking whether x is _not_ equal to the string '.bin', i.e. filtering out the '.bin' folder.
       return ['.bin'].indexOf(x) === -1;
     })
     .forEach(function(mod) {
       nodeModules[mod] = 'commonjs ' + mod;
     });
 
-  
 
 module.exports = {
+  // this tells webpack not to bother with built-in node modules like 'fs' or 'path'.
     target: "node",
     mode: process.env.NODE_ENV,
     entry: path.join(__dirname, "src/server", "server.ts"),
