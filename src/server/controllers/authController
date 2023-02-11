@@ -21,7 +21,7 @@ authController.checkCookies = (req, res, next) => {
             res.locals.cookieMatch = false;
             return next();
         }
-        const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
+        const getHandleAndAccessFromDbQueryString = `SELECT handle, access FROM public.musicians WHERE spotify_id = '${spotifyId.replace(/'/g, "''")}'`;
         db.query(getHandleAndAccessFromDbQueryString).then(data => {
             console.log('after db query inside of authController.checkCookies, the data is:', data.rows)
             if (!data.rows.length) {
@@ -159,9 +159,9 @@ authController.spotifyIdAndAccessToDb = (req, res, next) => {
         const upsertMusicianInfoQueryString = `INSERT INTO musicians
             (spotify_id, access)
         VALUES
-            ('${spotifyId.replaceAll("'", "''")}', '${access.replaceAll("'", "''")}')
+            ('${spotifyId.replace(/'/g, "''")}', '${access.replace(/'/g, "''")}')
         ON CONFLICT (spotify_id) DO UPDATE SET
-            access = '${access.replaceAll("'", "''")}';`
+            access = '${access.replace(/'/g, "''")}';`
 
         db.query(upsertMusicianInfoQueryString).then(data => {
             console.log('just executed upsertMusicianInfoQueryString, and the returned data is:', data);

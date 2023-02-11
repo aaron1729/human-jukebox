@@ -10,11 +10,11 @@ songController.getSongs = (req, res, next) => {
     if (!spotifyId) {
         return next();
     }
-    console.log('inside of songController.getSongs, and spotifyId is', spotifyId);
+    console.log('inside of songController.getSongs, and spotifyId is:', spotifyId);
 
     const getMusicianSongsQueryString = `SELECT songs.*, musicians_songs.displayed, musicians_songs.familiarity, musicians_songs.repertoire_index
     FROM songs JOIN musicians_songs ON songs.spotify_id = musicians_songs.song_spotify_id
-    WHERE musicians_songs.musician_spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
+    WHERE musicians_songs.musician_spotify_id = '${spotifyId.replace(/'/g, "''")}'`; // this was ${spotifyId.replaceAll("'", "''")} -- but this doesn't work on the server for some reason!!!
     
     db.query(getMusicianSongsQueryString).then(data => {
         if (globals.longConsoleLogs) console.log('inside of songController.getSongs, and data.rows is:', data.rows)
@@ -42,12 +42,12 @@ songController.setPlaylistInDb = (req, res, next) => {
             let previewUrlColumnEntryText = "";
             if (existsPreviewUrl) {
                 previewUrlColumnNameText = ", preview_url";
-                previewUrlColumnEntryText = `, '${songObj.preview_url.replaceAll("'", "''")}'`;
+                previewUrlColumnEntryText = `, '${songObj.preview_url.replace(/'/g, "''")}'`;
             }
             return `INSERT INTO songs
             (name, artist, album_name, spotify_id, popularity` + previewUrlColumnNameText + `)
             VALUES
-            ('${songObj.name.replaceAll("'", "''")}', '${songObj.artist.replaceAll("'", "''")}', '${songObj.album_name.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', ${songObj.popularity}` + previewUrlColumnEntryText + `)
+            ('${songObj.name.replace(/'/g, "''")}', '${songObj.artist.replace(/'/g, "''")}', '${songObj.album_name.replace(/'/g, "''")}', '${songObj.spotify_id.replace(/'/g, "''")}', ${songObj.popularity}` + previewUrlColumnEntryText + `)
             ON CONFLICT DO NOTHING;`}).join("\n");
             
         if (globals.longConsoleLogs) console.log('inside of songController.setPlaylistInDb, and upsertPlaylistSongsIntoSongTableQueryString is:\n', upsertPlaylistSongsIntoSongTableQueryString);
@@ -59,7 +59,7 @@ songController.setPlaylistInDb = (req, res, next) => {
             const upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString = res.locals.playlist.map((songObj, index) => `INSERT INTO musicians_songs
                 (musician_spotify_id, song_spotify_id, repertoire_index)
             VALUES
-                ('${spotifyId.replaceAll("'", "''")}', '${songObj.spotify_id.replaceAll("'", "''")}', ${index})
+                ('${spotifyId.replace(/'/g, "''")}', '${songObj.spotify_id.replace(/'/g, "''")}', ${index})
             ON CONFLICT (musician_spotify_id, song_spotify_id) DO UPDATE SET
                 repertoire_index = ${index};`).join("\n");
             
@@ -67,7 +67,7 @@ songController.setPlaylistInDb = (req, res, next) => {
 
                 if (globals.longConsoleLogs) console.log('just executed upsertPlaylistSongsIntoMusiciansSongsJoinTableQueryString, and the returned data is:', data);
 
-                const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId.replaceAll("'", "''")}';`;
+                const getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString = `SELECT * FROM musicians_songs WHERE musician_spotify_id = '${spotifyId.replace(/'/g, "''")}';`;
 
                 db.query(getAllSongsForThisMusicianFromMusiciansSongsJoinTableQueryString).then(data => {
 
@@ -88,7 +88,7 @@ songController.setPlaylistInDb = (req, res, next) => {
                     }
 
                     const dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString = songSpotifyIdsToDrop.map(songSpotifyId => `DELETE FROM musicians_songs
-                    WHERE (musician_spotify_id = '${spotifyId.replaceAll("'", "''")}' AND song_spotify_id = '${songSpotifyId.replaceAll("'", "''")}');`).join("\n");
+                    WHERE (musician_spotify_id = '${spotifyId.replace(/'/g, "''")}' AND song_spotify_id = '${songSpotifyId.replace(/'/g, "''")}');`).join("\n");
 
                     db.query(dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString).then(data => {
                         if (globals.longConsoleLogs) console.log('just executed dropSongsRemovedFromPlaylistFromMusiciansSongsJoinTableQueryString, and the returned data is:', data);

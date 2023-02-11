@@ -33,7 +33,7 @@ musicianController.getMusicianInfoFromDb = (req, res, next) => {
         const {handle} = req.params;
         const getMusicianInfoQueryString = `SELECT * FROM musicians WHERE handle = '${handle}'`;
         db.query(getMusicianInfoQueryString).then(data => {
-            console.log('inside of musicianController.getMusicianInfoFromDb, and the data.rows are:', data.rows);
+            console.log('inside of musicianController.getMusicianInfoFromDb, and data.rows.length (which should be either 0 or 1) is:', data.rows.length);
             if (!data.rows[0]) {
                 return next()
             }
@@ -90,7 +90,7 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
         // handle handle updates separately, as they require uniqueness. and in this case, _only_ update the handle.
         if (update.handle) {
             console.log('inside of musicianController.updateMusicianInfoInDb, and specifically updating the _handle_ in db.');
-            const updateHandleInDbQueryString = `UPDATE public.musicians SET handle = '${update.handle.toLowerCase()}' WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}' RETURNING (handle, spotify_id);`;
+            const updateHandleInDbQueryString = `UPDATE public.musicians SET handle = '${update.handle.toLowerCase()}' WHERE spotify_id = '${spotifyId.replace(/'/g, "''")}' RETURNING (handle, spotify_id);`;
             db.query(updateHandleInDbQueryString).then(data => {
                 console.log('after executing updateHandleInDbQueryString, the returned data is:', data);
                 if (data.rowCount === 1) {
@@ -119,7 +119,7 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
                 console.log('the value is:', value);
                 // if the value is a string, prepare it for the SQL query: escape its single-quote-marks (i.e. double them) and then wrap the whole thing in single-quote-marks. (but if it's a boolean, we _don't_ want to have quote marks around it.)
                 if (typeof value === "string") {
-                    value = value.replaceAll("'", "''");
+                    value = value.replace(/'/g, "''");
                     value = `'${value}'`
                     console.log('and now the updated value is:', value);
                 }
@@ -134,7 +134,7 @@ musicianController.updateMusicianInfoInDb = (req, res, next) => {
                 return next();
             }
 
-            const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpsString} WHERE spotify_id = '${spotifyId.replaceAll("'", "''")}'`;
+            const updateKVPInDbQueryString = `UPDATE public.musicians SET ${kvpsString} WHERE spotify_id = '${spotifyId.replace(/'/g, "''")}'`;
             db.query(updateKVPInDbQueryString).then(data => {
                 console.log('after executing updateKVPInDbQueryString, the returned data is:', data);
                 if (data.rowCount === 1) {
