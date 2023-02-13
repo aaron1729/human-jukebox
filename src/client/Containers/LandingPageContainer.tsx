@@ -61,13 +61,39 @@ function LandingPageContainer(){
   return(
     // this className used to have "landing-page" in it, which seems not to do anything at the moment (it should be a custom tailwind class or something).
     <div className="flex flex-col justify-end justify-items-center items-center place-content-center">
-      <h1 className ={styles.h1Text}>Welcome to Human Jukebox!</h1>
-      <br />
+      
+      <h1 className={styles.h1Text}>Welcome to Human Jukebox!</h1>
+      
+      {/* <br /> */}
+      
       <SearchInput />
+    
+      
+      {/* <br /> */}
+      
+      
+      <span>
+        check out a sample musician page: &nbsp;
+        <Link
+          to="/musician/public?musician=jimi-hendrix"
+          className={styles.textButtonForDbUpdates}
+        >
+          here
+        </Link>
+      </span>
+
       <br />
-      <button onClick={login} className={styles.buttonBig}>
-        Spotify signup/login for musicians
-      </button>
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <span>
+        <b>for musicians: &nbsp;</b>
+        <button onClick={login} className={styles.buttonSpotify}>
+          signup/login via Spotify
+        </button>
+      </span>
 
       {/* <br />
       <Link to="/DNE">

@@ -2,6 +2,8 @@ const express = require('express');
 
 const path = require('path');
 
+const spotifyApi = require('../utils/apiWrapper');
+
 const authController = require('../controllers/authController');
 const musicianController = require('../controllers/musicianController');
 const songController = require('../controllers/songController');
@@ -14,6 +16,10 @@ const router = express.Router();
 // this endpoint checks if the user has valid cookies, i.e. "spotifyId" and "access" cookies that match ones in the database
 router.get(
     '/checkCookies',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/checkCookies route handler');
+        return next();
+    },
     authController.checkCookies,
     (req, res) => {
         return res.status(200).json({cookieMatch: res.locals.cookieMatch, handle: res.locals.handle});
@@ -22,18 +28,23 @@ router.get(
 
 
 // this endpoint redirects the musician to the Spotify auth page.
-// after the musician finishes there, they are redirected to localhost:8080/api/getMusicianInfo (handled just below).
+// after the musician finishes there, they are redirected to /api/getMusicianInfo (handled just below).
     // if their Spotify login was successful, that redirect comes with a 'code' (a long string) stored as req.query.code .
     // if the Spotify login was unsuccessful, that redirect comes with an error message.
 router.get(
     '/auth',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/auth route handler');
+        return next();
+    },
     (req, res) => {
-        const params = new URLSearchParams();
-        params.set('response_type', 'code');
-        params.set('scope', 'playlist-read-private playlist-read-collaborative');
-        params.set('redirect_uri', process.env.REDIRECT_URI);
-        params.set('client_id', process.env.CLIENT_ID);
-        return res.redirect('https://accounts.spotify.com/authorize?' + params.toString());
+        const scopes = [
+            'playlist-read-private',
+            'playlist-read-collaborative',
+        ];
+        const authUrl = spotifyApi.createAuthorizeURL(scopes);
+        console.log('authUrl is:', authUrl);
+        return res.redirect(authUrl);
     }
 )
 
@@ -49,6 +60,10 @@ router.get(
         // it loads the auth.js file, which triggers the function window.login2 back in the LandingPageContainer
 router.get(
     '/getMusicianInfo',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/getMusicianInfo route handler');
+        return next();
+    },
     authController.getTokens,
     authController.getSpotifyId,
     authController.spotifyIdAndAccessToDb,
@@ -64,6 +79,10 @@ router.get(
 // this serves the javascript file attached to auth.html
 router.get(
     '*/auth.js',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/*/auth.js route handler');
+        return next();
+    },
     (req, res) => {
         return res.sendFile(path.join(__dirname, '../../client/auth.js'));
     }
@@ -73,6 +92,10 @@ router.get(
 // this endpoint receives a possible spotifyId and, if it corresponds to a musician in the db, returns the corresponding handle.
 router.get(
     '/getHandle/:spotifyId',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/getHandle route handler');
+        return next();
+    },
     musicianController.getHandleFromDb,
     (req, res) => {
         return res.status(200).json({success: res.locals.success, handle: res.locals.handle});
@@ -83,6 +106,10 @@ router.get(
 // this endpoint receives a musician's handle, retrieves their public info from the database, and sends it back.
 router.get(
     '/info_public/:handle',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/info_public route handler');
+        return next();
+    },
     musicianController.getMusicianInfoFromDb,
     musicianController.removePrivateInfo,
     (req, res) => {
@@ -202,6 +229,10 @@ router.delete(
 // this endpoint receives a request based on the musician clicking the "logout" button on their private page
 router.get(
     '/logout',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/logout route handler');
+        return next();
+    },
     authController.deleteCookies,
     (req, res) => {
         return res.status(200).json({message: 'cookies deleted'});

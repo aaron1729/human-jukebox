@@ -1,6 +1,7 @@
 type StyleObj = {
     buttonSmall: string
     buttonBig: string
+    buttonSpotify: string
     textButtonForDbUpdates: string
     searchField: string
     textArea: string
@@ -35,6 +36,14 @@ const styles: StyleObj = {
         "font-bold",
         "py-2",
         "px-4",
+        "rounded-full"
+    ].join(" "),
+    buttonSpotify: [
+        "bg-green-500",
+        "hover:bg-green-400",
+        "font-bold",
+        "py-1",
+        "px-3",
         "rounded-full"
     ].join(" "),
     textButtonForDbUpdates: [

@@ -82,7 +82,7 @@ const TextFieldSmall = (props: any) => {
 
     if (field === "email") {
       const re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/;
-      if (!update[field].toUpperCase().match(re)) {
+      if (update[field].length && !update[field].toUpperCase().match(re)) {
         console.log('match object is:', update[field].match(re))
         alert("please enter a valid email address");
         return;
