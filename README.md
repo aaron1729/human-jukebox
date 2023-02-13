@@ -6,7 +6,7 @@
 
 ## Running an instance of Human Jukebox
 
-You will need to create an app at the [Spotify developer dashboard](https://developer.spotify.com/dashboard/). Record your "Client ID" and "Client Secret", and whitelist any Spotify accounts that you would like to be able to access your app in development mode.
+You will need to create an app at the [Spotify developer dashboard](https://developer.spotify.com/dashboard/). Record both your Client ID and your Client Secret, and whitelist any Spotify accounts that you would like to be able to access your app in development mode.
 
 You will also need to create a PostgreSQL database. Record its URI. The database structure will vary as more features are added, but it can be readily inferred from the database queries embedded in the codebase.
 
@@ -16,7 +16,7 @@ You will also need to create a PostgreSQL database. Record its URI. The database
 
 1. In the root folder, run `npm install`.
 
-1. In the root folder, create a new text file called `.env`, and populate it as follows.
+1. In the root folder, create a new file called `.env` containing the following lines.
 
         CLIENT_ID=[your client id]
         CLIENT_SECRET=[your client secret]
@@ -32,9 +32,17 @@ The app should now be accessible at `localhost:8080`.
 
 Instructions for hosting the app will depend on the hosting service, but here are the essential points.
 
-1. In the `.env` file of your cloned repo, change the line `REDIRECT_URI=http://localhost:8080/api/getMusicianInfo` to `REDIRECT_URI=[your root URL]/api/getMusicianInfo`. (Or you can write both lines and toggle between them as desired, commenting-out a line by prepending it with the `#` symbol.)
+1. In the `.env` file of your cloned repo, change the line
+    ```
+    REDIRECT_URI=http://localhost:8080/api/getMusicianInfo
+    ```
+    to
+    ```
+    REDIRECT_URI=[your root URL]/api/getMusicianInfo
+    ```
+    (where `[your root URL]` includes the `http` or `https`). (Or you can write both lines and toggle between them as desired, commenting-out a line by prepending it with the `#` symbol.)
 
-1. In the root folder of your cloned repo, run `npm run bundle-frontend`. Inside of `dist`, the former will create the files `bundle-frontend.js` and `index.html` while the latter will create the file `bundle-backend.js` (all via Webpack).
+1. In the root folder of your cloned repo, run `npm run bundle-frontend` and `npm run bundle-backend`. (Inside of `dist`, the former will create the files `bundle-frontend.js` and `index.html` while the latter will create the file `bundle-backend.js` -- all via Webpack.)
 
 1. On your server, create a dedicated root folder for Human Jukebox. Within it, create directories called `client` and `server`.
 
@@ -42,14 +50,14 @@ Instructions for hosting the app will depend on the hosting service, but here ar
 
 1. Navigate to `/server`. Copy into here the file `package.json`, and run `npm install`.
 
-1. Inside of `/server`, make a subfolder also called `server` and copy into it the file `bundle-backend.js`.
+1. Inside of `/server`, make a subfolder also called `server` and copy into it the file `bundle-backend.js`. To start the server, run `node server/bundle-backend.js`.
 
-1. Proxy requests past `/api` to `[your root URL]:4000/api`.
+1. Set up your frontend server, and proxy requests past `/api` to `[your root URL]:4000/api`.
 
 Your app should now be live.
 
-### General notes
+## General notes
 
-Note the file `/src/globals.ts`. In it you can toggle `longConsoleLogs` (depending on what you are working on), and you can also set `hardCutoffForPlaylistLength` (depending on your database needs).
+Note the file `/src/globals.ts`. In it, you can toggle `longConsoleLogs`; depending on what you are working on, it may be useful to either show or hide the (possibly very long) console logs. In it, you can also set `hardCutoffForPlaylistLength`, depending on your database preferences.
 
 If you would like to allow your app to be accessible beyond the explicitly whitelisted users, you must submit a quota extension request in your Spotify developer dashboard.
