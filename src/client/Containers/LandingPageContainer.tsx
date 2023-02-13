@@ -7,21 +7,32 @@ function LandingPageContainer(){
 
   const navigate = useNavigate();
   
-  // navigate to a musician's public page if client requests not just root but also with a query parameter.
+  // navigate to a musician's public page if client requests not just root but also with a valid query parameter.
   const searchParams = (new URL((document as any).location)).searchParams;
+  const handle = searchParams.get("handle");
   const spotifyId = searchParams.get("spotifyId");
   const possiblyNavigateToPublicPage = async () => {
-    const res = await fetch(`/api/getHandle/${spotifyId}`);
-    const data = await res.json();
-    console.log('inside of possiblyNavigateToPublicPage, and data is:', data);
-    if (data.success) {
-      navigate(`/musician/public?musician=${data.handle}`);
+    console.log(`inside of possiblyNavigateToPublicPage, handle is ${handle}, and spotifyId = ${spotifyId}`);
+    // first try handle, if it exists.
+    if (handle) {
+      const resFromHandle = await fetch(`/api/info_public/${handle}`);
+      const dataFromHandle = await resFromHandle.json();
+      if (dataFromHandle.handle) {
+        return navigate(`/musician/public?musician=${handle}`);
+      }
+    }
+    // if handle doesn't exist as a query parameter or in the database, then try the spotify id.
+    const resFromSpotifyId = await fetch(`/api/getHandle/${spotifyId}`);
+    const dataFromSpotifyId = await resFromSpotifyId.json();
+    if (dataFromSpotifyId.success) {
+      return navigate(`/musician/public?musician=${dataFromSpotifyId.handle}`);
     }
   }
-  if (spotifyId) {
+  if (handle || spotifyId) {
     possiblyNavigateToPublicPage();
   }
   
+
   const login = async function () {
     const res = await fetch('/api/checkCookies');
     // console.log('typeof res is: ', typeof res);

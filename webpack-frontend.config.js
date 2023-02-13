@@ -10,7 +10,8 @@ console.log('webpack port:', port)
 
 module.exports = {
     target: 'web',
-    mode: 'none',
+    // this needs to be 'development' in order for the `webpack-dev-server` terminal command (which is implicitly run by `npm start`) to work properly.
+    mode: 'development',
     entry: path.join(__dirname, "src/client", "index.tsx"),
     output: {
         path: path.resolve(__dirname, "dist"),
