@@ -36,8 +36,8 @@ var fs = require('fs');
 
 module.exports = {
   // this tells webpack not to bother with built-in node modules like 'fs' or 'path'.
-    target: "node",
-    mode: process.env.NODE_ENV,
+    target: 'node',
+    mode: 'none',
     entry: path.join(__dirname, "src/server", "server.ts"),
     output: {
         path: path.resolve(__dirname, "dist"),

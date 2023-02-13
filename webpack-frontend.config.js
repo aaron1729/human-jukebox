@@ -10,7 +10,7 @@ console.log('webpack port:', port)
 
 module.exports = {
     target: 'web',
-    mode: process.env.NODE_ENV,
+    mode: 'none',
     entry: path.join(__dirname, "src/client", "index.tsx"),
     output: {
         path: path.resolve(__dirname, "dist"),
