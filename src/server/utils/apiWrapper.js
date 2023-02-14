@@ -1,6 +1,7 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 
 let baseForRedirectUri;
+// we assume development mode unless this string is precisely equal to "production".
 if (process.env.NODE_ENV === "production") {
     baseForRedirectUri = process.env.REDIRECT_URI_BASE_PRODUCTION
 } else {
