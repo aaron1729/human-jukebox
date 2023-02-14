@@ -30,7 +30,7 @@ function PublicMusicianContainer(){
 
     return(
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center px-10">
 
         {/* the handle is used here as a proxy for the existence of the musician. */}
 

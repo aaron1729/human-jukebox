@@ -1,6 +1,6 @@
 # Human Jukebox
 
-[Human Jukebox](https://human-jukebox.etale.site/) is a web app for musicians (and bands) to connect with their audience members, sharing information such as their repertoire, their biography, and links to their social media and Venmo accounts. Musicians are authenticated via Spotify, and their repertoires are imported from playlists attached to their Spotify accounts.
+[Human Jukebox](https://human-jukebox.etale.site/) is a web app for musicians and bands to connect with their audience members, sharing information such as their repertoire, their biography, and links to their social media and Venmo accounts. Musicians are authenticated via Spotify, and their repertoires are imported from playlists attached to their Spotify accounts.
 
 **This is a public repo for the Human Jukebox app.** Pull requests are very welcome. For questions, comments, and bug reports, please write to [human.jukebox.app@gmail.com](mailto:human.jukebox.app@gmail.com).
 
@@ -20,7 +20,7 @@ You will also need to create a PostgreSQL database. Record its URI. The database
 
         CLIENT_ID=[your client id]
         CLIENT_SECRET=[your client secret]
-        REDIRECT_URI=http://localhost:8080/api/getMusicianInfo
+        REDIRECT_URI_BASE_DEVELOPMENT=http://localhost:8080
         PG_URI=[your postgresql URI]
         PORT=4000
 
@@ -32,15 +32,11 @@ The app should now be accessible at `localhost:8080`.
 
 Instructions for hosting the app will depend on the hosting service, but here are the essential points.
 
-1. In the `.env` file of your cloned repo, change the line
+1. In the `.env` file of your cloned repo, add the line
     ```
-    REDIRECT_URI=http://localhost:8080/api/getMusicianInfo
+    REDIRECT_URI_BASE_PRODUCTION=[your root URL]
     ```
-    to
-    ```
-    REDIRECT_URI=[your root URL]/api/getMusicianInfo
-    ```
-    (where `[your root URL]` includes the `http` or `https`). (Or you can write both lines and toggle between them as desired, commenting-out a line by prepending it with the `#` symbol.)
+    where `[your root URL]` includes the `http` or `https` and ends without a slash.
 
 1. In the root folder of your cloned repo, run `npm run bundle-frontend` and `npm run bundle-backend`. (Inside of `dist`, the former will create the files `bundle-frontend.js` and `index.html` while the latter will create the file `bundle-backend.js` -- all via Webpack.)
 

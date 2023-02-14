@@ -1,10 +1,17 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 
-// create a new instance of the SpotifyWebApi class, to be exported
+let baseForRedirectUri;
+if (process.env.NODE_ENV === "production") {
+    baseForRedirectUri = process.env.REDIRECT_URI_BASE_PRODUCTION
+} else {
+    baseForRedirectUri = process.env.REDIRECT_URI_BASE_DEVELOPMENT
+}
+
+// create a new instance of the SpotifyWebApi class, to be exported.
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: process.env.REDIRECT_URI
+    redirectUri: baseForRedirectUri + "/api/getMusicianInfo",
 });
 
 module.exports = spotifyApi;

@@ -12,6 +12,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 
+// reset the node environment. (as of 2/13/2023, this is only used in /src/server/utils/apiWrapper.js.)
+process.env.NODE_ENV = "production";
 
 // the following code is copied from this file:
   // https://github.com/jlongster/backend-with-webpack/blob/part1/webpack.config.js
