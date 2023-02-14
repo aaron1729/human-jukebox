@@ -78,6 +78,13 @@ authController.getTokens = (req, res, next) => {
             spotifyApi.setAccessToken(res.locals.access);
             spotifyApi.setRefreshToken(res.locals.refresh);
             return next();
+        }).catch(err => {
+            console.log('inside of the catch block of authControler.getTokens, and error is:', err);
+            return next({
+                log: 'INSIDE OF CATCH BLOCK, AND error getting access and refresh tokens',
+                status: err.statusCode || 418,
+                message: {error: 'INSIDE OF CATCH BLOCK, AND failed to get access and refresh tokens'}
+            })
         })
     } catch(err) {
         return next({

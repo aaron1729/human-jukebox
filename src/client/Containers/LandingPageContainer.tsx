@@ -105,6 +105,7 @@ function LandingPageContainer(){
           signup/login via Spotify
         </button>
       </span>
+      <h6 className='flex flex-row justify-center text-xs text-gray-500'>(If this doesn't work on your phone, try it on a computer.)</h6>
 
       {/* <br />
       <Link to="/DNE">

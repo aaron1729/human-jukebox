@@ -23,6 +23,7 @@ You will also need to create a PostgreSQL database. Record its URI. The database
         REDIRECT_URI_BASE_DEVELOPMENT=http://localhost:8080
         PG_URI=[your postgresql URI]
         PORT=4000
+        NODE_ENV=development
 
 1. In the root folder, run `npm start`.
 
@@ -38,7 +39,7 @@ Instructions for hosting the app will depend on the hosting service, but here ar
     ```
     where `[your root URL]` includes the `http` or `https` and ends without a slash.
 
-1. In the root folder of your cloned repo, run `npm run bundle-frontend` and `npm run bundle-backend`. (Inside of `dist`, the former will create the files `bundle-frontend.js` and `index.html` while the latter will create the file `bundle-backend.js` -- all via Webpack.)
+1. In the root folder of your cloned repo, run `npm run bundle-frontend` and `npm run bundle-backend`. (Inside of `/dist`, the former will create the files `bundle-frontend.js` and `index.html` while the latter will create the file `bundle-backend.js` -- all via Webpack.)
 
 1. On your server, create a dedicated root folder for Human Jukebox. Within it, create directories called `client` and `server`.
 
@@ -46,7 +47,9 @@ Instructions for hosting the app will depend on the hosting service, but here ar
 
 1. Navigate to `/server`. Copy into here the file `package.json`, and run `npm install`.
 
-1. Inside of `/server`, make a subfolder also called `server` and copy into it the file `bundle-backend.js`. To start the server, run `node server/bundle-backend.js`.
+1. Inside of `/server`, make a subfolder also called `server` and copy into it the file `bundle-backend.js`.
+
+1. To start the server, navigate to `/server/server` and run `node bundle-backend.js` (or e.g. from the root folder run `node server/server/bundle-backend.js`).
 
 1. Set up your frontend server, and proxy requests past `/api` to `[your root URL]:4000/api`.
 

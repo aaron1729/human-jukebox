@@ -43,6 +43,7 @@ const SongDisplayContainer = (props: any) => {
     <div>
       <div>
         <h4 className='flex flex-row justify-center'><b>Click a song title to hear a preview!</b></h4>
+        <h6 className='flex flex-row justify-center text-xs text-gray-500'>(Not all songs have previews.)</h6>
       </div>
       <div className='px-4 py-2 flex flex-row justify-center'>
         <table className='table-fixed'>

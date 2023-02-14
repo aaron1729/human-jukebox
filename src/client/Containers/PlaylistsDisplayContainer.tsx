@@ -122,6 +122,8 @@ const PlaylistsDisplayContainer = (props: any) => {
 
           {playlistArray}
 
+          {!playlistArray.length && "It seems that you have no playlists in your Spotify account. Go make one!"}
+
           <button onClick={handleSubmit} className={styles.buttonSmall}>
             submit
           </button>

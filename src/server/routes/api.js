@@ -22,6 +22,7 @@ router.get(
     },
     authController.checkCookies,
     (req, res) => {
+        console.log('at the end of the /api/checkCookies route handler');
         return res.status(200).json({cookieMatch: res.locals.cookieMatch, handle: res.locals.handle});
     }
 )
@@ -43,7 +44,7 @@ router.get(
             'playlist-read-collaborative',
         ];
         const authUrl = spotifyApi.createAuthorizeURL(scopes);
-        console.log('authUrl is:', authUrl);
+        console.log('at the end of the /api/auth route handler, and authUrl is:', authUrl);
         return res.redirect(authUrl);
     }
 )
@@ -63,6 +64,13 @@ router.get(
     (req, res, next) => {
         console.log('at the beginning of the /api/getMusicianInfo route handler');
         return next();
+    },
+    (req, res, next) => {
+        if (!req.query.code) {
+            return res.status(200).json({message: 'Human Jukebox is currently in development mode, which means that all musicians must be individually whitelisted in order to use this app. Please write to human.jukebox.app@gmail.com if you would like to be whitelisted! In your message, include your full name and the email address attached to your Spotify account.'});
+        } else {
+            return next();
+        }
     },
     authController.getTokens,
     authController.getSpotifyId,
