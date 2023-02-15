@@ -70,15 +70,16 @@ authController.getTokens = (req, res, next) => {
     console.log('inside of authController.getTokens middleware, and req.query.code is:', req.query.code);
     try {
         spotifyApi.authorizationCodeGrant(req.query.code)
-        .then(data => {
-            // can additionally set an expiration on the cookie (say N minutes) e.g. using res.cookie('cookieName', cookieValue, {maxAge: 1000 * 60 * N})
-            res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
-            res.locals.access = data.body.access_token;
-            res.locals.refresh = data.body.refresh_token;
-            spotifyApi.setAccessToken(res.locals.access);
-            spotifyApi.setRefreshToken(res.locals.refresh);
-            return next();
-        })
+            .then(data => {
+                console.log('inside of the .then of authController.getTokens');
+                // can additionally set an expiration on the cookie (say N minutes) e.g. using res.cookie('cookieName', cookieValue, {maxAge: 1000 * 60 * N})
+                res.cookie('access', data.body.access_token).cookie('refresh', data.body.refresh_token);
+                res.locals.access = data.body.access_token;
+                res.locals.refresh = data.body.refresh_token;
+                spotifyApi.setAccessToken(res.locals.access);
+                spotifyApi.setRefreshToken(res.locals.refresh);
+                return next();
+            })
     } catch(err) {
         return next({
             log: 'error getting access and refresh tokens',
@@ -119,6 +120,7 @@ authController.getNewAccessToken = (req, res, next) => {
 
 // using a musician's spotify access token (saved as res.locals.access), get their spotify id and set it as res.locals.spotifyId .
 authController.getSpotifyId = (req, res, next) => {
+    console.log('inside of authController.getSpotifyId');
     try {
         spotifyApi.setAccessToken(res.locals.access);
         spotifyApi.getMe().then(userData => {
@@ -126,6 +128,10 @@ authController.getSpotifyId = (req, res, next) => {
                 res.cookie('spotifyId', res.locals.spotifyId);
                 return next();
             }
+        ).catch(err => {
+            console.log('inside of .catch of authController.getSpotifyId, and error object is:', err);
+            return res.status(200).send('Human Jukebox is still in development. If you are a musician and would like early access, please let us know! To do this, send an email human.jukebox.app@gmail.com that includes your full name as well as the email address associated with your Spotify account. (Your Spotify account is only used to manage your Human Jukebox account, and will never be available on your Human Jukebox musician profile page.)');
+        }
         )
     } catch(err) {
         return next({

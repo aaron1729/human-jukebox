@@ -44,6 +44,8 @@ router.get(
             'playlist-read-collaborative',
         ];
         const authUrl = spotifyApi.createAuthorizeURL(scopes);
+        // this will be something like:
+            //  https://accounts.spotify.com/authorize?client_id=[CLIENT ID GOES HERE]&response_type=code&redirect_uri=[BASE FOR REDIRECT URI GOES HERE]/api/getMusicianInfo&scope=playlist-read-private%20playlist-read-collaborative
         console.log('at the end of the /api/auth route handler, and authUrl is:', authUrl);
         return res.redirect(authUrl);
     }

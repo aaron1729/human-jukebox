@@ -5,6 +5,7 @@ import {styles} from '../styles';
 
 function LandingPageContainer(){
 
+
   const navigate = useNavigate();
   
   // navigate to a musician's public page if client requests not just root but also with a valid query parameter.
@@ -52,6 +53,7 @@ function LandingPageContainer(){
     }
   };
 
+
   // this is nearly a copy of the login function above (both are used!), but living on the window instead of in local memory. of course, ideal would be to get the login function living on the window, but for some reason typescript is unhappy with that.
   (window as any).login2 = async function () {
     console.log('login2 triggered');
@@ -68,6 +70,7 @@ function LandingPageContainer(){
       }
     }
   };
+
 
   return(
     // this className used to have "landing-page" in it, which seems not to do anything at the moment (it should be a custom tailwind class or something).
