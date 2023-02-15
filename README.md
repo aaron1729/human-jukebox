@@ -20,24 +20,19 @@ You will also need to create a PostgreSQL database. Record its URI. The database
 
         CLIENT_ID=[your client id]
         CLIENT_SECRET=[your client secret]
-        REDIRECT_URI_BASE_DEVELOPMENT=http://localhost:8080
         PG_URI=[your postgresql URI]
         PORT=4000
         NODE_ENV=development
 
 1. In the root folder, run `npm start`.
 
-The app should now be accessible at `localhost:8080`.
+The app should now be accessible at `localhost:8080` (or elsewhere if you change the value of `globals.REDIRECT_URI_BASE_DEVELOPMENT` in the file `/src/globals.ts`).
 
 ### Hosting an instance of Human Jukebox
 
 Instructions for hosting the app will depend on the hosting service, but here are the essential points.
 
-1. In the `.env` file of your cloned repo, add the line
-    ```
-    REDIRECT_URI_BASE_PRODUCTION=[your root URL]
-    ```
-    where `[your root URL]` includes the `http` or `https` and ends without a slash.
+1. In the file `/src/globals.ts` of your cloned repo, change the value of `globals.REDIRECT_URI_BASE_PRODUCTION` to your root URL, including the `http` or `https` and ending without a slash.
 
 1. In the root folder of your cloned repo, run `npm run bundle-frontend` and `npm run bundle-backend`. (Inside of `/dist`, the former will create the files `bundle-frontend.js` and `index.html` while the latter will create the file `bundle-backend.js` -- all via Webpack.)
 

@@ -12,7 +12,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 
-// reset the node environment. (as of 2/13/2023, this is only used in /src/server/utils/apiWrapper.js.)
+// reset the node environment.
 process.env.NODE_ENV = "production";
 
 // the following code is copied from this file:

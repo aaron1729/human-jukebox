@@ -10,8 +10,6 @@ import DeleteAccount from '../Components/DeleteAccount';
 
 const globals = require('../../globals');
 
-
-
 /*
 // on 2/6/2023, commenting these out because they seem to be pulling with them some crappy old node packages that are messing up my backend webpack build.
 // these are from: https://mui.com/material-ui/material-icons/
@@ -146,6 +144,13 @@ function PrivateMusicianContainer(){
 
   const deleteCookies = () => {
     fetch('/api/logout');
+  }
+
+  let baseForRedirectUri: String;
+  if (process.env.NODE_ENV === "production") {
+    baseForRedirectUri = globals.REDIRECT_URI_BASE_PRODUCTION
+  } else {
+    baseForRedirectUri = globals.REDIRECT_URI_BASE_DEVELOPMENT
   }
 
 
@@ -335,6 +340,19 @@ function PrivateMusicianContainer(){
       >
         <span className={styles.textButtonForDbUpdates}>preview public page</span>
       </button>
+      <h6 className="text-xs my-2">
+        <b>direct link:</b>
+        &nbsp;
+        <Link
+        to={`/musician/public?musician=${handle}`}
+        >
+        {baseForRedirectUri}?handle={handle}
+        </Link>
+        &nbsp;
+        <button onClick={() => navigator.clipboard.writeText(`${baseForRedirectUri}?handle=${handle}`)}>
+          <span className={styles.textButtonForDbUpdates}>copy to clipboard</span>
+        </button>
+      </h6>
 
       <br />
 

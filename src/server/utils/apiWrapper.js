@@ -1,11 +1,12 @@
 const SpotifyWebApi = require('spotify-web-api-node');
+const globals = require('../../globals.ts');
 
 let baseForRedirectUri;
 // we assume development mode unless this string is precisely equal to "production".
 if (process.env.NODE_ENV === "production") {
-    baseForRedirectUri = process.env.REDIRECT_URI_BASE_PRODUCTION
+    baseForRedirectUri = globals.REDIRECT_URI_BASE_PRODUCTION
 } else {
-    baseForRedirectUri = process.env.REDIRECT_URI_BASE_DEVELOPMENT
+    baseForRedirectUri = globals.REDIRECT_URI_BASE_DEVELOPMENT
 }
 
 // create a new instance of the SpotifyWebApi class, to be exported.
