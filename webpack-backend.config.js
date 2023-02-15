@@ -14,6 +14,7 @@ dotenv.config();
 
 // reset the node environment.
 process.env.NODE_ENV = "production";
+console.log('inside of webpack-backend.config.js, and process.env.NODE_ENV is:', process.env.NODE_ENV);
 
 // the following code is copied from this file:
   // https://github.com/jlongster/backend-with-webpack/blob/part1/webpack.config.js
