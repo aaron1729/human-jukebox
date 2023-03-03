@@ -38,7 +38,7 @@ Instructions for hosting the app will depend on the hosting service, but here ar
 
 1. On your server, create a dedicated root folder for Human Jukebox. Within it, create directories called `client` and `server`.
 
-1. Navigate to `/client`. Copy into here the above two frontend files (`bundle-frontend.js` and `index.html`) as well as the files `auth.html` and `auth.js` living in `/src/client`. 
+1. Navigate to `/client`. Copy into here the above two frontend files (`bundle-frontend.js` and `index.html`) as well as the files `auth.html`, `auth.js`, `qr.html`, and `qr.js` living in `/src/client`.
 
 1. Navigate to `/server`. Copy into here the file `package.json`, and run `npm install`.
 

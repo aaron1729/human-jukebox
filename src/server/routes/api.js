@@ -90,6 +90,31 @@ router.get(
 )
 
 
+// this serves the html file containing the QR code.
+router.get(
+    '/qr',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/qr route handler');
+        return next();
+    },
+    (req, res) => {
+        return res.sendFile(path.join(__dirname, '../../client/qr.html'));
+    }
+)
+
+
+router.get(
+    '/qr.js',
+    (req, res, next) => {
+        console.log('at the beginning of the /api/qr.js route handler');
+        return next();
+    },
+    (req, res) => {
+        return res.sendFile(path.join(__dirname, '../../client/qr.js'));
+    }
+)
+
+
 // this endpoint receives a possible spotifyId and, if it corresponds to a musician in the db, returns the corresponding handle.
 router.get(
     '/getHandle/:spotifyId',

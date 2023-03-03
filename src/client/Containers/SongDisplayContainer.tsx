@@ -49,7 +49,7 @@ const SongDisplayContainer = (props: any) => {
         <table className='table-fixed'>
           <thead>
             <tr>
-              <th className='border px-4 py-2'>Title</th>
+              <th className='border px-4 py-2'>Song</th>
               <th className='border px-4 py-2'>Artist</th>
               {/* <th className='border px-4 py-2'>Tags</th> */}
             </tr>

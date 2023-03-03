@@ -12,8 +12,6 @@ const globals = require('../../globals');
 
 
 
-
-
 /*
 // on 2/6/2023, commenting these out because they seem to be pulling with them some crappy old node packages that are messing up my backend webpack build.
 // these are from: https://mui.com/material-ui/material-icons/
@@ -39,6 +37,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 function PrivateMusicianContainer(){
 
   const navigate = useNavigate();
+
+
+  let baseUrl = "";
+  // we assume development mode unless this string is precisely equal to "production".
+  if (process.env.NODE_ENV === "production") {
+      baseUrl = globals.REDIRECT_URI_BASE_PRODUCTION
+  } else {
+      baseUrl = globals.REDIRECT_URI_BASE_DEVELOPMENT
+  }
+
 
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -129,6 +137,15 @@ function PrivateMusicianContainer(){
     if (results.hardCutoffReached) {
       alert(`to prevent server/database crashes, by default Human Jukebox only allows musicians to import ${globals.hardCutoffForPlaylistLength} songs to the database. your current chosen playlist exceeds this limit. please contact us at human.jukebox.app@gmail.com if you would like this limit raised for you!`)
     }
+  }
+
+
+  const qrPage = () => {
+    const newWindow = window.open(`http://localhost:8080/api/qr?displayName=${privateMusicianInfo.display_name}&handle=${privateMusicianInfo.handle}`, '_blank');
+
+    console.log('newWindow is:', newWindow);
+    
+    console.log('qrPage function triggered');
   }
 
 
@@ -331,25 +348,33 @@ function PrivateMusicianContainer(){
 
       <br />
 
-      <button
-        onClick = {() => navigate(`/musician/private/preview?musician=${privateMusicianInfo.handle}`)}
-        // className={'ml-5'}
-      >
-        <span className={styles.textButtonForDbUpdates}>preview public page</span>
-      </button>
       <h6 className="text-xs my-2">
-        <b>direct link:</b>
+        <b>public page:</b>
         &nbsp;
         <Link
         to={`/musician/public?musician=${handle}`}
         >
-        {globals.REDIRECT_URI_BASE_PRODUCTION}?handle={handle}
+        {baseUrl}?handle={handle}
         </Link>
-        &nbsp;
-        <button onClick={() => navigator.clipboard.writeText(`${globals.REDIRECT_URI_BASE_PRODUCTION}?handle=${handle}`)}>
-          <span className={styles.textButtonForDbUpdates}>copy to clipboard</span>
-        </button>
       </h6>
+
+      <span>
+        <button
+          onClick = {() => navigate(`/musician/private/preview?musician=${privateMusicianInfo.handle}`)}
+        >
+          <span className={styles.textButtonForDbUpdates}>preview</span>
+        </button>
+        &nbsp;
+        <button onClick={() => navigator.clipboard.writeText(`${baseUrl}?handle=${handle}`)}>
+          <span className={styles.textButtonForDbUpdates}>copy URL to clipboard</span>
+        </button>
+        &nbsp;
+        <button
+          onClick = {() => qrPage()}
+        >
+          <span className={styles.textButtonForDbUpdates}>generate QR code</span>
+        </button>
+        </span>
 
       <br />
 
