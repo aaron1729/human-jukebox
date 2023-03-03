@@ -47,6 +47,8 @@ function PrivateMusicianContainer(){
       baseUrl = globals.REDIRECT_URI_BASE_DEVELOPMENT
   }
 
+  console.log('inside of PrivateMusicianContainer, and process.env.NODE_ENV is ' + process.env.NODE_ENV + ' and baseUrl is ' + baseUrl);
+
 
   // get query parameter from URL
   const [searchParams, setSearchParams] = useSearchParams();
@@ -141,11 +143,8 @@ function PrivateMusicianContainer(){
 
 
   const qrPage = () => {
-    const newWindow = window.open(`http://localhost:8080/api/qr?displayName=${privateMusicianInfo.display_name}&handle=${privateMusicianInfo.handle}`, '_blank');
-
-    console.log('newWindow is:', newWindow);
-    
-    console.log('qrPage function triggered');
+    window.open(`${baseUrl}/api/qr?displayName=${privateMusicianInfo.display_name}&handle=${privateMusicianInfo.handle}`, '_blank');
+    console.log('inside of qrPage function, and baseUrl is:', baseUrl);
   }
 
 
